@@ -1,1 +1,66 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap');
+
+body, html {
+    height: 100vh !important;
+    width:100%;
+    margin: 0 !important;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+    background-color: rgb(31, 31, 31);
+}
+
+.fullExpand {
+    height:100%;
+    width: 100%;
+}
+
+.centerChild  {
+        display: flex;           /* establish flex container */
+        flex-direction: column;  /* make main axis vertical */
+        justify-content: center; /* center items vertically, in this case */
+        align-items: center;     /* center items horizontally, in this case */
+}
+
+.h-100 {
+    height:100% !important;
+}
+
+.w-100 {
+    width:100% !important;
+}
+
+.shadow-1{
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+}
+
+.shadow-2{
+	-webkit-box-shadow: 0 10px 6px -6px #777;
+	-moz-box-shadow: 0 10px 6px -6px #777;
+	box-shadow: 0 10px 6px -6px #777;
+}
+
+.flex-row{
+    display: flex;
+    flex-direction: row;
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;       /* Remove default arrow */
+    background-color: #333333;
+    border: none;
+    color: white ;
+    text-align: center;
+    padding: 5px;
+    margin: 0 2px;
+    border-radius: 4px;
+    font-weight: 800;
+    width: 100%;
+ }
+ 
