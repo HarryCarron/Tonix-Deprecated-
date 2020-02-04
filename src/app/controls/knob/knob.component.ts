@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
 import { DragAndDrop } from './../../functionality/dragAndDrop';
 import { dragAndDropOrientation } from './../../objects/types';
 
@@ -13,6 +13,8 @@ export class KnobComponent implements AfterViewInit {
 
     @ViewChild('knob') knobElement: ElementRef;
 
+    @Input() name: string;
+
     private _knob: ElementRef;
 
     private lowLimit: number;
@@ -20,8 +22,7 @@ export class KnobComponent implements AfterViewInit {
 
     private clientY: number;
 
-    beginDrag = (e: any) => {
-    }
+    private dragActive = false;
 
     set knob(nElement: ElementRef) {
         if (nElement.nativeElement) {
@@ -36,16 +37,26 @@ export class KnobComponent implements AfterViewInit {
         console.log(amm);
     }
 
-    // private initKob() { this.setRotation(120); }
+
+
+    private killBrowserMouseMove(e) {
+        (window as any).onmousemove = null;
+        (window as any).onmouseup = null;
+        // todo
+    }
+
+    initiateDrag() {
+        (window as any).onmousemove = (e) => {
+            (this.knob as any).style.transform = `rotate(${e.clientY}deg)`;
+        };
+        (window as any).onmouseup = this.killBrowserMouseMove;
+    }
 
     constructor() { }
 
 
     ngAfterViewInit() {
         this.knob = this.knobElement;
-        const x = new DragAndDrop(this.knob, 10, 0, dragAndDropOrientation['yOnly'], (e) => { this.setRotation(e); });
-        // this.lowLimit = 0;
-        // this.highLimit = 10;
     }
 
 }

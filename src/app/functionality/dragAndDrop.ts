@@ -9,8 +9,7 @@ export class DragAndDrop {
 
     private mouseDownAt: number;
 
-
-    private dragActive: boolean;
+    private dragActive = false;
 
     private callback;
 
@@ -58,7 +57,7 @@ export class DragAndDrop {
             let a = Math.min( e.clientY - this.mouseDownAt);
             a = Math.max(a, 0);
 
-            this.callback( (a / this.upperLimit) * 240 - 160);
+            this.callback( (e.clientY / this.upperLimit) * 240 - 160);
         }
     }
 
@@ -66,29 +65,36 @@ export class DragAndDrop {
 
     }
 
+
+
     private wrapEvents() {
         // mouse down
 
-        const existingMouseDown = (this.control as any).onmousedown || noop;
+        const existingControlMouseDown = (this.control as any).onmousedown || noop;
+        const existingBrowserMouseMove = (window as any).onmousemove || noop;
+        const existingBrowserMouseUp = (window as any).onmouseup || noop;
+
         (this.control as any).onmousedown = (e) => {
             this.dragActive = true;
-            existingMouseDown();
+            existingControlMouseDown();
+            console.log('DRAG STARTED - DRAG STATUS AT CLICK -' + this.dragActive);
+
         };
 
         // mouse up
-        const existingMouseUp = (this.control as any).onmouseup || noop;
-        (this.control as any).onmouseup = (e) => {
+        (window as any).onmouseup = (e) => {
             this.mouseDownAt = e.clientY;
             this.dragActive = false;
-            existingMouseUp();
+            existingBrowserMouseUp();
+            console.log('DRAG STOPPED');
         };
 
-        const existingMouseMove = (this.control as any).onmousemove || noop;
-        (this.control as any).onmousemove = (e) => {
+        (window as any).onmousemove = (e) => {
+            console.log('MOUSE MOVE-' + this.dragActive);
             if (this.dragActive) {
                 this.recordMoveXY(e);
             } else {
-                existingMouseMove();
+                existingBrowserMouseMove();
             }
         };
 

@@ -59,12 +59,12 @@
     
                             <div class='h-100 centerChild' style='width:60px;'>
                                 GAIN
-                                <app-knob></app-knob>
+                                <app-knob [name]="'gainKnob_' + i"></app-knob>
                             </div>
 
                             <div class='h-100 centerChild' style='width:60px;'>
                                 W/T POS.
-                                <app-knob></app-knob>
+                                <app-knob  [name]="'waveTablePosKnob_' + i"></app-knob>
                             </div>
      
                         </div>
