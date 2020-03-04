@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MasterService, Oscillator } from './services/master.service';
 import { FormsModule } from '@angular/forms';
 import { KnobComponent } from './controls/knob/knob.component';
+import { MouseMetricsComponent } from './developerTools/mouse-metrics/mouse-metrics.component';
 
 @Component({
   selector: 'app-root',

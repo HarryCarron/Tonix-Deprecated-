@@ -24,11 +24,15 @@ export class KnobComponent implements AfterViewInit {
 
     private dragActive = false;
 
+    private droppedY = 0;
+
     set knob(nElement: ElementRef) {
         if (nElement.nativeElement) {
             this._knob = nElement.nativeElement;
         }
     }
+
+
 
     get knob() { return this._knob; }
 
@@ -37,19 +41,21 @@ export class KnobComponent implements AfterViewInit {
         console.log(amm);
     }
 
-
-
-    private killBrowserMouseMove(e) {
+    private killBrowserMouseMove() {
         (window as any).onmousemove = null;
         (window as any).onmouseup = null;
         // todo
     }
 
-    initiateDrag() {
-        (window as any).onmousemove = (e) => {
-            (this.knob as any).style.transform = `rotate(${e.clientY}deg)`;
+    initiateDrag(e) {
+        this.killBrowserMouseMove();
+        this.droppedY = e.clientY;
+        (window as any).onmousemove = (e: any) => {
+            (this.knob as any).style.transform = `rotate(${this.droppedY++}deg)`;
         };
-        (window as any).onmouseup = this.killBrowserMouseMove;
+        (window as any).onmouseup = () => {
+            this.killBrowserMouseMove();
+        };
     }
 
     constructor() { }
