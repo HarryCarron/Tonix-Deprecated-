@@ -1,29 +1,9 @@
-.topbar{
-    height:35px;
-    background-color:#252525; 
-}
-
-.synth{
-    width: 1100px;
-    height: 600px;
-    background-color:#3C3D40;
-    border: 1px solid #484848;
-    border-radius: 5px;
-    overflow: hidden;
-    font-family: Helvetica, Arial, sans-serif;
-    box-shadow: 0 10px 20px rgb(14, 14, 14);
-}
 
 .oscName {
     font-weight:800;
     letter-spacing:1.4px;
     font-size:1.2em;
     padding-left:20px;
-    color:#f7f788;
-}
-
-.osc-container {
-    height:60px;
 }
 
 .waveTable{
@@ -35,6 +15,13 @@
     background-color: #cbd9e2;
     border-top: 3px solid #647886;
     border-bottom: 3px solid #ececec;
+}
+
+.osc-container{
+    height:60px;
+    background-color:#38393c;
+    margin:10px;
+    border-radius:5px;
 }
 
 .osc-rack{
@@ -70,20 +57,3 @@
     height:45px;
     margin:5px;
 }
-
-.onoffcontainer{
-    width: 10%;
-}
-
-.osc{
-
-    border-radius: 5px;
-    margin: 5px;
-}
-
-.mouseMetricsContainer{
-    position: absolute;
-    left:10px;
-    top:10px;
-}
-

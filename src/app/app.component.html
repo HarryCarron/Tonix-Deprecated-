@@ -1,81 +1,13 @@
-<div class='mouseMetricsContainer'>
-    <app-mouse-metrics [on]="true"></app-mouse-metrics>
-</div>
 
 <div class='fullExpand centerChild'>
     <div class='synth'>
         <div class='topbar'></div>
         <div class='content-wrapper h-100'>
             <div class='osc-rack h-100'>
-                <div *ngFor='let osc of oscillators; let i = index' class='osc'>
-
-                    <div class='oscName'>{{osc.name}}</div>
-
-                    <div style='transition:0.6s;' [style.opacity]="osc.isOn ? '1' : '0.3'">
-
-                        <div class='flex-row'>
-                            <div class='centerChild onOffContainer'>
-                                <input type="checkbox" [(ngModel)]='osc.isOn'>
-                            </div>
-    
-                            <div class='waveTable'>
-    
-                            </div>
-                        </div>
-
-
-    
-                        <div class="flex-row control-row">
-                            
-                            <div class='h-100 centerChild'>
-                                WAVEFORM
-                                <select [(ngModel)]='osc.waveType'
-                                [disabled] = '!osc.isOn'
-                                (change)="osc.selectWaveForm(osc.waveType)">
-                                    <option [value]="waveForm"
-                                    *ngFor="let waveForm of osc.availableWaveForms">
-                                        {{waveForm}}
-                                    </option>
-                                </select>
-                            </div>
-                            
-                            <div class='h-100 centerChild controlWidth'>
-                                DETUNE
-                                <input class='numInput'
-                                [disabled] = '!osc.isOn'
-                                (change)='osc.limitDetune(osc.detune)'
-                                [(ngModel)]="osc.detune"
-                                type="number"
-                                min="-0.99"
-                                max="0.99"
-                                step="0.01">
-                            </div>
-    
-                            <div class='h-100 centerChild controlWidth'>
-                                PITCH
-                                <input class='numInput'
-                                [disabled] = '!osc.isOn'
-                                [(ngModel)]="osc.pitch"
-                                type="number"
-                                step="1">
-                            </div>
-    
-                            <div class='h-100 centerChild' style='width:60px;'>
-                                GAIN
-                                <span ui-knob [value]="value" [options]="knOptions"></span>
-                            </div>
-
-                            <div class='h-100 centerChild' style='width:60px;'>
-                                W/T POS.
-                                <app-knob  [name]="'waveTablePosKnob_' + i"></app-knob>
-                            </div>
-     
-                        </div>
-
-                    </div>
-
-                    
-                </div>
+                <div class='osc'>
+                <ng-container *ngFor='let osc of oscillators; let i = index'>
+                    <app-oscillator [data]="osc" ></app-oscillator>
+                </ng-container>
             </div> 
         </div>
     </div>
