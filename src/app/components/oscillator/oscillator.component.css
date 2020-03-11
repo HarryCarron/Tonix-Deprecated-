@@ -17,6 +17,14 @@
     border-bottom: 3px solid #ececec;
 }
 
+.detuneContainer {
+    width: 50px;
+}
+
+.pitchContainer {
+    width: 40px;
+}
+
 .osc-container{
     height:60px;
     background-color:#38393c;
@@ -36,8 +44,7 @@
     height:60px;
 }
 
-.controlWidth{
-    width:60px;
+.controlContainer{
     margin: 0 10px;
 }
 
