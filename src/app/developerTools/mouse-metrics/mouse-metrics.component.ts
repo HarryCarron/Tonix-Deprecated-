@@ -39,10 +39,10 @@ export class MouseMetricsComponent implements OnInit {
         this.mouseMoveListener();
     }
 
-    ngOnChanges() {
-        if (this.on) {
-            this.addMouseMoveListeners();
-        }
-    }
+    // ngOnChanges() {
+    //     if (this.on) {
+    //         this.addMouseMoveListeners();
+    //    }
+    // }
 
 }

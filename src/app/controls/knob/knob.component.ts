@@ -50,7 +50,7 @@ export class KnobComponent implements AfterViewInit {
     initiateDrag(e) {
         this.killBrowserMouseMove();
         this.droppedY = e.clientY;
-        (window as any).onmousemove = (e: any) => {
+        (window as any).onmousemove = () => {
             (this.knob as any).style.transform = `rotate(${this.droppedY++}deg)`;
         };
         (window as any).onmouseup = () => {
