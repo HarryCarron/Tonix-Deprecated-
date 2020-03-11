@@ -11,7 +11,7 @@ export type degree = number;
 })
 export class KnobComponent implements AfterViewInit {
 
-    @ViewChild('knob') knobElement: ElementRef;
+    @ViewChild('knob', { static: true }) knobElement: ElementRef;
 
     @Input() name: string;
 
