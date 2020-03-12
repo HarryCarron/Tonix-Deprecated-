@@ -11,20 +11,7 @@ export type degree = number;
 })
 export class KnobComponent implements AfterViewInit {
 
-    @ViewChild('knob', { static: true }) knobElement: ElementRef;
-
-    @Input() name: string;
-
-    private _knob: ElementRef;
-
-    private lowLimit: number;
-    private highLimit: number;
-
-    private clientY: number;
-
-    private dragActive = false;
-
-    private droppedY = 0;
+    @ViewChild('knob', { static: true })
 
     set knob(nElement: ElementRef) {
         if (nElement.nativeElement) {
@@ -32,37 +19,79 @@ export class KnobComponent implements AfterViewInit {
         }
     }
 
+    @Input() name: string;
 
+    private relativeTravel = 0; // todo fix
+
+
+    @Input() lowerRotationLimit: number;
+    @Input() upperRotationLimit: number;
+
+    @Input() lowerOutputRange: number;
+    @Input() upperOutputRange: number;
+
+    public current: number;
+    private before: number;
+
+    private downAtY: number;
+
+
+    private freeze = false;
+
+    private _knob: ElementRef;
+
+    private dragActive = false;
+
+    private droppedY = 0;
 
     get knob() { return this._knob; }
 
     private setRotation(amm: degree): void {
         (this.knob as any).style.transform = `rotate(${amm}deg)`;
-        console.log(amm);
     }
 
     private killBrowserMouseMove() {
         (window as any).onmousemove = null;
         (window as any).onmouseup = null;
-        // todo
     }
 
     initiateDrag(e) {
-        this.killBrowserMouseMove();
-        this.droppedY = e.clientY;
-        (window as any).onmousemove = () => {
-            (this.knob as any).style.transform = `rotate(${this.droppedY++}deg)`;
+
+        this.dragActive = true;
+
+        this.downAtY = e.clientY + 1;
+        (window as any).onmousemove = (ev: any) => {
+
+            let at = Math.min(this.downAtY - ev.clientY);
+
+            if (this.dragActive && at) {
+
+                at = Math.max(at);
+                const r = ((at / this.upperOutputRange) * 240) - 160;
+                if (r < this.upperRotationLimit) {
+                    console.log(r);
+                    this.setRotation(r);
+                }
+            }
+
         };
         (window as any).onmouseup = () => {
+            this.dragActive = false;
             this.killBrowserMouseMove();
         };
+    }
+
+    private calculate(): void {
+        const radius = 360 - ((360 - this.upperRotationLimit) + this.lowerRotationLimit);
+        this.relativeTravel = radius / (this.upperOutputRange);
     }
 
     constructor() { }
 
 
     ngAfterViewInit() {
-        this.knob = this.knobElement;
+        this.setRotation(this.lowerRotationLimit);
+        this.calculate();
     }
 
 }

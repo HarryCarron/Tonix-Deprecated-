@@ -8,13 +8,14 @@ import { KnobComponent } from './controls/knob/knob.component';
 import { KnobModule } from 'ng2-knob';
 import { NgSwitcheryModule } from 'angular-switchery-ios';
 import { OscillatorComponent } from './components/oscillator/oscillator.component';
+import { AdsrEnvelopeComponent } from './components/adsr-envelope/adsr-envelope.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     KnobComponent,
     OscillatorComponent,
-    // MouseMetricsComponent,
+    AdsrEnvelopeComponent
   ],
   imports: [
     BrowserModule,
