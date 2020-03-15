@@ -1,20 +1,21 @@
 .knobContainer {
-    height: 20px;
-    width:20px;
+    margin-bottom: 4px;
+    height: 25px;
+    width:25px;
 }
 
 .knob{
     width: 100%;
     height:100%;
     border-radius:50%;
-    background-color: #292929;
+    background-color: rgb(58, 58, 58);
     display:flex;
     flex-direction: column;
 }
 
 .knob-top {
     height:30%;
-    padding-top: 2px;
+    /* padding-top: 2px; */
 }
 
 .knob-outer-outline{
@@ -32,11 +33,12 @@
 
     height:100%;
     width:2px;
-    background-color:#23D0EA;
+    background-color:white;
     border-radius: 3px;
 }
 
 .knob-outline{
+    box-sizing: border-box;
     width: 100%;
     height:100%;
     border:2px solid #23D0EA;

@@ -4,11 +4,14 @@
         <div class='topbar'></div>
         <div class='content-wrapper h-100'>
             <div class='osc-rack h-100'>
+                <span class='voice'>VOICE</span>
                 <div class='osc'>
                 <ng-container *ngFor='let osc of oscillators; let i = index'>
                     <app-oscillator [data]="osc" ></app-oscillator>
                 </ng-container>
-            </div> 
+                <app-settings-rack></app-settings-rack>
+                
+            </div>
         </div>
     </div>
 </div>

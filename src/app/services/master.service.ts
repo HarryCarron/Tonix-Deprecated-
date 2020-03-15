@@ -22,13 +22,14 @@ export class MasterService {
 
         // pass true for isOn prop so only first oscillator is active
 
-        return this.utils.a(3).map((i) => new Oscillator(i, waveTypeIn, i === 0, null, null));
+        return this.utils.a(3).map((i) => new Oscillator(i + 1, i, waveTypeIn, i === 0, null, null));
     }
 
 }
 
 export class Oscillator {
 
+    public readonly number: number;
     private waveType: waveType;
     private _name: string;
     private utils = new UtilitiesService();
@@ -58,7 +59,8 @@ export class Oscillator {
         }
     }
 
-    constructor(nameIn: string | number, waveTypeIn: waveType, isOn: boolean, detune: number, pitch: number) {
+    constructor(number: number, nameIn: string | number, waveTypeIn: waveType, isOn: boolean, detune: number, pitch: number) {
+        this.number = number;
         this.waveType = waveTypeIn || defaultWaveForm;
         this.name = nameIn;
         this.isOn = isOn;

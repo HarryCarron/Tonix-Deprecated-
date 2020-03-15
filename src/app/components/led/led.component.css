@@ -1,0 +1,18 @@
+.container {
+    height:25px;
+    width:25px;
+    
+}
+
+.led {
+    cursor: pointer;
+    height: 50%;
+    width: 50%;
+    border-radius: 50%;
+    border: 1px solid grey;
+    transition:0.2s;
+}
+
+.on {
+    background-color: #d2f9ff;
+}

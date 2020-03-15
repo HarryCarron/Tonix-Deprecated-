@@ -27,13 +27,14 @@ export class KnobComponent implements AfterViewInit {
     @Input() lowerRotationLimit: number;
     @Input() upperRotationLimit: number;
 
-    @Input() lowerOutputRange: number;
-    @Input() upperOutputRange: number;
+    @Input() upperOutputLimit: number;
 
     public current: number;
     private before: number;
 
-    private downAtY: number;
+    private dragStartedAt: number;
+
+    private value: number;
 
 
     private freeze = false;
@@ -57,21 +58,24 @@ export class KnobComponent implements AfterViewInit {
 
     initiateDrag(e) {
 
+        this.dragStartedAt = e.clientY;
+
         this.dragActive = true;
 
-        this.downAtY = e.clientY + 1;
+        // let r: number;
+
         (window as any).onmousemove = (ev: any) => {
+            const limit = 100;
+            const offset = ev.clientY - this.value || 0 + 1;
+            this.value += offset;
+            this.value = Math.min(offset, limit);
+            this.value = Math.max(this.value, 0);
 
-            let at = Math.min(this.downAtY - ev.clientY);
-
-            if (this.dragActive && at) {
-
-                at = Math.max(at);
-                const r = ((at / this.upperOutputRange) * 240) - 160;
-                if (r < this.upperRotationLimit) {
-                    console.log(r);
-                    this.setRotation(r);
-                }
+            if (this.dragActive) {
+                const turn = this.lowerRotationLimit + ((this.value / limit) * (this.upperRotationLimit - this.lowerRotationLimit));
+                console.log(turn);
+                console.log((this.value / 100) * 100);
+                this.setRotation(turn);
             }
 
         };
@@ -81,17 +85,11 @@ export class KnobComponent implements AfterViewInit {
         };
     }
 
-    private calculate(): void {
-        const radius = 360 - ((360 - this.upperRotationLimit) + this.lowerRotationLimit);
-        this.relativeTravel = radius / (this.upperOutputRange);
-    }
-
     constructor() { }
 
 
     ngAfterViewInit() {
-        this.setRotation(this.lowerRotationLimit);
-        this.calculate();
+        this.setRotation(this.lowerRotationLimit); // todo: create initRotation param!
     }
 
 }

@@ -1,0 +1,29 @@
+.settingsRackContainer{
+    background-color:#38393c;
+    margin:10px;
+    border-radius:5px;
+    overflow:hidden;
+    transition:1s;
+}
+
+.menuItem{
+    padding:6px;
+    background-color: #343538;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.selected{
+    background-color: #2b2c2e;
+}
+
+
+.menuItem-Right{
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.menuItem-Left{
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+}

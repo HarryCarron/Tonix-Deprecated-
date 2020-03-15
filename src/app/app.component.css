@@ -76,14 +76,26 @@
 }
 
 .osc{
-
+    border: 1px solid #4e4e4e;
     border-radius: 5px;
     margin: 5px;
 }
-
+m  
 .mouseMetricsContainer{
     position: absolute;
     left:10px;
     top:10px;
 }
 
+.voice{
+    font-size: 1.3em;
+    background-color: #3c3d40;
+    color: #e8e8e8;
+    position: relative;
+    top: 13px;
+    left: 20px;
+    width: 50px;
+    padding: 2px;
+    letter-spacing: 2px;
+    text-align: center;
+}

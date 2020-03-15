@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { LedComponent } from './../led/led.component';
+import { SettingsRackComponent } from './../../components/settings-rack/settings-rack.component';
+
 
 @Component({
   selector: 'app-oscillator',

@@ -1,0 +1,18 @@
+<div class='settingsRackContainer'>
+    <div style='margin:10px;' >
+        <div class='d-flex'>
+            <div class='menuItem-Left menuItem'
+            [ngClass]='{"selected" : envelopeSelected}'
+            (click)='selectMenuItem(1)'>ENVELOPE</div>
+            <div class='menuItem-Right menuItem'
+            [ngClass]='{"selected" : effectsSelected}'
+            (click)='selectMenuItem(2)'>FX</div>
+        </div>
+
+        <div style='margin-top: 10px;'>
+            <app-adsr-envelope [hidden]='!envelopeSelected'></app-adsr-envelope>
+            <app-effects-rack [hidden]='!effectsSelected'></app-effects-rack>
+        </div>    
+    </div>
+    
+</div>
