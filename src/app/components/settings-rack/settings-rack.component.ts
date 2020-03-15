@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { EffectsRackComponent } from './effects-rack/effects-rack.component';
 import { AdsrEnvelopeComponent } from './adsr-envelope/adsr-envelope.component';
 
+import { VoiceService } from './../../services/voice/voice.service';
+import { Subscription } from 'rxjs';
+
 enum settingsRackMenuItem {
     envelope = 1,
     effects = 2
@@ -14,9 +17,11 @@ enum settingsRackMenuItem {
 })
 export class SettingsRackComponent implements OnInit {
 
-  constructor() { }
+  constructor(private voiceService: VoiceService) { }
 
   selectedMenuItem = 1;
+
+  subscription: Subscription;
 
   get envelopeSelected(): boolean {
     return this.selectedMenuItem === settingsRackMenuItem.envelope;
@@ -30,7 +35,13 @@ export class SettingsRackComponent implements OnInit {
     this.selectedMenuItem = menuItem;
   }
 
+  private handleMessage(m) {
+      return 1;
+  }
+
   ngOnInit(): void {
+    this.subscription = this.voiceService.getMessages().subscribe(message => { this.handleMessage(message); });
+    this.voiceService.sendMessage('hey!');
   }
 
 }

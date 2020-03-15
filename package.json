@@ -20,12 +20,11 @@
     "@angular/platform-browser-dynamic": "~9.0.6",
     "@angular/router": "~9.0.6",
     "@types/d3-selection": "^1.4.1",
-    "angular-switchery-ios": "^2.0.0",
     "core-js": "^2.5.4",
     "d3": "^5.15.0",
     "d3-selection-multi": "^1.0.1",
+    "font-awesome": "^4.7.0",
     "lodash-es": "^4.17.15",
-    "ng2-knob": "^1.1.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.9.0",
     "zone.js": "~0.10.2"

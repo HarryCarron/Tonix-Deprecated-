@@ -1,74 +1,86 @@
-<div class='flex-row osc-container' >
-    <div class='h-100 centerChild' style='width:20px; color: white; '>
-        <span>{{data.number}}</span>
-    </div>
-    <div style='width:15%;' class='h-100 centerChild'>
-        <app-led [(ngModel)]='data.isOn'></app-led>
-    </div>
-    <div style='transition:1s;' [style.opacity]="data.isOn ? '1' : '0.3'">
-        <div class="flex-row h-100">
+<div class='osc-container'>
+    <div class='flex-row controlRow' >
 
-            <div class='h-100 controlContainer' style='width:50px;'>
-                <div class='oscControlLabel centerChild'>
-                    WAVEFORM
-                </div>
-                <div class='oscControlContainer centerChild'>
-                    <select [(ngModel)]='data.waveType'
-                    [disabled] = '!data.isOn'
-                    (change)="data.selectWaveForm(data.waveType)">
-                        <option [value]="waveForm"
-                        *ngFor="let waveForm of data.availableWaveForms">
-                            {{waveForm}}
-                        </option>
-                    </select>
-                    <div style='height:30%;'></div>
+        <div style='width:15%;' class='h-100 centerChild'>
+            <div style='height:50%;' class='w-100 centerChild'>
+                <app-led [(ngModel)]='data.isOn'></app-led>
+            </div>
+            <div style='height:50%;' class='w-100 centerChild'>
+                <div class='h-100 centerChild' style='width:20px; color: white; '>
+                    <span>{{data.number}}</span>
                 </div>
             </div>
-
-            <div class='h-100 controlContainer' style='width:50px;'>
-                <div class='oscControlLabel centerChild'>
-                    DETUNE
-                </div>
-                <div class='oscControlContainer centerChild'>
-                    <input class='numInput'
-                    [disabled] = '!data.isOn'
-                    [(ngModel)]="data.detune"
-                    type="number"
-                    min="-0.99"
-                    step="0.01">
-                    <div style='height:30%;'></div>
-                </div>
-            </div>
-
-            <div class='h-100 controlContainer' style='width:40px;'>
-                <div class='oscControlLabel centerChild'>
-                    W/T POS
-                </div>
-                <div class='oscControlContainer centerChild'>
-                    <app-knob [lowerRotationLimit]='30'
-                    [upperRotationLimit]='330'
-                    [upperOutputRange]='100'>
-                    </app-knob>
-                    <div style='height:30%;'></div>
-                </div>
-            </div>
-
-            <div class='h-100 controlContainer' style='width:40px;'>
-                <div class='oscControlLabel centerChild'>
-                    GAIN
-                </div>
-                <div class='oscControlContainer centerChild'>
-                    <app-knob [lowerRotationLimit]='30'
-                    [upperRotationLimit]='330'
-                    [upperOutputRange]='100'>
-                    </app-knob>
-                    <div style='height:30%;'></div>
-                </div>
-            </div>
-
+            
         </div>
+        <div style='transition:1s;' [style.opacity]="data.isOn ? '1' : '0.3'">
+            <div class="flex-row h-100">
+
+                <div class='h-100 controlContainer' style='width:50px;'>
+                    <div class='oscControlLabel centerChild'>
+                        WAVEFORM
+                    </div>
+                    <div class='oscControlContainer centerChild'>
+                        <select [(ngModel)]='data.waveType'
+                        [disabled] = '!data.isOn'
+                        (change)="data.selectWaveForm(data.waveType)">
+                            <option [value]="waveForm"
+                            *ngFor="let waveForm of data.availableWaveForms">
+                                {{waveForm}}
+                            </option>
+                        </select>
+                        <div style='height:30%;'></div>
+                    </div>
+                </div>
+
+                <div class='h-100 controlContainer' style='width:50px;'>
+                    <div class='oscControlLabel centerChild'>
+                        DETUNE
+                    </div>
+                    <div class='oscControlContainer centerChild'>
+                        <input class='numInput'
+                        [disabled] = '!data.isOn'
+                        [(ngModel)]="data.detune"
+                        type="number"
+                        min="-0.99"
+                        step="0.01">
+                        <div style='height:30%;'></div>
+                    </div>
+                </div>
+
+                <div class='h-100 controlContainer' style='width:40px;'>
+                    <div class='oscControlLabel centerChild'>
+                        W/T POS
+                    </div>
+                    <div class='oscControlContainer centerChild'>
+                        <app-knob [lowerRotationLimit]='30'
+                        [upperRotationLimit]='330'
+                        [upperOutputLimit]='100'>
+                        </app-knob>
+                        <div style='height:30%;'></div>
+                    </div>
+                </div>
+
+                <div class='h-100 controlContainer' style='width:40px;'>
+                    <div class='oscControlLabel centerChild'>
+                        GAIN
+                    </div>
+                    <div class='oscControlContainer centerChild'>
+                        <app-knob [lowerRotationLimit]='30'
+                        [upperRotationLimit]='330'
+                        [upperOutputLimit]='100'>
+                        </app-knob>
+                        <div style='height:30%;'></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div> 
+    <app-partials [showPartials]='showPartials'></app-partials>
+    <div (click)='togglePartials()' style='text-align: center; padding: 3px;'>
+        <span style='padding:2px;'>
+            <i class="fas" style='font-size:1.5em; cursor: pointer; color: white;' [ngClass]="showPartials ? 'fa-angle-up' : 'fa-angle-down'"></i>
+        </span>
+        
     </div>
-</div>  
-
-
-
+</div>

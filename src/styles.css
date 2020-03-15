@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap');
 
+
 body, html {
     height: 100vh !important;
     width:100%;
@@ -12,6 +13,17 @@ body, html {
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
     background-color: rgb(31, 31, 31);
+}
+
+.numInput{
+    background-color:#333333;
+    border:none;
+    color: white;
+    text-align:center;
+    padding:5px;
+    margin: 0 2px;
+    border-radius: 4px;
+    width: 100%;
 }
 
 .fullExpand {

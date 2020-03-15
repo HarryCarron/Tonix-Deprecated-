@@ -1,0 +1,26 @@
+.isOpen {
+    height:100px !important;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+
+.partialContainer {
+    transition: 0.3s;
+    margin: 5px;
+    height: 0;
+    background-color: #303134;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.partials-numInput {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    color: #23D0EA;
+    font-size: 8px;
+    text-align: center;
+    font-weight: bold;
+}
