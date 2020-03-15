@@ -21,12 +21,24 @@ export class OscillatorComponent implements OnInit {
 
     showPartials = false;
 
-    togglePartials() {
-        this.showPartials = !this.showPartials === true;
+    togglePartials(oscId: number, manual: boolean) {
+        if (manual || manual === false) {
+            this.showPartials = manual;
+            return;
+        }
+
+        const t = !this.showPartials === true;
+        this.showPartials = t;
+        if (t) {
+            this.voiceService.partialOpened(oscId);
+        }
+
     }
 
-    private handleMessage(message) {
-        return 1;
+    private handleMessage(oscId) {
+        if (oscId !== this.data.number) {
+            this.togglePartials(this.data.number, false);
+        }
     }
 
     ngOnInit(): void {

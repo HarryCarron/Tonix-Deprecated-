@@ -1,5 +1,6 @@
 .isOpen {
     height:100px !important;
+    opacity: 1 !important;
 }
 
 textarea:focus, input:focus{
@@ -7,6 +8,7 @@ textarea:focus, input:focus{
 }
 
 .partialContainer {
+    opacity: 0;
     transition: 0.3s;
     margin: 5px;
     height: 0;
@@ -19,7 +21,7 @@ textarea:focus, input:focus{
     width: 100%;
     background-color: transparent;
     border: none;
-    color: #23D0EA;
+    color: #5be279;
     font-size: 8px;
     text-align: center;
     font-weight: bold;

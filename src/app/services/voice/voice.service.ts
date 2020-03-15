@@ -15,6 +15,10 @@ export class VoiceService {
       this.subject.next( { text: message } );
   }
 
+  partialOpened(oscId: number) {
+    this.subject.next(oscId);
+  }
+
   clearMessage() {
     this.subject.next();
   }
