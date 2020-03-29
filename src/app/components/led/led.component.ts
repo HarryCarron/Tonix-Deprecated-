@@ -3,15 +3,16 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { noop } from 'rxjs';
 
 @Component({
-  selector: 'app-led',
-  templateUrl: './led.component.html',
-  styleUrls: ['./led.component.css'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => LedComponent),
-    multi: true
- }]
+    selector: 'app-led',
+    templateUrl: './led.component.html',
+    styleUrls: ['./led.component.css'],
+        providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => LedComponent),
+        multi: true
+    }]
 })
+
 export class LedComponent implements ControlValueAccessor {
 
   constructor() { }

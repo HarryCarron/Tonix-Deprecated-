@@ -6,8 +6,8 @@
 
 .led {
     cursor: pointer;
-    height: 25%;
-    width: 25%;
+    height: 30%;
+    width: 30%;
     border-radius: 50%;
     border: 1px solid grey;
     transition:0.2s;

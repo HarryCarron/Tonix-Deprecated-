@@ -22,7 +22,7 @@ export class MasterService {
 
         // pass true for isOn prop so only first oscillator is active
 
-        return this.utils.a(3).map((i) => new Oscillator(i + 1, i, waveTypeIn, i === 0, null, null));
+        return this.utils.a(3).map((i) => new Oscillator(i + 1, i, waveTypeIn, i === 0, null, null, [0.1, 0.5, 0.9]));
     }
 
 }
@@ -32,12 +32,15 @@ export class Oscillator {
     public readonly number: number;
     private waveType: waveType;
     private _name: string;
-    private utils = new UtilitiesService();
-    public availableWaveForms: string[] = this.utils.definitionArrayFromEnum(waveTypeEnum);
+
     public isOn = false;
     public detune: number;
     public pitch: number;
     public gain: number;
+    public partials: number[];
+
+    private utils = new UtilitiesService();
+    public availableWaveForms: string[] = this.utils.definitionArrayFromEnum(waveTypeEnum);
 
     set name(n: string | number) {
         this._name = BASE_OSC_NAME + ' ' + n;
@@ -59,7 +62,14 @@ export class Oscillator {
         }
     }
 
-    constructor(number: number, nameIn: string | number, waveTypeIn: waveType, isOn: boolean, detune: number, pitch: number) {
+    constructor(number: number,
+        nameIn: string | number,
+        waveTypeIn: waveType,
+        isOn: boolean,
+        detune: number,
+        pitch: number,
+        partialCount: number[]) {
+
         this.number = number;
         this.waveType = waveTypeIn || defaultWaveForm;
         this.name = nameIn;
@@ -67,6 +77,10 @@ export class Oscillator {
         this.detune = detune || BASE_OSC_PITCH;
         this.pitch = pitch || BASE_OSC_PITCH;
         this.gain = pitch || BASE_OSC_GAIN;
+        this.partials = partialCount;
+
     }
 
 }
+
+export const PARTIAL_CONTAINER_HEIGHT = 100;

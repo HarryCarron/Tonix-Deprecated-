@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, forwardRef } from '@angular/core';
 import { VoiceService } from './../../../services/voice/voice.service';
+import { PARTIAL_CONTAINER_HEIGHT } from './../../../services/master.service';
 
 @Component({
   selector: 'app-partials',
@@ -10,10 +11,22 @@ export class PartialsComponent implements OnChanges {
 
   constructor() { }
 
-  @Input() showPartials: boolean;
+    defaultHeight = PARTIAL_CONTAINER_HEIGHT;
 
-  ngOnChanges() {
+    partialCount: number;
 
-  }
+    @Input() showPartials: boolean;
+
+    _partials: number[];
+
+    partialSelectionDisabled = false;
+
+    @Input()
+    set partials(p) { this._partials = p; }
+    get partials() { return this._partials; }
+
+    ngOnChanges() {
+        this.partialCount = this.partials.length;
+    }
 
 }

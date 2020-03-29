@@ -2,8 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { LedComponent } from './../led/led.component';
 import { SettingsRackComponent } from './../../components/settings-rack/settings-rack.component';
 import { VoiceService } from './../../services/voice/voice.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { PartialsComponent } from './partials/partials.component';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 
 @Component({
@@ -17,9 +18,15 @@ export class OscillatorComponent implements OnInit {
 
 
     @Input() data; // todo: type
-    subscription: Subscription;
 
-    showPartials = false;
+    subscription: Observable<any>;
+
+    private _showPartials = false;
+
+    @Input()
+    set showPartials (show) { this._showPartials = show; }
+
+    get showPartials() { return this._showPartials; }
 
     togglePartials(oscId: number, manual: boolean) {
         if (manual || manual === false) {
@@ -41,8 +48,13 @@ export class OscillatorComponent implements OnInit {
         }
     }
 
+    private listenForOpeningPartial(): void {
+        this.subscription = this.voiceService.getMessages();
+        this.subscription.subscribe(message => { this.handleMessage(message); });
+    }
+
     ngOnInit(): void {
-        this.subscription = this.voiceService.getMessages().subscribe(message => { this.handleMessage(message); });
+        this.listenForOpeningPartial();
 
     }
 

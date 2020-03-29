@@ -13,6 +13,7 @@ import { AdsrEnvelopeComponent } from './components/settings-rack/adsr-envelope/
 import { PartialsComponent } from './components/oscillator/partials/partials.component';
 
 import { from, fromEventPattern } from 'rxjs';
+import { PartialsSelectorComponent } from './components/oscillator/partials/partials-selector/partials-selector.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { from, fromEventPattern } from 'rxjs';
     SettingsRackComponent,
     EffectsRackComponent,
     AdsrEnvelopeComponent,
-    PartialsComponent
+    PartialsComponent,
+    PartialsSelectorComponent
   ],
   imports: [
     BrowserModule,

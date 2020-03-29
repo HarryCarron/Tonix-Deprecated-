@@ -76,11 +76,10 @@
             </div>
         </div>
     </div> 
-    <app-partials [showPartials]='showPartials'></app-partials>
+    <app-partials [showPartials]='showPartials' [partials]='data.partials'></app-partials>
     <div (click)='togglePartials(data.number)' style='text-align: center; padding: 3px;'>
         <span style='padding:2px;'>
             <i class="fas" style='font-size:1.5em; cursor: pointer; color: white;' [ngClass]="showPartials ? 'fa-angle-up' : 'fa-angle-down'"></i>
         </span>
-        
     </div>
 </div>
