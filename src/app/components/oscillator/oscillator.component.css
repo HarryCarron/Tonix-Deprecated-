@@ -26,10 +26,12 @@
 }
 
 .osc-container{
+    
     background-color:#38393c;
-    margin:10px;
-    border-radius:5px;
-    overflow:hidden;
+    border: 1px solid #404040;
+    border-top: 1px solid #545454;
+    border-bottom: 1px solid #2b2b2b;
+    border-radius: 3px;
 }
 
 .osc-rack{
@@ -49,7 +51,10 @@
     margin: 10px 0 10px 0;
 }
 
-
+.osc-shadow {
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.4);
+    margin:3px;
+}
 
 .number{
     font-size: 1.2em;

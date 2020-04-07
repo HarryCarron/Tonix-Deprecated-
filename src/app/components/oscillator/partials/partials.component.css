@@ -38,6 +38,10 @@ textarea:focus, input:focus {
     height:100%;
 }
 
+.canvasshadow{
+    box-shadow: inset 0px 9px 15px rgba(0,0,0,0.2);
+}
+
 .disable {
     opacity: 0.3;
 }

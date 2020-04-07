@@ -80,3 +80,23 @@ select {
     width: 100%;
  }
  
+ * {
+     color: white;
+ }
+
+ .label {
+    color:#d0d0d0;
+ }
+
+ .controlshadow-1 {
+    box-shadow: 0px 3px 4px rgba(0,0,0,0.5);
+}
+
+.controlshadow-2 {
+    box-shadow: 0px 3px 9px rgba(0,0,0,0.5);
+}
+
+.controlshadow-3 {
+    box-shadow: inset 0px 3px 2px rgba(0,0,0,0.2);
+}
+

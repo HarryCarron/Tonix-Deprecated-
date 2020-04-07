@@ -15,6 +15,8 @@ import { noop } from 'rxjs';
 })
 export class PartialsSelectorComponent implements AfterViewInit {
 
+    height = PARTIAL_CONTAINER_HEIGHT;
+
     constructor() { }
 
     onTouched;
@@ -42,36 +44,49 @@ export class PartialsSelectorComponent implements AfterViewInit {
     private partialSelectorHeight = PARTIAL_CONTAINER_HEIGHT;
     private partialSelectorWidth: number;
 
-    private getCanvasDimensions(): void {
+    private pWidth = 0;
+
+    private setCanvasDimensions(): void {
         this.partialSelectorWidth = this.partialsCanvas.offsetWidth;
+        this.partialSelectorHeight = this.partialsCanvas.offsetHeight;
+
+        this.partialsCanvas.width = this.partialSelectorWidth;
+        this.partialsCanvas.height = this.partialSelectorHeight;
     }
 
     writeValue(partials: number[]): void {
         this.partials = partials;
         if (this.partials) {
+            this.pWidth = Math.ceil(this.partialSelectorWidth / this.partials.length);
             this.draw();
         }
     }
 
-    private draw(): void {
-        const pWidth = this.partialSelectorWidth / this.partials.length;
+    draw(): void {
+        this.partialCanvasContext.clearRect(0, 0, this.partialSelectorWidth, 100);
+
         this.partials.forEach( (p, i) => {
             this.partialCanvasContext.beginPath();
-            this.partialCanvasContext.rect(pWidth * i, 0, pWidth * i, p * 100);
+            this.partialCanvasContext.rect(this.pWidth * i, 100, this.pWidth, ((p * 100) || 0.1) * -1);
             this.partialCanvasContext.fillStyle = this.PARTIAL_FILL_COL;
             this.partialCanvasContext.fill();
         });
     }
 
-    ngAfterViewInit() { this.getCanvasDimensions(); }
+    partialsClicked(): void {
+
+    }
+
+
+    ngAfterViewInit() {
+        this.setCanvasDimensions();
+    }
 
     // NGMODEL FUNCTIONS
 
     registerOnTouched(fn: () => void): void {}
 
     setDisabledState(isDisabled: boolean): void { noop(); }
-
-
 
     registerOnChange(fn: (partials: number[]) => void): void { this.onChange = fn; }
 

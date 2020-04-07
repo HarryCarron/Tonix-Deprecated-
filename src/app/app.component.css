@@ -40,9 +40,8 @@
 .osc-rack{
     display: flex;
     flex-direction: column;
-    width:30%;
+    width: 25%;
     font-size:0.5em;
-    color: #23D0EA;
 }
 
 .osc-control-row{
@@ -75,12 +74,7 @@
     width: 10%;
 }
 
-.osc{
-    border: 1px solid #4e4e4e;
-    border-radius: 5px;
-    margin: 5px;
-}
-m  
+
 .mouseMetricsContainer{
     position: absolute;
     left:10px;

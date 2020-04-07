@@ -13,20 +13,34 @@ export class PartialsComponent implements OnChanges {
 
     defaultHeight = PARTIAL_CONTAINER_HEIGHT;
 
+    showShadow = false;
+
     partialCount: number;
 
     @Input() showPartials: boolean;
 
-    _partials: number[];
+    @Input() partials: number[];
 
     partialSelectionDisabled = false;
 
-    @Input()
-    set partials(p) { this._partials = p; }
-    get partials() { return this._partials; }
+    updatePartials(partialCount: number): void {
+        if (this.partials.length < partialCount)  {
+            this.partials = (this.partials || []).concat([0]);
+        } else {
+            this.partials = this.partials.filter((p, i, o) => i + 1 !== o.length);
+        }
+    }
+
+    private triggerShadow(): void {
+        const mode = !!(this.showPartials === true);
+        setTimeout(() => {
+            this.showShadow = mode;
+        }, mode ? 50 : 0);
+    }
 
     ngOnChanges() {
         this.partialCount = this.partials.length;
+        this.triggerShadow();
     }
 
 }
