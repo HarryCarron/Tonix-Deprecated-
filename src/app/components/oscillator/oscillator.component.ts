@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LedComponent } from './../led/led.component';
-import { SettingsRackComponent } from './../../components/settings-rack/settings-rack.component';
+import { SettingsRackComponent } from './settings-rack/settings-rack.component';
 import { VoiceService } from './../../services/voice/voice.service';
 import { Subscription, Observable } from 'rxjs';
 import { PartialsComponent } from './partials/partials.component';

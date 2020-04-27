@@ -1,0 +1,49 @@
+.settingsRackContainer{
+    background-color:#f18a6d;
+    height: 130px;
+    margin: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.settingsHolder{
+    transition: 0.5s;
+}
+
+.menuItem{
+    padding:6px;
+    background-color: #343538;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.selected{
+    background-color: #e67c5e;
+    font-weight: bold;
+}
+
+
+.menuItem-Right{
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.menuItem-Left{
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px;
+}
+
+.settingsRack{
+    height: 80%;
+}
+
+.menuContainer{
+    display:flex;
+    height: 20%;
+    background-color: #f59d84;
+}
+
+.settingsRackButton{
+    width: 60px;
+    cursor: pointer;
+}

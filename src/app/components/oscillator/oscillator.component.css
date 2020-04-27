@@ -25,13 +25,21 @@
     width: 40px;
 }
 
+.oscLabelHeading {
+    background-color: #f49b7c;
+}
+
+.oscNumber {
+    font-weight: bold;
+    font-size: 3em;
+}
+
 .osc-container{
     
-    background-color:#38393c;
-    border: 1px solid #404040;
-    border-top: 1px solid #545454;
-    border-bottom: 1px solid #2b2b2b;
-    border-radius: 3px;
+    background-color:#ffbba8;
+    border-radius: 8px;
+    margin: 10px 10px 0 10px;
+    overflow:hidden;
 }
 
 .osc-rack{

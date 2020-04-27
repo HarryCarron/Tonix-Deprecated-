@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { EffectsRackComponent } from './effects-rack/effects-rack.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdsrEnvelopeComponent } from './adsr-envelope/adsr-envelope.component';
 
-import { VoiceService } from './../../services/voice/voice.service';
+import { VoiceService } from '../../../services/voice/voice.service';
 import { Subscription } from 'rxjs';
 
 enum settingsRackMenuItem {
-    envelope = 1,
-    effects = 2
+    overview,
+    envelope,
+    partials
 }
 
 @Component({
@@ -19,16 +19,40 @@ export class SettingsRackComponent implements OnInit {
 
   constructor(private voiceService: VoiceService) { }
 
-  selectedMenuItem = 1;
+  private _settingsHolder: any;
+
+
+
+
+  selectedMenuItem = 0;
+
+  menu = [
+      {
+          label: 'Overview',
+          id: settingsRackMenuItem.overview
+      },
+      {
+        label: 'Envelope',
+        id: settingsRackMenuItem.envelope
+    },
+    {
+        label: 'Partials',
+        id: settingsRackMenuItem.partials
+    },
+  ];
 
   subscription: Subscription;
+
+  get overviewSelected(): boolean {
+    return this.selectedMenuItem === settingsRackMenuItem.overview;
+  }
 
   get envelopeSelected(): boolean {
     return this.selectedMenuItem === settingsRackMenuItem.envelope;
   }
 
-  get effectsSelected(): boolean {
-    return this.selectedMenuItem === settingsRackMenuItem.effects;
+  get partialsSelected(): boolean {
+    return this.selectedMenuItem === settingsRackMenuItem.partials;
   }
 
   selectMenuItem(menuItem: settingsRackMenuItem): void {

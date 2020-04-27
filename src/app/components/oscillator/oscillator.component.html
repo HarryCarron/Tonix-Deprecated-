@@ -1,24 +1,24 @@
-<div class='osc-container osc-shadow'>
-    <div style='height:24px;' class='d-flex'>
+<div class='osc-container'>
+    <div style='height:24px;' class='d-flex oscLabelHeading'>
         <div style='width:10%;' class='centerChild h-100'>
             <app-led [(ngModel)]='data.isOn'></app-led>
         </div>
         <div style='width:20%;' class='centerChild label'>
-            WAVEFORM
+            Waveform
         </div>
-        <div style='width:20%;' class='centerChild label'>
-            DETUNE
-        </div>
-        <div style='width:25%;' class='centerChild label'>
-            PHASE
+        <div style='width:20%;' class='centerChild label'> 
+            Detune
         </div>
         <div style='width:25%;' class='centerChild label'>
-            GAIN
+            Phase
+        </div>
+        <div style='width:25%;' class='centerChild label'>
+            Gain
         </div>
     </div>
-    <div style='height:32px;' class='d-flex'>
+    <div style='height:70px;' class='d-flex'>
         <div style='width:10%;' class='centerChild'>
-            <span>{{data.number}}</span>
+            <span class='oscNumber'>{{data.number}}</span>
         </div>
 
         <div style='width: 20%;' class='centerChild'>
@@ -55,14 +55,7 @@
         </div>
     </div>
 
-    <div (click)='togglePartials(data.number)' style='text-align: center; padding: 3px;'>
-        <span style='padding:2px;'>
-            <!-- <i class="fas" style='font-size:1.5em; cursor: pointer; color: white;' [ngClass]="showPartials ? 'fa-angle-up' : 'fa-angle-down'"></i> -->
-            <i class="fas fa-chart-bar"></i>
-        </span>
-    </div>
-
-    <app-partials [showPartials]='showPartials' [partials]='data.partials'></app-partials>
+    <app-settings-rack></app-settings-rack>
 
 
 </div>

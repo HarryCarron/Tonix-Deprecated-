@@ -22,7 +22,7 @@ export class MasterService {
 
         // pass true for isOn prop so only first oscillator is active
 
-        return this.utils.a(3).map((i) => new Oscillator(i + 1, i, waveTypeIn, i === 0, null, null, [0.1, 0.5, 0.9]));
+        return this.utils.a(2).map((i) => new Oscillator(i + 1, i, waveTypeIn, i === 0, null, null, [0.1, 0.5, 0.9]));
 
     }
 
@@ -85,3 +85,4 @@ export class Oscillator {
 }
 
 export const PARTIAL_CONTAINER_HEIGHT = 120;
+export const WINDOW_DPI = window.devicePixelRatio;

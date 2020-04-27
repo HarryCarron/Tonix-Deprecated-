@@ -1,4 +1,8 @@
-<div class='knobContainer d-flex'>
+<div class='knobContainer centerChild controlshadow-4'>
+    <!-- <canvas #canvasKnob height='30px' width='30px'>
+
+    </canvas>
+
     <div class='knob-outer-outline controlshadow-1'>
         <div #knob (mousedown)='initiateDrag($event)' class='knob-outline'>
             <div class='knob'>
@@ -8,6 +12,14 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+
+    <svg style='transform: rotate(-240deg);' xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48.5 48.5"><g style="isolation:isolate"><g id="back"><circle cx="24.25" cy="24.25" r="24.25" style="fill:#f18a6d"/>
+        <circle cx="24.25" cy="24.25" r="14.94" class='controlshadow-4' style="fill:#f18a6d"/></g><g id="flair"><circle cx="24.25" cy="24.25" r="24.25" style="fill:none"/></g>
+        <path class='centerKnob' #arc stroke-linecap="round" fill="none" stroke="white" stroke-width="4" />
+        <g id="top" #knob class='centerKnob'></g>
+        <circle (mousedown)='initiateDrag($event);' cx="24.25" cy="24.25" r="14.94" style="fill:#f5a893;stroke-miterlimit:10"/><rect x="33.42" y="21.21" width="2.69" height="7.59" rx="1.35" transform="translate(59.02 -10.52) rotate(90)" style="fill:#fff"/></g>
+        
+    </svg>
 </div>
 

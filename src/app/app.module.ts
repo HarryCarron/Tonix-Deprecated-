@@ -7,9 +7,8 @@ import { AppComponent } from './app.component';
 import { KnobComponent } from './controls/knob/knob.component';
 import { OscillatorComponent } from './components/oscillator/oscillator.component';
 import { LedComponent } from './components/led/led.component';
-import { SettingsRackComponent } from './components/settings-rack/settings-rack.component';
-import { EffectsRackComponent } from './components/settings-rack/effects-rack/effects-rack.component';
-import { AdsrEnvelopeComponent } from './components/settings-rack/adsr-envelope/adsr-envelope.component';
+import { SettingsRackComponent } from './components/oscillator/settings-rack/settings-rack.component';
+import { AdsrEnvelopeComponent } from './components/oscillator/settings-rack/adsr-envelope/adsr-envelope.component';
 import { PartialsComponent } from './components/oscillator/partials/partials.component';
 
 import { from, fromEventPattern } from 'rxjs';
@@ -22,7 +21,6 @@ import { PartialsSelectorComponent } from './components/oscillator/partials/part
     OscillatorComponent,
     LedComponent,
     SettingsRackComponent,
-    EffectsRackComponent,
     AdsrEnvelopeComponent,
     PartialsComponent,
     PartialsSelectorComponent
