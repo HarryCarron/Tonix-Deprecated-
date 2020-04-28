@@ -13,7 +13,35 @@ export type degree = number;
 })
 export class KnobComponent implements AfterViewInit, AfterViewInit {
 
-    @ViewChild('knob', { static: true })
+    private mouseDownAt: number;
+    private mouseDroppedAt: number;
+
+    private yTopLimit: number;
+    private yBottomLimit: number;
+
+    readonly inputRange = 100;
+
+
+    metrics = {
+        output: {
+            upperLimit: 1,
+            lowerLimit: 0,
+            scaleUnit: null
+        },
+        rotation: {
+            upperLimit: 330,
+            lowerLimit: 30,
+            scaleUnit: null
+        }
+    };
+
+
+    readonly rotationLowerLimit = 30;
+    readonly rotationUpperLimit = 330;
+
+    readonly scaleUnit: number;
+
+    @ViewChild('top', { static: true })
 
     set knob(nElement: ElementRef) {
         if (nElement.nativeElement) {
@@ -21,60 +49,80 @@ export class KnobComponent implements AfterViewInit, AfterViewInit {
         }
     }
 
-    @ViewChild('arc', {static: false})
-    set arc(nElement: ElementRef) {
-        if (nElement.nativeElement) {
-            this._arc = nElement.nativeElement;
-        }
-    }
+    // @ViewChild('arc', {static: false})
+    // set arc(nElement: ElementRef) {
+    //     if (nElement.nativeElement) {
+    //         this._arc = nElement.nativeElement;
+    //     }
+    // }
 
-    get arc() { return this._arc; }
+    // get arc() { return this._arc; }
 
-    private _arc: any;
-
-    private _canvasKnob;
-
-    @Input() name: string;
+    // private _arc: any;
 
     private relativeTravel = 0; // todo fix
 
     private startKnob = 0.7 * Math.PI;
-    private endKnob = 0.3 * Math.PI;
-
-
-    @Input() lowerRotationLimit: number;
-    @Input() upperRotationLimit: number;
-
-    @Input() upperOutputLimit: number;
+    // private endKnob = 0.3 * Math.PI;
 
     private _knob: ElementRef;
 
     get knob() { return this._knob; }
 
-    private setRotation(amm: degree): void {
-        (this.knob as any).setAttribute('transform', `rotate(${amm})`);
+    private setDragMouseIcon(mode): void {
+        (document as any).body.style.cursor = mode ? 'move' : '';
     }
 
-    private killBrowserMouseMove() {
+    private setRotation(amm: number): void {
+        const calculatedDegree = Math.floor(this.metrics.rotation.scaleUnit * amm);
+        if (calculatedDegree > this.rotationUpperLimit) {
+            return;
+        }
+        if (calculatedDegree < this.rotationLowerLimit) {
+            return;
+        }
+        (this.knob as any).setAttribute('transform', `rotate(${calculatedDegree})`);
+    }
+
+    private killBrowserMouseMove(ev: any): void {
         (window as any).onmousemove = null;
         (window as any).onmouseup = null;
+        this.setDragMouseIcon(false);
+        this.mouseDroppedAt = ev.clientY;
+    }
+
+    private produceOutput(amm: number) {
+        const m = this.metrics.output;
+        const calculatedDegree = (m.scaleUnit * amm);
+        if (calculatedDegree > m.upperLimit) {
+            return;
+        }
+        if (calculatedDegree < m.lowerLimit) {
+            return;
+        }
+        console.log(calculatedDegree);
     }
 
     initiateDrag(e): void {
 
+        this.setDragMouseIcon(true);
+
         (window as any).onmousemove = (ev: any) => {
-
+            const travel = ev.clientY - this.yBottomLimit;
+            this.setRotation(travel);
+            this.produceOutput(travel);
+            this.drawArc(travel);
         };
-        (window as any).onmouseup = () => {
-
+        (window as any).onmouseup = (ev) => {
+            this.killBrowserMouseMove(ev);
         };
     }
 
     constructor() { }
 
-    drawArc(deg) {
-        const a = this.describeArc(24.5, 24.4, 22, 0, deg);
-        (<any>this.arc).setAttribute('d', a);
+    drawArc(travel) {
+        const a = this.describeArc(30, 30, 15, 0, travel);
+        // (<any>this.arc).setAttribute('d', a);
     }
 
     polarToCartesian(centerX, centerY, radius, angleInDegrees) {
@@ -100,14 +148,21 @@ export class KnobComponent implements AfterViewInit, AfterViewInit {
 
       }
 
-
+    calculateScaleUnits () {
+        Object.keys(this.metrics).forEach(m =>  {
+            this.metrics[m].scaleUnit = this.metrics[m].upperLimit / this.inputRange;
+        });
+    }
 
 
     ngAfterViewInit() {
+        this.yBottomLimit = Math.floor((this.knob as any).getBoundingClientRect().top);
+        this.yTopLimit = Math.floor((this.knob as any).getBoundingClientRect().top) + 100;
+        this.calculateScaleUnits();
+        this.setRotation(10);
 
-        this.drawArc(0);
-        this.setRotation(this.startKnob); // todo: create initRotation param!
-        console.log((this.knob as any).getBoundingClientRect());
+        // this.drawArc(this.startKnob);
+
     }
 
 }

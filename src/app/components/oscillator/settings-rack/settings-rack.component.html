@@ -21,24 +21,23 @@
 
         
     </div>
-    <div style='height:104px; overflow: hidden;'>
+    <div class='settingContainer'>
         <div class='controlshadow-3' style='z-index: 1000; position: absolute; height: 104px; width: 310px;'>
 
         </div>
-        <div class='settingsHolder' style='position: relative'>
-            <div *ngIf="overviewSelected" style='height: 104px; font-size: 1.5em; font-weight:bold; opacity: 0.7;' class='centerChild'> 
-                <i class="far fa-eye" style='font-size: 1.5em;'></i>
-                I'm the Overview component
-            </div>
-            <div *ngIf="envelopeSelected" style='height: 104px; font-size: 1.5em; font-weight:bold; opacity: 0.7;' class='centerChild'> 
-                <i class="far fa-envelope" style='font-size: 1.5em;'></i>
-                I'm the Envelope component
-            </div>
-            <div *ngIf="partialsSelected" style='height: 104px; font-size: 1.5em; font-weight:bold; opacity: 0.7;' class='centerChild'> 
-                <i class="far fa-chart-bar" style='font-size: 1.5em;'></i>
-                I'm the Partials component
-            </div>
+
+        <div *ngIf="overviewSelected" style='height: 100%; font-size: 1.5em; font-weight:bold; opacity: 0.7;' class='centerChild'> 
+            <i class="far fa-eye" style='font-size: 1.5em;'></i>
+            I'm the Overview component
         </div>
+        <div *ngIf="envelopeSelected" style='height: 100%; font-size: 1.5em; font-weight:bold; opacity: 0.7;'>
+            <app-adr-envelope></app-adr-envelope>
+        </div>
+        <div *ngIf="partialsSelected" style='height: 100%; font-size: 1.5em; font-weight:bold; opacity: 0.7;' class='centerChild'> 
+            <i class="far fa-chart-bar" style='font-size: 1.5em;'></i>
+            I'm the Partials component
+        </div>
+
 
     </div>
 </div>

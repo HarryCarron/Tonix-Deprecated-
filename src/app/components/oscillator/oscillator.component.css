@@ -30,16 +30,22 @@
 }
 
 .oscNumber {
-    font-weight: bold;
+    font-weight: 800;
     font-size: 3em;
-    font-family: Futura;
+    font-family: 'Roboto', sans-serif;
 }
 
 .osc-container{
-    
     background-color:#ffbba8;
     border-radius: 8px;
     margin: 10px 10px 0 10px;
+    overflow:hidden;
+}
+
+.osc-container-last{
+    background-color:#ffbba8;
+    border-radius: 8px;
+    margin: 0 10px 10 10px;
     overflow:hidden;
 }
 
@@ -68,7 +74,6 @@
 .number{
     font-size: 1.2em;
     color:#9e9e9e;
-    font-weight: bold;
 }
 
 .oscControlLabel{

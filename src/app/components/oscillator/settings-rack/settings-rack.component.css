@@ -37,9 +37,13 @@
     height: 80%;
 }
 
+.settingContainer{
+    height: 85%;
+}
+
 .menuContainer{
     display:flex;
-    height: 20%;
+    height: 15%;
     background-color: #f59d84;
 }
 

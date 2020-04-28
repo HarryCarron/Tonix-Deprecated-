@@ -1,14 +1,22 @@
 
 <div class='fullExpand centerChild'>
-    <div class='synth'>
+    <div>
         <div class='topbar'></div>
-        <div class='content-wrapper h-100'>
-            <div class='osc-rack h-100'>
-                <ng-container *ngFor='let osc of oscillators; let i = index'>
-                    <app-oscillator [data]="osc" ></app-oscillator>
-                </ng-container>
-                <!-- <app-settings-rack></app-settings-rack> -->
+        <div class='synth'>
+            <div class='content-wrapper h-100'>
+                <div class='osc-rack h-100'>
+                    <div class='titleContainer'>
+                        <span class='title'>Voice</span>
+                    </div>
+                    <ng-container *ngFor='let osc of oscillators; let i = index'>
+                        <app-oscillator [data]="osc" ></app-oscillator>
+                    </ng-container>
 
+                </div>
+                
+                <div class='effects-rack controlshadow-3'>
+                    <app-effects-rack></app-effects-rack>
+                </div>
             </div>
         </div>
     </div>

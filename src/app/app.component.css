@@ -1,12 +1,27 @@
 .topbar{
     height:35px;
-    background-color:#f6af91; 
+    background-color:#f6af91;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 3em;
+    font-weight: 800;
+    font-style: italic;
+    
+}
+
+.titleContainer{
+    padding: 10px 10px 0 20px;
 }
 
 .synth{
     height: 600px;
     background-color:#f7c9bd;
-    border-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
     overflow: hidden;
     font-family: Helvetica, Arial, sans-serif;
 }
@@ -34,6 +49,10 @@
     border-bottom: 3px solid #ececec;
 }
 
+.content-wrapper{
+    display: flex;
+}
+
 .osc-rack{
     display: flex;
     flex-direction: column;
@@ -45,7 +64,16 @@
 
 .osc-rack::-webkit-scrollbar {
     display: none;
-  }
+}
+
+.effects-rack {
+
+        background-color:#ffbba8;
+        border-radius: 8px;
+        margin: 10px 10px 10px 0;
+        overflow:hidden;
+        width: 250px;
+}
 
 
 .osc-control-row{
