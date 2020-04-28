@@ -47,27 +47,12 @@ export class KnobComponent implements AfterViewInit, AfterViewInit {
 
     @Input() upperOutputLimit: number;
 
-    public current: number;
-    private before: number;
-
-    private dragStartedAt: number;
-
-    value: number;
-
-
-    private freeze = false;
-
     private _knob: ElementRef;
-
-    private dragActive = false;
-
-    private droppedY = 0;
 
     get knob() { return this._knob; }
 
     private setRotation(amm: degree): void {
         (this.knob as any).setAttribute('transform', `rotate(${amm})`);
-        // console.log(a);
     }
 
     private killBrowserMouseMove() {
@@ -86,7 +71,6 @@ export class KnobComponent implements AfterViewInit, AfterViewInit {
     }
 
     constructor() { }
-
 
     drawArc(deg) {
         const a = this.describeArc(24.5, 24.4, 22, 0, deg);
@@ -109,19 +93,18 @@ export class KnobComponent implements AfterViewInit, AfterViewInit {
 
           const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
 
-          const d = [
+          return [
               'M', start.x, start.y,
               'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y
           ].join(' ');
 
-          return d;
       }
 
 
 
 
     ngAfterViewInit() {
-        // this.prepCanvas();
+
         this.drawArc(0);
         this.setRotation(this.startKnob); // todo: create initRotation param!
         console.log((this.knob as any).getBoundingClientRect());

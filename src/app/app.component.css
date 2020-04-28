@@ -39,7 +39,14 @@
     flex-direction: column;
     width: 350px;
     font-size:0.5em;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
 }
+
+.osc-rack::-webkit-scrollbar {
+    display: none;
+  }
+
 
 .osc-control-row{
     height:60px;
