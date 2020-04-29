@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AdsrEnvelopeComponent } from './adsr-envelope/adsr-envelope.component';
 
 import { VoiceService } from '../../../services/voice/voice.service';
 import { Subscription } from 'rxjs';
@@ -21,10 +20,7 @@ export class SettingsRackComponent implements OnInit {
 
   private _settingsHolder: any;
 
-
-
-
-  selectedMenuItem = 0;
+  selectedMenuItem = 1;
 
   menu = [
       {

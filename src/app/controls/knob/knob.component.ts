@@ -21,6 +21,7 @@ export class KnobComponent implements AfterViewInit, AfterViewInit {
 
     readonly inputRange = 100;
 
+    output: number;
 
     metrics = {
         output: {
@@ -100,6 +101,7 @@ export class KnobComponent implements AfterViewInit, AfterViewInit {
         if (calculatedDegree < m.lowerLimit) {
             return;
         }
+        this.output = Math.round(calculatedDegree * 100);
         console.log(calculatedDegree);
     }
 

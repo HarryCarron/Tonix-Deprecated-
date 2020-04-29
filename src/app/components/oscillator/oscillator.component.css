@@ -37,7 +37,8 @@
 
 .osc-container{
     background-color:#ffbba8;
-    border-radius: 8px;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
     margin: 10px 10px 0 10px;
     overflow:hidden;
 }
