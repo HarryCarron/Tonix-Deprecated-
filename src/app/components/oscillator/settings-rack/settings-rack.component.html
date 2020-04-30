@@ -22,8 +22,6 @@
         
     </div>
     <div class='settingContainer'>
-        <div *ngIf="envelopeSelected">
-            <app-adr-envelope></app-adr-envelope>
-        </div>
+        <app-adr-envelope [hidden]="!envelopeSelected"></app-adr-envelope>
     </div>
 </div>
