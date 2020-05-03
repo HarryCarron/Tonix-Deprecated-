@@ -1,4 +1,4 @@
-import { EnvelopeService, envelopePart } from './envelope.service';
+import { EnvelopeService, EnvelopePart, CurveType } from './envelope.service';
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 
 @Component({
@@ -12,32 +12,48 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
       this.envService.renderer = renderer;
   }
 
-  private containerLimit;
+    activeReleaseCurve = CurveType.linear;
+
+    private containerLimit = {
+        h: null,
+        w: null
+    };
+
+    private floor = 110;
+    private ciel = 20;
+
+    private containerWidth = null;
+    private containerHeight = null;
+
+    private readonly padding = 20;
+    private Xmargin = null;
+    private readonly envWidth = 220;
 
     private envBody;
     private envBeginHandle;
     private envPointHandle;
     private envEndHandle;
+    private qHandle;
 
     private attackPart;
     private releasePart;
 
+
+
     private env = {
-        begin: {
+        b: {
             x: null,
             y: null
         },
-        point: {
+        p: {
             x: null,
             y: null
         },
-        end: {
+        e: {
             x: null,
             y: null
         }
     };
-
-
 
     private _svgContainer: ElementRef;
     @ViewChild('svgContainer')
@@ -51,11 +67,60 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     set envelopeContainer(e) {this._envelopeContainer = e.nativeElement; }
     get envelopeContainer() {return this._envelopeContainer; }
 
+    private getReleaseCurve(asString: boolean) {
+
+        const p = this.env.p;
+        const e = this.env.e;
+        const b = this.env.b;
+        let q = null;
+
+        switch (this.activeReleaseCurve) {
+            case CurveType.linear: {
+                if (asString) {
+                    q = `Q${p.x + (e.x - p.x / 2)},${e.y - p.y / 2}`;
+                } else {
+                    return [e.x - p.x / 2, e.y - p.y / 2];
+                }
+                console.log([e.x - p.x / 2, e.y - p.y / 2]);
+                break;
+            }
+            case CurveType.exponential: {
+                if (asString) {
+                    q = `Q${p.x},${ this.floor }`;
+                } else {
+                    return [p.x, this.floor];
+                }
+                break;
+            }
+            case CurveType.cosine: {
+                if (asString) {
+                    q = `Q${p.x},${ e.y }`;
+                } else {
+                    return [p.x, e.y];
+                }
+            }
+        }
+        return q + ` ${e.x} ${e.y}`;
+    }
+
+    private getAttackCurve() {
+
+        const p = this.env.p;
+
+        return [
+            'L',
+            p.x,
+            ',',
+            p.y,
+        ].join('');
+
+    }
+
     private manipulateEnvelope() {
 
-    const b = this.env.begin;
-    const p = this.env.point;
-    const e = this.env.end;
+    const b = this.env.b;
+    const p = this.env.p;
+    const e = this.env.e;
 
     this.renderer.setAttribute(this.envBody, 'd',
         [
@@ -64,15 +129,9 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
             ',',
             b.y,
             ' ',
-            'L',
-            p.x,
-            ',',
-            p.y,
+            this.getAttackCurve(),
             ' ',
-            'L',
-            e.x,
-            ',',
-            e.y
+            this.getReleaseCurve(true)
         ].join('')
         );
 
@@ -96,37 +155,53 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
         this.renderer.setAttribute(this.envEndHandle, 'cx', e.x);
         this.renderer.setAttribute(this.envEndHandle, 'cy', e.y);
+
+        this.renderer.setAttribute(this.qHandle, 'cx', this.getReleaseCurve(false)[0]);
+        this.renderer.setAttribute(this.qHandle, 'cy', this.getReleaseCurve(false)[1]);
+
     }
 
     private giveTestCords() {
-    this.env.begin.x = 20;
-    this.env.begin.y = 100;
+    this.env.b.x = this.Xmargin;
+    this.env.b.y = this.floor;
 
-    this.env.point.x = 30;
-    this.env.point.y = 20;
+    this.env.p.x = 70;
+    this.env.p.y = 20;
 
-    this.env.end.x = 210;
-    this.env.end.y = 100;
+    this.env.e.x = this.containerWidth - this.Xmargin;
+    this.env.e.y = this.floor;
     }
 
     private initContainer() {
-        this.renderer.setAttribute(this.envelopeContainer, 'height', (this.svgContainer as any).clientHeight);
-        this.renderer.setAttribute(this.envelopeContainer, 'width', (this.svgContainer as any).clientWidth);
-        this.renderer.appendChild(this.envelopeContainer, this.envBody);
+        this.containerHeight = (this.svgContainer as any).clientHeight;
+        this.containerWidth = (this.svgContainer as any).clientWidth;
 
-        this.renderer.appendChild(this.envelopeContainer, this.attackPart);
-        this.renderer.appendChild(this.envelopeContainer, this.releasePart);
+        this.containerLimit.h = this.containerHeight;
+        this.containerLimit.w = this.containerWidth;
+
+        this.Xmargin = (this.containerWidth - this.envWidth) / 2;
+
+        this.renderer.setAttribute(this.envelopeContainer, 'height', this.containerHeight);
+        this.renderer.setAttribute(this.envelopeContainer, 'width', this.containerWidth);
         this.renderer.appendChild(this.envelopeContainer, this.envBody);
 
         this.renderer.appendChild(this.envelopeContainer, this.envBeginHandle);
         this.renderer.appendChild(this.envelopeContainer, this.envPointHandle);
         this.renderer.appendChild(this.envelopeContainer, this.envEndHandle);
+
+        this.renderer.appendChild(this.envelopeContainer, this.envBody);
+
+        this.renderer.appendChild(this.envelopeContainer, this.attackPart);
+        this.renderer.appendChild(this.envelopeContainer, this.releasePart);
+
+        this.renderer.appendChild(this.envelopeContainer, this.qHandle);
+
     }
 
     ngAfterViewInit(): void {
-    this.giveTestCords();
-    this.initContainer();
-    this.manipulateEnvelope();
+        this.initContainer();
+        this.giveTestCords();
+        this.manipulateEnvelope();
     }
 
     toggleBoundingBox() {
@@ -139,18 +214,26 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.envBeginHandle = this.envService.getEnvHandle();
         this.envPointHandle = this.envService.getEnvHandle();
         this.envEndHandle = this.envService.getEnvHandle();
+        this.qHandle = this.envService.qHandle();
 
-        this.attackPart = this.envService.getEnvPart();
-        this.releasePart = this.envService.getEnvPart();
-
-        this.renderer.listen(this.envBody, 'click', this.toggleBoundingBox);
+        this.attackPart = this.envService.getEnvPart(this.partClicked, EnvelopePart.attack);
+        this.releasePart = this.envService.getEnvPart(this.partClicked, EnvelopePart.release);
 
 
     document.onkeydown = () => {
-        this.env.point.x = (this.env.point.x + 2);
+        this.env.p.x = (this.env.p.x + 2);
         this.manipulateEnvelope();
     };
 
+    }
+
+    partClicked = (type) => {
+        if (this.activeReleaseCurve === 2) {
+            this.activeReleaseCurve = 0;
+        } else {
+            this.activeReleaseCurve = this.activeReleaseCurve + 1;
+        }
+        this.manipulateEnvelope();
     }
 
 }
