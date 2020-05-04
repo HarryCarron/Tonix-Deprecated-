@@ -1,4 +1,4 @@
-import { EnvelopeService, EnvelopePart, CurveType } from './envelope.service';
+import { EnvelopeService, EnvelopePart, CurveType, ReleaseCurve, AttackCurve } from './envelope.service';
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 
 @Component({
@@ -13,6 +13,7 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
   }
 
     activeReleaseCurve = CurveType.linear;
+    activeAttackCurve = CurveType.linear;
 
     private containerLimit = {
         h: null,
@@ -25,7 +26,7 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     private containerWidth = null;
     private containerHeight = null;
 
-    private readonly padding = 20;
+    private readonly Ymargin = 20;
     private Xmargin = null;
     private readonly envWidth = 220;
 
@@ -33,7 +34,8 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     private envBeginHandle;
     private envPointHandle;
     private envEndHandle;
-    private qHandle;
+    private qAttackHandle;
+    private qReleaseHandle;
 
     private attackPart;
     private releasePart;
@@ -69,38 +71,6 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
     private getReleaseCurve(asString: boolean) {
 
-        const p = this.env.p;
-        const e = this.env.e;
-        const b = this.env.b;
-        let q = null;
-
-        switch (this.activeReleaseCurve) {
-            case CurveType.linear: {
-                if (asString) {
-                    q = `Q${p.x + (e.x - p.x / 2)},${e.y - p.y / 2}`;
-                } else {
-                    return [e.x - p.x / 2, e.y - p.y / 2];
-                }
-                console.log([e.x - p.x / 2, e.y - p.y / 2]);
-                break;
-            }
-            case CurveType.exponential: {
-                if (asString) {
-                    q = `Q${p.x},${ this.floor }`;
-                } else {
-                    return [p.x, this.floor];
-                }
-                break;
-            }
-            case CurveType.cosine: {
-                if (asString) {
-                    q = `Q${p.x},${ e.y }`;
-                } else {
-                    return [p.x, e.y];
-                }
-            }
-        }
-        return q + ` ${e.x} ${e.y}`;
     }
 
     private getAttackCurve() {
@@ -122,6 +92,15 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     const p = this.env.p;
     const e = this.env.e;
 
+    const d = {
+        floor:              this.floor,
+        ciel:               this.ciel,
+        data:               this.env,
+        attackType:         this.activeAttackCurve,
+        releaseType:        this.activeReleaseCurve,
+        xMargin:            this.Xmargin
+    };
+
     this.renderer.setAttribute(this.envBody, 'd',
         [
             'M',
@@ -129,9 +108,16 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
             ',',
             b.y,
             ' ',
-            this.getAttackCurve(),
+            new AttackCurve(d).asString(),
             ' ',
-            this.getReleaseCurve(true)
+            p.x,
+            ',',
+            p.y,
+            new ReleaseCurve(d).asString(),
+            ' ',
+            e.x,
+            ',',
+            e.y
         ].join('')
         );
 
@@ -143,7 +129,7 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.setAttribute(this.releasePart, 'x', p.x);
         this.renderer.setAttribute(this.releasePart, 'y', p.y);
         this.renderer.setAttribute(this.releasePart, 'width', (e.x - p.x).toString());
-        this.renderer.setAttribute(this.releasePart, 'height', ( e.y - p.y).toString());
+        this.renderer.setAttribute(this.releasePart, 'height', (e.y - p.y).toString());
 
         this.renderer.setAttribute(this.envBeginHandle, 'cy', b.y);
 
@@ -156,8 +142,11 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.setAttribute(this.envEndHandle, 'cx', e.x);
         this.renderer.setAttribute(this.envEndHandle, 'cy', e.y);
 
-        this.renderer.setAttribute(this.qHandle, 'cx', this.getReleaseCurve(false)[0]);
-        this.renderer.setAttribute(this.qHandle, 'cy', this.getReleaseCurve(false)[1]);
+        this.renderer.setAttribute(this.qReleaseHandle, 'cx', new ReleaseCurve(d).asArray()[0].toString());
+        this.renderer.setAttribute(this.qReleaseHandle, 'cy', new ReleaseCurve(d).asArray()[1].toString());
+
+        this.renderer.setAttribute(this.qAttackHandle, 'cx', new AttackCurve(d).asArray()[0].toString());
+        this.renderer.setAttribute(this.qAttackHandle, 'cy', new AttackCurve(d).asArray()[1].toString());
 
     }
 
@@ -166,7 +155,7 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     this.env.b.y = this.floor;
 
     this.env.p.x = 70;
-    this.env.p.y = 20;
+    this.env.p.y = 40;
 
     this.env.e.x = this.containerWidth - this.Xmargin;
     this.env.e.y = this.floor;
@@ -194,7 +183,8 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.appendChild(this.envelopeContainer, this.attackPart);
         this.renderer.appendChild(this.envelopeContainer, this.releasePart);
 
-        this.renderer.appendChild(this.envelopeContainer, this.qHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.qAttackHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.qReleaseHandle);
 
     }
 
@@ -214,7 +204,8 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.envBeginHandle = this.envService.getEnvHandle();
         this.envPointHandle = this.envService.getEnvHandle();
         this.envEndHandle = this.envService.getEnvHandle();
-        this.qHandle = this.envService.qHandle();
+        this.qAttackHandle = this.envService.qHandle();
+        this.qReleaseHandle = this.envService.qHandle();
 
         this.attackPart = this.envService.getEnvPart(this.partClicked, EnvelopePart.attack);
         this.releasePart = this.envService.getEnvPart(this.partClicked, EnvelopePart.release);
@@ -228,12 +219,25 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     }
 
     partClicked = (type) => {
-        if (this.activeReleaseCurve === 2) {
-            this.activeReleaseCurve = 0;
-        } else {
-            this.activeReleaseCurve = this.activeReleaseCurve + 1;
+
+        if (type === EnvelopePart.attack) {
+            if (this.activeAttackCurve === 2) {
+                this.activeAttackCurve = 0;
+            } else {
+                this.activeAttackCurve = this.activeAttackCurve + 1;
+            }
+        }
+
+        if (type === EnvelopePart.release) {
+            if (this.activeReleaseCurve === 2) {
+                this.activeReleaseCurve = 0;
+            } else {
+                this.activeReleaseCurve = this.activeReleaseCurve + 1;
+            }
         }
         this.manipulateEnvelope();
     }
 
 }
+
+

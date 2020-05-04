@@ -34,7 +34,7 @@ export class EnvelopeService {
 
   public qHandle () {
     const qhandle = this.renderer.createElement('circle', 'svg');
-    this.renderer.setAttribute(qhandle, 'r', '6');
+    this.renderer.setAttribute(qhandle, 'r', '4');
     this.renderer.setAttribute(qhandle, 'stroke-width', '2');
     this.renderer.setAttribute(qhandle, 'fill', 'white');
     this.renderer.setAttribute(qhandle, 'stroke', 'white');
@@ -82,3 +82,101 @@ export class EnvelopeService {
   }
 
 }
+
+type QArray = [number, number];
+
+abstract class Curve {
+
+    protected floor: number;
+    protected ciel: number;
+    protected _output: QArray;
+    protected releaseType: CurveType;
+    protected attackType: CurveType;
+    protected xMargin: number;
+    protected data: any;
+
+    get output(): QArray {
+        // round all numbers of data
+        return this._output.map((d) => Math.round(d)) as QArray;
+    }
+
+    set output(d) { this._output = d; }
+
+    calculate: (d: any) => any;
+
+    constructor(input) {
+        this.floor          = input.floor;
+        this.ciel           = input.ciel;
+        this.attackType     = input.attackType;
+        this.releaseType    = input.releaseType;
+        this.xMargin        = input.xMargin;
+        this.data           = input.data;
+    }
+
+    public asString = (): string => {
+        return `Q${this.output[0]},${this.output[1]}`;
+    }
+
+    public asArray = (): QArray => {
+        return this.output;
+    }
+}
+
+export class ReleaseCurve extends Curve {
+
+    constructor(data) {
+        super(data);
+        this.calculate();
+    }
+
+    calculate = () => {
+        const d = this.data;
+
+        switch (this.releaseType) {
+            case CurveType.linear: {
+                this.output = [
+                    (this.xMargin + (d.b.x + d.p.x)) + ((d.p.x - d.b.x) / 2),
+                    this.floor
+                ];
+                break;
+            }
+            case CurveType.exponential: {
+                this.output = [d.p.x, this.floor];
+                break;
+            }
+            case CurveType.cosine: {
+                this.output = [d.e.x, d.p.y];
+            }
+        }
+    }
+}
+
+export class AttackCurve extends Curve {
+
+    constructor(data) {
+        super(data);
+        this.calculate();
+    }
+
+    calculate = () => {
+        const d = this.data;
+
+
+        switch (this.attackType) {
+            case CurveType.linear: {
+                this.output = [
+                    this.xMargin + (d.p.x - d.b.x), this.ciel + (d.e.y - d.p.y)
+                ];
+                break;
+            }
+            case CurveType.exponential: {
+                this.output = [d.p.x, d.p.y];
+                break;
+            }
+            case CurveType.cosine: {
+                this.output = [d.e.x, this.ciel];
+            }
+        }
+    }
+}
+
