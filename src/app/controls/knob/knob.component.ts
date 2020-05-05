@@ -131,22 +131,22 @@ export class KnobComponent implements AfterViewInit, AfterViewInit {
         const angleInRadians = (angleInDegrees) * Math.PI / 180;
 
         return {
-          x: centerX + (radius * Math.cos(angleInRadians)),
-          y: centerY + (radius * Math.sin(angleInRadians))
+            x: centerX + (radius * Math.cos(angleInRadians)),
+            y: centerY + (radius * Math.sin(angleInRadians))
         };
-      }
+    }
 
       describeArc(x, y, radius, startAngle, endAngle) {
 
-          const start = this.polarToCartesian(x, y, radius, endAngle);
-          const end = this.polarToCartesian(x, y, radius, startAngle);
+        const start = this.polarToCartesian(x, y, radius, endAngle);
+        const end = this.polarToCartesian(x, y, radius, startAngle);
 
-          const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+        const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
 
-          return [
-              'M', start.x, start.y,
-              'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y
-          ].join(' ');
+        return [
+            'M', start.x, start.y,
+            'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y
+        ].join(' ');
 
       }
 

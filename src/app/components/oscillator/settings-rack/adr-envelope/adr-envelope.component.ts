@@ -40,6 +40,7 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     private attackPart;
     private releasePart;
 
+    private limitContainer;
 
 
     private env = {
@@ -124,7 +125,7 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.setAttribute(this.attackPart, 'x', b.x);
         this.renderer.setAttribute(this.attackPart, 'y', p.y);
         this.renderer.setAttribute(this.attackPart, 'width', (p.x - b.x).toString());
-        this.renderer.setAttribute(this.attackPart, 'height', ( b.y - p.y).toString());
+        this.renderer.setAttribute(this.attackPart, 'height', (b.y - p.y).toString());
 
         this.renderer.setAttribute(this.releasePart, 'x', p.x);
         this.renderer.setAttribute(this.releasePart, 'y', p.y);
@@ -194,13 +195,8 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.manipulateEnvelope();
     }
 
-    toggleBoundingBox() {
-        this.renderer.setAttribute(this.attackPart, 'visibility', 'visible');
-        this.renderer.setAttribute(this.releasePart, 'visibility', 'visible');
-    }
-
     ngOnInit(): void {
-        this.envBody = this.envService.getEnvBody(this.toggleBoundingBox);
+        this.envBody = this.envService.getEnvBody();
         this.envBeginHandle = this.envService.getEnvHandle();
         this.envPointHandle = this.envService.getEnvHandle();
         this.envEndHandle = this.envService.getEnvHandle();
@@ -209,7 +205,11 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
         this.attackPart = this.envService.getEnvPart(this.partClicked, EnvelopePart.attack);
         this.releasePart = this.envService.getEnvPart(this.partClicked, EnvelopePart.release);
-
+        // this.limitContainer = this.envService.limitContainer();
+        // this.renderer.setAttribute(this.limitContainer, 'height', this.containerHeight);
+        // this.renderer.setAttribute(this.limitContainer, 'width', this.containerWidth);
+        // this.renderer.setAttribute(this.limitContainer, 'height', this.containerHeight);
+        // this.renderer.setAttribute(this.limitContainer, 'width', this.containerWidth);
 
     document.onkeydown = () => {
         this.env.p.x = (this.env.p.x + 2);

@@ -1,25 +1,21 @@
 <div class='h-100'>
-    <div class='knobContainer centerChild' style='height: 70%'>
+    <div class='knobContainer centerChild'>
 
 
 
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 163.31 163.31">
     
             <g id="back">
-                <circle cx="81.65" cy="81.65" r="81.65" style="fill:#f5a894"/>
-                <circle cx="81.65" cy="87.3" r="52.47" style="fill:#d3766d"/>
+                <circle cx="81.65" cy="81.65" r="81.65" style="fill:#f5a894" stroke='#e6795b' stroke-width='1'/>
             </g>
     
             <g id="front" #top class='centerKnob grabbable' (mousedown)='initiateDrag($event);'>
-                <circle cx="81.65" cy="81.65" r="52.47" style="fill:#f1896d"/>
+                <circle cx="81.65" cy="81.65" r="52.47" style="fill:#f1896d" stroke='#ffdbd1' stroke-width='6' stroke-opacity='0.'/>
                 <rect x="77.08" y="102.2" width="9.15" stroke="white" stroke-width="6" height="25.06" rx="4.5" style="fill:#fff"/>
             </g>
             <!-- <path class='centerKnob' #arc stroke-linecap="round" fill="none" stroke="white" stroke-width="4" /> -->
     
         </svg>
-    </div>
-    <div style='height: 30%; background-color : #f18a6d; color : white; border-radius : 5px;' class='centerChild'>
-        {{output || ' - '}}
     </div>
 </div>
 

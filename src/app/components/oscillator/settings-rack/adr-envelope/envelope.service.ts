@@ -42,7 +42,18 @@ export class EnvelopeService {
     return qhandle;
   }
 
-  public getEnvBody (callback) {
+  public limitContainer() {
+    const part = this.renderer.createElement('rect', 'svg');
+    this.renderer.setAttribute(part, 'fill', 'white');
+    this.renderer.setAttribute(part, 'fill-opacity', 0.1);
+    this.renderer.setAttribute(part, 'stroke', 'white');
+    this.renderer.setAttribute(part, 'stroke-width', 1);
+    this.renderer.setAttribute(part, 'stroke-dasharray', 4);
+    this.renderer.setAttribute(part, 'cursor', 'pointer');
+    this.renderer.setAttribute(part, 'opacity', 0);
+  }
+
+  public getEnvBody () {
     const body = this.renderer.createElement('path', 'svg');
     this.renderer.setAttribute(body, 'fill-opacity', '0.3');
     this.renderer.setAttribute(body, 'stroke', 'white');
@@ -135,13 +146,13 @@ export class ReleaseCurve extends Curve {
         switch (this.releaseType) {
             case CurveType.linear: {
                 this.output = [
-                    (this.xMargin + (d.b.x + d.p.x)) + ((d.p.x - d.b.x) / 2),
-                    this.floor
+                    d.p.x + (d.e.x - d.p.x) / 2,
+                    d.p.y + ((d.e.y - d.p.y) / 2)
                 ];
                 break;
             }
             case CurveType.exponential: {
-                this.output = [d.p.x, this.floor];
+                this.output = [d.p.x, d.b.y];
                 break;
             }
             case CurveType.cosine: {
@@ -161,20 +172,20 @@ export class AttackCurve extends Curve {
     calculate = () => {
         const d = this.data;
 
-
         switch (this.attackType) {
             case CurveType.linear: {
                 this.output = [
-                    this.xMargin + (d.p.x - d.b.x), this.ciel + (d.e.y - d.p.y)
+                    d.b.x +  ((d.p.x - d.b.x) / 2),
+                    d.p.y + ((d.e.y - d.p.y) / 2)
                 ];
                 break;
             }
             case CurveType.exponential: {
-                this.output = [d.p.x, d.p.y];
+                this.output = [d.p.x, d.b.y];
                 break;
             }
             case CurveType.cosine: {
-                this.output = [d.e.x, this.ciel];
+                this.output = [d.b.x, d.p.y];
             }
         }
     }
