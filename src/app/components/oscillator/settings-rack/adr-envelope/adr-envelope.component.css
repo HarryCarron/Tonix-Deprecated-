@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap');
+
 
 .nodeStyle {
     stroke:white;
@@ -9,6 +10,31 @@
 }
 
 * {
-    font-family: 'Space Mono', monospace;
+
+    font-family: 'Roboto', sans-serif;
+}
+
+.partLabel {
+
+    font-weight: bold;
+}
+
+.rightSelector {
+    text-align: right;
+}
+
+.rightMenu {
+    text-align: right;
+}
+
+.partSelector {
+    width: 70%;
+    opacity: 0.8;
+    font-size: 1.2em;
+    letter-spacing: 1.2px;
+}
+
+.partSelectable {
+    font-weight: 300;
 }
 

@@ -37,6 +37,9 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     activeReleaseCurve = CurveType.linear;
     activeAttackCurve = CurveType.linear;
 
+
+    curvesSelectorItems = ['Lin', 'Exp', 'Cos'];
+
     private containerLimit = {
         h: null,
         w: null
@@ -50,7 +53,7 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
     private readonly Ymargin = 20;
     private Xmargin = null;
-    private readonly envWidth = 220;
+    private readonly envWidth = 200;
 
     private envBody;
     private envBeginHandle;
@@ -100,19 +103,6 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     get envelopeContainer() {return this._envelopeContainer; }
 
     private getReleaseCurve(asString: boolean) {
-
-    }
-
-    private getAttackCurve() {
-
-        const p = this.env.p;
-
-        return [
-            'L',
-            p.x,
-            ',',
-            p.y,
-        ].join('');
 
     }
 
@@ -180,15 +170,15 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
     }
 
-    private giveTestCords() {
-    this.env.b.x = this.Xmargin;
-    this.env.b.y = this.floor;
+    private giveTestCords() { // todo: remove me when taking values from ng-model
+        this.env.b.x = this.Xmargin;
+        this.env.b.y = this.floor;
 
-    this.env.p.x = 70;
-    this.env.p.y = 40;
+        this.env.p.x = 70;
+        this.env.p.y = 40;
 
-    this.env.e.x = this.containerWidth - this.Xmargin;
-    this.env.e.y = this.floor;
+        this.env.e.x = this.containerWidth - this.Xmargin;
+        this.env.e.y = this.floor;
     }
 
     private initContainer() {
@@ -224,18 +214,16 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         const handle = handleType[handletype];
         switch (handletype) {
             case(handleType[0]): {
-                this.env.b.x = x;
-                this.env.b.y = y;
+                // this.env.b.x = x;
                 break;
             }
             case(handleType[1]): {
-                this.env.p.x = x;
+                this.env.p.x = x <= this.env.b.x ? this.env.b.x : x >= this.env.e.x ? this.env.e.x : x;
                 this.env.p.y = y;
                 break;
             }
             case(handleType[2]): {
                 this.env.e.x = x;
-                this.env.e.y = y;
             }
         }
     }
@@ -306,10 +294,12 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
             browserMouseMove.subscribe( ({x, y}) => {
                 if (this.handleCurrentlyClicked) {
+                    const newX = x - this.svgContCoords.left;
+                    const newY = y - this.svgContCoords.top;
                     this.newHandlePoint(
                         this.activeHandle,
-                        x - this.svgContCoords.left,
-                        y - this.svgContCoords.top
+                        (newX < 0) ? 0 : newX,
+                        (newY < 0) ? 0 : newY,
                     );
                     this.manipulateEnvelope();
                 }

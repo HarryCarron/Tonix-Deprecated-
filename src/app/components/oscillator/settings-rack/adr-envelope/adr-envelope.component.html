@@ -1,6 +1,22 @@
 <div class='h-100 d-flex'>
-    <div class='h-100 w-100'#svgContainer>
+    <div style='width:15%' class='h-100 centerChild'>
+        <!-- <div class='partSelector'>
+            <span class='partLabel'>ATT</span>
+            <div *ngFor='let item of curvesSelectorItems' class='partSelectable'>
+                {{item}}
+            </div>
+        </div> -->
+    </div>
+    <div class='h-100 d-flex' style='width:70%;'#svgContainer>
         <svg #envelopeContainer>
         </svg> 
+    </div>
+    <div style='width:15%;' class='h-100 centerChild'>
+        <!-- <div class='partSelector rightMenu'>
+            <span class='partLabel'>DEC</span>
+            <div *ngFor='let item of curvesSelectorItems' class='partSelectable'>
+                {{item}}
+            </div>
+        </div> -->
     </div>
 </div>
