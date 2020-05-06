@@ -1,5 +1,23 @@
-import { EnvelopeService, EnvelopePart, CurveType, ReleaseCurve, AttackCurve } from './envelope.service';
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { WindowEventsService } from './../../../../services/events/window-events.service';
+
+import {
+    EnvelopeService,
+    EnvelopePart,
+    CurveType,
+    ReleaseCurve,
+    AttackCurve,
+    handleType
+} from './envelope.service';
+
+import {
+    Component,
+    OnInit,
+    AfterViewInit,
+    ViewChild,
+    ElementRef,
+    Renderer2,
+    HostListener
+} from '@angular/core';
 
 @Component({
   selector: 'app-adr-envelope',
@@ -8,7 +26,11 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Renderer2 } fr
 })
 export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
-  constructor(private renderer: Renderer2, private envService: EnvelopeService) {
+  constructor(
+        private renderer: Renderer2,
+        private envService: EnvelopeService,
+        private windowEvents: WindowEventsService
+    ) {
       this.envService.renderer = renderer;
   }
 
@@ -42,6 +64,9 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
     private limitContainer;
 
+    private handleCurrentlyClicked = false;
+
+    private activeHandle;
 
     private env = {
         b: {
@@ -64,6 +89,10 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     this._svgContainer = e.nativeElement;
     }
     get svgContainer() { return this._svgContainer; }
+
+    get svgContCoords() {
+        return (this.svgContainer as any).getBoundingClientRect();
+    }
 
     private _envelopeContainer: ElementRef;
     @ViewChild('envelopeContainer')
@@ -175,9 +204,7 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.setAttribute(this.envelopeContainer, 'width', this.containerWidth);
         this.renderer.appendChild(this.envelopeContainer, this.envBody);
 
-        this.renderer.appendChild(this.envelopeContainer, this.envBeginHandle);
-        this.renderer.appendChild(this.envelopeContainer, this.envPointHandle);
-        this.renderer.appendChild(this.envelopeContainer, this.envEndHandle);
+
 
         this.renderer.appendChild(this.envelopeContainer, this.envBody);
 
@@ -187,6 +214,30 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.appendChild(this.envelopeContainer, this.qAttackHandle);
         this.renderer.appendChild(this.envelopeContainer, this.qReleaseHandle);
 
+        this.renderer.appendChild(this.envelopeContainer, this.envBeginHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.envPointHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.envEndHandle);
+
+    }
+
+    private newHandlePoint(handletype, x: number, y: number): void {
+        const handle = handleType[handletype];
+        switch (handletype) {
+            case(handleType[0]): {
+                this.env.b.x = x;
+                this.env.b.y = y;
+                break;
+            }
+            case(handleType[1]): {
+                this.env.p.x = x;
+                this.env.p.y = y;
+                break;
+            }
+            case(handleType[2]): {
+                this.env.e.x = x;
+                this.env.e.y = y;
+            }
+        }
     }
 
     ngAfterViewInit(): void {
@@ -197,9 +248,9 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.envBody = this.envService.getEnvBody();
-        this.envBeginHandle = this.envService.getEnvHandle();
-        this.envPointHandle = this.envService.getEnvHandle();
-        this.envEndHandle = this.envService.getEnvHandle();
+        this.envBeginHandle = this.envService.getEnvHandle(this.handleClicked, handleType.begin);
+        this.envPointHandle = this.envService.getEnvHandle(this.handleClicked, handleType.point);
+        this.envEndHandle = this.envService.getEnvHandle(this.handleClicked, handleType.end);
         this.qAttackHandle = this.envService.qHandle();
         this.qReleaseHandle = this.envService.qHandle();
 
@@ -237,6 +288,35 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         }
         this.manipulateEnvelope();
     }
+
+        // hostlistener events
+
+        public handleClicked = (handle) => {
+            this.windowEvents.enableEvents();
+            this.handleCurrentlyClicked = true;
+            this.activeHandle = handleType[parseInt(handle.id, 10)];
+
+            const browserMouseUp = this.windowEvents.getMouseUpMessages();
+            const browserMouseMove = this.windowEvents.getMouseMoveMessages();
+
+            browserMouseUp.subscribe( () => {
+                this.handleCurrentlyClicked = false;
+                this.windowEvents.destroyEvents();
+            } );
+
+            browserMouseMove.subscribe( ({x, y}) => {
+                if (this.handleCurrentlyClicked) {
+                    this.newHandlePoint(
+                        this.activeHandle,
+                        x - this.svgContCoords.left,
+                        y - this.svgContCoords.top
+                    );
+                    this.manipulateEnvelope();
+                }
+            });
+        }
+
+        // hostlistener events end
 
 }
 

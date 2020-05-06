@@ -5,6 +5,12 @@ export enum EnvelopePart {
     release
 }
 
+export enum handleType {
+    begin,
+    point,
+    end
+}
+
 export enum CurveType {
     linear,
     exponential,
@@ -23,12 +29,15 @@ export class EnvelopeService {
   private readonly envStyle = 'stroke:white; stroke-linecap:round; stroke-width:3px; stroke-linejoin:round; fill: white;';
   private readonly partStyle = 'stroke:white; stroke-linecap:round; stroke-width:3px; stroke-linejoin:round; fill: white;';
 
-  public getEnvHandle () {
+  public getEnvHandle (callback, handletype: handleType) {
     const handle = this.renderer.createElement('circle', 'svg');
     this.renderer.setAttribute(handle, 'r', '4');
     this.renderer.setAttribute(handle, 'stroke', '4');
     this.renderer.setAttribute(handle, 'style', this.envStyle);
     this.renderer.setAttribute(handle, 'fill-opacity', '0.2');
+    this.renderer.setAttribute(handle, 'cursor', 'move');
+    this.renderer.setAttribute(handle, 'id', handletype);
+    this.renderer.listen(handle, 'mousedown', () => {  callback(handle); });
     return handle;
   }
 
