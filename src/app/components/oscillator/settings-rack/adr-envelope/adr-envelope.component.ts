@@ -31,8 +31,8 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         private envService: EnvelopeService,
         private windowEvents: WindowEventsService
     ) {
-      this.envService.renderer = renderer;
-  }
+        this.envService.renderer = renderer;
+    }
 
     activeReleaseCurve = CurveType.linear;
     activeAttackCurve = CurveType.linear;
@@ -51,9 +51,9 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     private containerWidth = null;
     private containerHeight = null;
 
-    private readonly Ymargin = 20;
+    // private readonly Ymargin = 20;
     private Xmargin = null;
-    private readonly envWidth = 200;
+    private readonly envWidth = 240;
 
     private envBody;
     private envBeginHandle;
@@ -102,10 +102,6 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     set envelopeContainer(e) {this._envelopeContainer = e.nativeElement; }
     get envelopeContainer() {return this._envelopeContainer; }
 
-    private getReleaseCurve(asString: boolean) {
-
-    }
-
     private manipulateEnvelope() {
 
     const b = this.env.b;
@@ -122,23 +118,23 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     };
 
     this.renderer.setAttribute(this.envBody, 'd',
-        [
-            'M',
-            b.x,
-            ',',
-            b.y,
-            ' ',
-            new AttackCurve(d).asString(),
-            ' ',
-            p.x,
-            ',',
-            p.y,
-            new ReleaseCurve(d).asString(),
-            ' ',
-            e.x,
-            ',',
-            e.y
-        ].join('')
+            [
+                'M',
+                b.x,
+                ',',
+                b.y,
+                ' ',
+                new AttackCurve(d).asString(),
+                ' ',
+                p.x,
+                ',',
+                p.y,
+                new ReleaseCurve(d).asString(),
+                ' ',
+                e.x,
+                ',',
+                e.y
+            ].join('')
         );
 
         this.renderer.setAttribute(this.attackPart, 'x', b.x);
@@ -244,17 +240,6 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
         this.attackPart = this.envService.getEnvPart(this.partClicked, EnvelopePart.attack);
         this.releasePart = this.envService.getEnvPart(this.partClicked, EnvelopePart.release);
-        // this.limitContainer = this.envService.limitContainer();
-        // this.renderer.setAttribute(this.limitContainer, 'height', this.containerHeight);
-        // this.renderer.setAttribute(this.limitContainer, 'width', this.containerWidth);
-        // this.renderer.setAttribute(this.limitContainer, 'height', this.containerHeight);
-        // this.renderer.setAttribute(this.limitContainer, 'width', this.containerWidth);
-
-    document.onkeydown = () => {
-        this.env.p.x = (this.env.p.x + 2);
-        this.manipulateEnvelope();
-    };
-
     }
 
     partClicked = (type) => {
@@ -280,19 +265,15 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         // hostlistener events
 
         public handleClicked = (handle) => {
-            this.windowEvents.enableEvents();
+
             this.handleCurrentlyClicked = true;
             this.activeHandle = handleType[parseInt(handle.id, 10)];
 
-            const browserMouseUp = this.windowEvents.getMouseUpMessages();
-            const browserMouseMove = this.windowEvents.getMouseMoveMessages();
-
-            browserMouseUp.subscribe( () => {
+            const mouseUp = (() => {
                 this.handleCurrentlyClicked = false;
-                this.windowEvents.destroyEvents();
             } );
 
-            browserMouseMove.subscribe( ({x, y}) => {
+            const mouseMove = (({x, y}) => {
                 if (this.handleCurrentlyClicked) {
                     const newX = x - this.svgContCoords.left;
                     const newY = y - this.svgContCoords.top;
@@ -304,10 +285,11 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
                     this.manipulateEnvelope();
                 }
             });
+
+            this.windowEvents.enableDragAndDrop(mouseUp, mouseMove);
         }
 
         // hostlistener events end
-
 }
 
 

@@ -1,0 +1,15 @@
+.pianoRoll {
+    margin: 10px 10px 10px 0;
+    background-color: #efb19f;
+    width: 500px;
+    height: 300px;
+    border-radius: 5px;
+}
+
+.piano {
+    width: 10%;
+}
+
+.roll {
+    flex-grow: 1;
+}

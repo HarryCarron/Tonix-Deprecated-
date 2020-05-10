@@ -3,11 +3,14 @@
     <div>
         <div class='topbar'></div>
         <div class='synth'>
-            <div class='content-wrapper h-100'>
+            <div class='content-wrapper h-100 d-flex'>
                 <div class='osc-rack h-100'>
                     <ng-container *ngFor='let osc of oscillators; let i = index'>
                         <app-oscillator [data]="osc" ></app-oscillator>
                     </ng-container>
+                </div>
+                <div>
+                    <app-piano-roll></app-piano-roll>
 
                 </div>
             </div>

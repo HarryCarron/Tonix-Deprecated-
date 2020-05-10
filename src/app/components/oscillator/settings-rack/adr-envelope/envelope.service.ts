@@ -32,7 +32,7 @@ export class EnvelopeService {
   public getEnvHandle (callback, handletype: handleType) {
     const handle = this.renderer.createElement('circle', 'svg');
     this.renderer.setAttribute(handle, 'r', '4');
-    this.renderer.setAttribute(handle, 'stroke', '4');
+    this.renderer.setAttribute(handle, 'stroke', '2');
     this.renderer.setAttribute(handle, 'style', this.envStyle);
     this.renderer.setAttribute(handle, 'fill-opacity', '0.2');
     this.renderer.setAttribute(handle, 'cursor', 'move');
@@ -44,7 +44,7 @@ export class EnvelopeService {
   public qHandle () {
     const qhandle = this.renderer.createElement('circle', 'svg');
     this.renderer.setAttribute(qhandle, 'r', '4');
-    this.renderer.setAttribute(qhandle, 'stroke-width', '2');
+    this.renderer.setAttribute(qhandle, 'stroke-width', '1');
     this.renderer.setAttribute(qhandle, 'fill', 'white');
     this.renderer.setAttribute(qhandle, 'stroke', 'white');
     this.renderer.setAttribute(qhandle, 'fill-opacity', '0.2');
@@ -66,7 +66,7 @@ export class EnvelopeService {
     const body = this.renderer.createElement('path', 'svg');
     this.renderer.setAttribute(body, 'fill-opacity', '0.3');
     this.renderer.setAttribute(body, 'stroke', 'white');
-    this.renderer.setAttribute(body, 'stroke-width', '2');
+    this.renderer.setAttribute(body, 'stroke-width', '1.5');
     this.renderer.setAttribute(body, 'stroke-linecap', 'round');
     this.renderer.setAttribute(body, 'fill', 'white');
     this.renderer.setAttribute(body, 'stroke-linejoin', 'round');
@@ -199,4 +199,3 @@ export class AttackCurve extends Curve {
         }
     }
 }
-

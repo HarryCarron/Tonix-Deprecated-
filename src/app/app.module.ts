@@ -14,6 +14,7 @@ import { from, fromEventPattern } from 'rxjs';
 import { PartialsSelectorComponent } from './components/oscillator/partials/partials-selector/partials-selector.component';
 import { EffectsRackComponent } from './effects-rack/effects-rack.component';
 import { AdrEnvelopeComponent } from './components/oscillator/settings-rack/adr-envelope/adr-envelope.component';
+import { PianoRollComponent } from './components/piano-roll/piano-roll.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { AdrEnvelopeComponent } from './components/oscillator/settings-rack/adr-
     PartialsComponent,
     PartialsSelectorComponent,
     EffectsRackComponent,
-    AdrEnvelopeComponent
+    AdrEnvelopeComponent,
+    PianoRollComponent
   ],
   imports: [
     BrowserModule,

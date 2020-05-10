@@ -22,7 +22,16 @@ export class MasterService {
 
         // pass true for isOn prop so only first oscillator is active
 
-        return this.utils.a(2).map((i) => new Oscillator(i + 1, i, waveTypeIn, i === 0, null, null, [0.1, 0.5, 0.9]));
+        return this.utils.a(2).map((i, v, o) =>
+            new Oscillator(
+            i + 1, i,
+            waveTypeIn,
+            i === 0,
+            null,
+            null,
+            [0.1, 0.5, 0.9],
+            i + 1 === o.length)
+            );
 
     }
 
@@ -39,6 +48,8 @@ export class Oscillator {
     public pitch: number;
     public gain: number;
     public partials: number[];
+
+    public isLastOsc: boolean;
 
     private utils = new UtilitiesService();
     public availableWaveForms: string[] = this.utils.definitionArrayFromEnum(waveTypeEnum);
@@ -69,7 +80,8 @@ export class Oscillator {
         isOn: boolean,
         detune: number,
         pitch: number,
-        partialCount: number[]) {
+        partialCount: number[],
+        isLastOsc: boolean) {
 
         this.number = number;
         this.waveType = waveTypeIn || defaultWaveForm;
@@ -79,6 +91,7 @@ export class Oscillator {
         this.pitch = pitch || BASE_OSC_PITCH;
         this.gain = pitch || BASE_OSC_GAIN;
         this.partials = partialCount;
+        this.isLastOsc = isLastOsc;
 
     }
 

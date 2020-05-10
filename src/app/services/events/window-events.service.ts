@@ -18,39 +18,20 @@ export class WindowEventsService {
     private mouseMoveSubject = new Subject();
 
     @HostListener('window:mouseup', ['$event'])
-    handleMouseDown() {
-        this.mouseUpSubject.next(true);
-    }
 
-    public enableEvents() {
-        this.mouseUp = window.addEventListener('mouseup', (event) => {
-            this.mouseUpSubject.next(true);
-          });
-          this.mouseMove = window.addEventListener('mousemove', (event) => {
-            this.mouseMoveSubject.next({x: event.clientX, y: event.clientY});
-        });
+    public enableDragAndDrop(mouseupCallback, mousemoveCallback) {
+        this.mouseUp = window.addEventListener('mouseup',
+            (event) => {
+            mouseupCallback(); this.destroyEvents(); });
+
+        this.mouseMove = window.addEventListener('mousemove',
+            ({clientX, clientY}) => { mousemoveCallback({x: clientX, y: clientY}); });
     }
 
     public destroyEvents() {
         this.mouseUp = null;
         this.mouseMove = null;
     }
-
-    public getMouseUpMessages(): Observable<any> {
-        return this.mouseUpSubject.asObservable();
-    }
-
-    public getMouseMoveMessages(): Observable<any> {
-        return this.mouseMoveSubject.asObservable();
-
-    }
-
-
-
-
-
-
-
 
   constructor() { }
 }

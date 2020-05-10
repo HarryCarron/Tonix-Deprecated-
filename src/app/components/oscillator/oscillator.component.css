@@ -25,9 +25,9 @@
     width: 40px;
 }
 
-.oscLabelHeading {
-    background-color: #f49b7c;
-}
+/* .oscLabelHeading {
+
+} */
 
 .oscNumber {
     font-weight: 800;
@@ -36,18 +36,18 @@
 }
 
 .osc-container{
-    background-color:#ffbba8;
+    background-color:#fdb49f;
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
-    margin: 10px 10px 0 10px;
     overflow:hidden;
 }
 
-.osc-container-last{
-    background-color:#ffbba8;
-    border-radius: 8px;
-    margin: 0 10px 10 10px;
-    overflow:hidden;
+.osc-container-margin{
+    margin: 10px;
+}
+
+.osc-container-margin-last{
+    margin: 0 10px 10px 10px;
 }
 
 .osc-rack{

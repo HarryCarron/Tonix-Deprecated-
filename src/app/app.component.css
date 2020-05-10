@@ -1,6 +1,6 @@
 .topbar{
     height:35px;
-    background-color:#f6af91;
+    background-color:#f5a792;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
@@ -18,7 +18,6 @@
 }
 
 .synth{
-    height: 600px;
     background-color:#f7c9bd;
     overflow: hidden;
     font-family: Helvetica, Arial, sans-serif;
