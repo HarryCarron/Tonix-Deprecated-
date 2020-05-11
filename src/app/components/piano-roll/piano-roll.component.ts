@@ -9,11 +9,10 @@ import {
     PianoRollService,
     keysColor,
     NUMBER_OF_OCTAVES,
-    OCTAVE_DEFINITION
+    OCTAVE_DEFINITION,
+    PIANO_ROLL_KEY_PADDING
 } from './piano-roll.service';
 import { NumberValueAccessor } from '@angular/forms';
-
-
 
 @Component({
   selector: 'app-piano-roll',
@@ -29,27 +28,37 @@ export class PianoRollComponent implements OnInit, AfterViewInit {
     private pianoContainerWidth: number;
     private pianoContainerHeight: number;
 
-    private _piano;
+    private rollContainerWidth: number;
+    private rollContainerHeight: number;
+
+    private _pianoRollContainer;
+    private _pianoRoll;
+
+    private rowHeight: number;
+
 
     private keyContainerX: number;
 
-    @ViewChild('piano', {static: true})
-    set piano(p) {this._piano = p.nativeElement; }
-    get piano() { return this._piano; }
+    @ViewChild('pianoRoll', {static: true})
+    set pianoRoll(p) {this._pianoRoll = p.nativeElement; }
+    get pianoRoll() { return this._pianoRoll; }
 
     private _pianoContainer;
-    @ViewChild('pianoContainer', {static: true})
-    set pianoContainer(p) { this._pianoContainer = p.nativeElement; }
-    get pianoContainer() { return this._pianoContainer; }
+    @ViewChild('pianoRollContainer', {static: true})
+    set pianoRollContainer(p) { this._pianoRollContainer = p.nativeElement; }
+    get pianoRollContainer() { return this._pianoRollContainer; }
 
-    private getAndSetPianoDimensions() {
-        this.pianoContainerHeight = this.pianoContainer.clientHeight;
-        this.pianoContainerWidth = this.pianoContainer.clientWidth;
-        this.renderer.setAttribute(this.piano, 'height', this.pianoContainerHeight.toString());
-        this.renderer.setAttribute(this.piano, 'width', this.pianoContainerWidth.toString());
+    private setContainerDimensions() {
+        this.pianoContainerHeight = this.pianoRollContainer.clientHeight;
+        this.pianoContainerWidth = this.pianoRollContainer.clientWidth;
+
+        this.rowHeight = this.pianoContainerHeight / this.rollKeys.length;
+
+        this.renderer.setAttribute(this.pianoRoll, 'height', this.pianoContainerHeight.toString());
+        this.renderer.setAttribute(this.pianoRoll, 'width', this.pianoContainerWidth.toString());
     }
 
-    get roll() {
+    get rollKeys() {
         const output = [];
         Array.from({length: NUMBER_OF_OCTAVES}).forEach( (_, i) => {
             OCTAVE_DEFINITION.forEach((k) => {
@@ -60,24 +69,25 @@ export class PianoRollComponent implements OnInit, AfterViewInit {
         return output;
     }
 
-    private getAndSetKeys() {
 
-        this.keyContainerX = this.pianoContainerHeight / this.roll.length;
-
-        this.roll.forEach( (t, i, o) => {
-            const k = this.pianoRollServ.getKey(t.color, this.keyContainerX, 40);
-            this.renderer.setAttribute(k, 'y', (this.keyContainerX * i).toString());
-            this.renderer.appendChild(this.piano, k);
+    private getAndSetRoll(): void {
+        this.rollKeys.forEach( (t, i, o) => {
+            const r = this.pianoRollServ.getRollRow(
+                t.color,
+                this.rowHeight,
+                this.pianoContainerWidth,
+                i,
+                o.length
+                );
+            this.renderer.appendChild(this.pianoRoll, r);
         } );
     }
 
-    ngOnInit(): void {
-
-    }
+    ngOnInit(): void { }
 
     ngAfterViewInit(): void {
-        this.getAndSetPianoDimensions();
-        this.getAndSetKeys();
+        this.setContainerDimensions();
+        this.getAndSetRoll();
     }
 
 }
