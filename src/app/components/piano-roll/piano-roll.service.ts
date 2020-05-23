@@ -88,7 +88,7 @@ export class PianoRollService {
     public getKey(type: keysColor, height: number, width: number, index: number) {
         const key = this.renderer.createElement('rect', 'svg');
         this.renderer.setAttribute(key, 'width', PIANO_ROLL_KEY_WIDTH - PIANO_ROLL_KEY_PADDING);
-        this.renderer.setAttribute(key, 'height', (height - PIANO_ROLL_KEY_PADDING * 2).toString());
+        this.renderer.setAttribute(key, 'height', (height - PIANO_ROLL_KEY_PADDING).toString());
         this.renderer.setAttribute(key, 'fill', type === keysColor.white ? '#f9ebeb' : '#f18a6d');
         this.renderer.setAttribute(key, 'ry', '2');
 
@@ -97,9 +97,15 @@ export class PianoRollService {
     }
 
     public getRollRow(type: keysColor, height: number, width: number, i: number, rowLength: number): void {
-        const rowContainer = this.renderer.createElement('g', 'svg');
-        this.renderer.setAttribute(rowContainer, 'transform', `translate(0, ${(height * i)})`);
-        this.renderer.appendChild(rowContainer, this.getKey(type, height, width, i));
+        const rc = this.renderer.createElement('svg', 'svg');
+        this.renderer.setAttribute(rc, 'height', height);
+        this.renderer.setAttribute(rc, 'width', width);
+        this.renderer.setAttribute(rc, 'y', height * i);
+
+        const k = this.getKey(type, height, width, i);
+        this.renderer.appendChild(rc, k);
+        this.renderer.setAttribute(k, 'y', PIANO_ROLL_KEY_PADDING);
+        this.renderer.setAttribute(k, 'height', height - PIANO_ROLL_KEY_PADDING);
 
         const innerContainer = () => {
             const row = this.renderer.createElement('rect', 'svg');
@@ -114,12 +120,8 @@ export class PianoRollService {
             return row;
         };
 
-        // Array.from({length: 4 }).forEach((_, i) => {
-        //     const row = innerContainer();
-        //     this.renderer.setAttribute(row, 'x', ((width / 4) * i).toString());
-        //     this.renderer.appendChild(rowContainer, row);
-        // });
-        return rowContainer;
+        // Array.from({ length: 4 }).forEach();
+        return rc;
     }
 
 }

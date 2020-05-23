@@ -36,7 +36,6 @@ export class PianoRollComponent implements OnInit, AfterViewInit {
 
     private rowHeight: number;
 
-
     private keyContainerX: number;
 
     @ViewChild('pianoRoll', {static: true})

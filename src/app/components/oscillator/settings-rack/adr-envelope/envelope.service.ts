@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 
 export enum EnvelopePart {
+    begin,
     attack,
+    decay,
+    sustain,
     release
 }
 
 export enum handleType {
-    begin,
-    point,
-    end
+    attack,
+    decay,
+    sustain,
+    sustainEnd,
+    release
 }
 
 export enum CurveType {
@@ -29,10 +34,10 @@ export class EnvelopeService {
   private readonly envStyle = 'stroke:white; stroke-linecap:round; stroke-width:3px; stroke-linejoin:round; fill: white;';
   private readonly partStyle = 'stroke:white; stroke-linecap:round; stroke-width:3px; stroke-linejoin:round; fill: white;';
 
-  public getEnvHandle (callback, handletype: handleType) {
+  public getEnvHandle (callback, handletype: EnvelopePart) {
     const handle = this.renderer.createElement('circle', 'svg');
     this.renderer.setAttribute(handle, 'r', '4');
-    this.renderer.setAttribute(handle, 'stroke', '2');
+    this.renderer.setAttribute(handle, 'stroke', '1');
     this.renderer.setAttribute(handle, 'style', this.envStyle);
     this.renderer.setAttribute(handle, 'fill-opacity', '0.2');
     this.renderer.setAttribute(handle, 'cursor', 'move');
@@ -117,6 +122,7 @@ abstract class Curve {
 
     get output(): QArray {
         // round all numbers of data
+        if (!this._output) { return; }
         return this._output.map((d) => Math.round(d)) as QArray;
     }
 
@@ -155,17 +161,17 @@ export class ReleaseCurve extends Curve {
         switch (this.releaseType) {
             case CurveType.linear: {
                 this.output = [
-                    d.p.x + (d.e.x - d.p.x) / 2,
-                    d.p.y + ((d.e.y - d.p.y) / 2)
+                    d.a.x + (d.r.x - d.a.x) / 2,
+                    d.a.y + ((d.r.y - d.a.y) / 2)
                 ];
                 break;
             }
             case CurveType.exponential: {
-                this.output = [d.p.x, d.b.y];
+                this.output = [d.a.x, d.b.y];
                 break;
             }
             case CurveType.cosine: {
-                this.output = [d.e.x, d.p.y];
+                this.output = [d.r.x, d.a.y];
             }
         }
     }
@@ -184,18 +190,47 @@ export class AttackCurve extends Curve {
         switch (this.attackType) {
             case CurveType.linear: {
                 this.output = [
-                    d.b.x +  ((d.p.x - d.b.x) / 2),
-                    d.p.y + ((d.e.y - d.p.y) / 2)
+                    d.b.x + ((d.a.x - d.b.x) / 2),
+                    10
                 ];
                 break;
             }
             case CurveType.exponential: {
-                this.output = [d.p.x, d.b.y];
+                this.output = [d.a.x, d.b.y];
                 break;
             }
             case CurveType.cosine: {
-                this.output = [d.b.x, d.p.y];
+                this.output = [d.b.x, d.a.y];
             }
         }
     }
+}
+
+export class DecayCurve extends Curve {
+    constructor(data) {
+        super(data);
+        this.calculate();
+    }
+
+    calculate = () => {
+        const d = this.data;
+
+        switch (this.attackType) {
+            case CurveType.linear: {
+                this.output = [
+                    10,
+                    30
+                ];
+                break;
+            }
+            case CurveType.exponential: {
+                this.output = [10, 30];
+                break;
+            }
+            case CurveType.cosine: {
+                this.output = [10, 30];
+            }
+        }
+    }
+
 }

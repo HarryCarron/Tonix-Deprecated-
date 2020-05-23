@@ -10,21 +10,20 @@
         <div style='width:18%;' class='centerChild label'> 
             Detune
         </div>
-        <div style='width:23%;' class='centerChild label'>
+        <div style='width:20%;' class='centerChild label'>
             Phase
         </div>
-        <div style='width:23%;' class='centerChild label'>
+        <div style='width:20%;' class='centerChild label'>
             Gain
         </div>
     </div>
-    <div style='height:60px;' class='d-flex'>
+    <div style='height:50px;' class='d-flex'>
         <div style='width:8%;' class='centerChild'>
             <span class='oscNumber'>{{data.number}}</span>
         </div>
 
         <div style='width: 18%;' class='centerChild'>
             <select [(ngModel)]='data.waveType'
-                class='controlshadow-3'
                 [disabled] = '!data.isOn'
                 style= 'width:45px;'
                 (change)="data.selectWaveForm(data.waveType)">
@@ -36,7 +35,7 @@
         </div>
 
         <div style='width: 18%;' class='centerChild'>
-            <input class='numInput controlshadow-3'
+            <input class='numInput'
             [disabled] = '!data.isOn'
             [(ngModel)]="data.detune"
             style= 'width:45px;'
@@ -45,17 +44,17 @@
             step="0.01">
         </div>
 
-        <div style='width:23%;' class='centerChild'>
+        <div style='width:20%;' class='centerChild'>
             <app-knob>
             </app-knob>
         </div>
 
-        <div style='width:23%;' class='centerChild'>
+        <div style='width:20%;' class='centerChild'>
             <app-knob>
             </app-knob>
         </div>
         <div style='width: 10%;' class='centerChild'>
-            <div class='controlshadow-5' style='border-radius: 10px; width:20%; height: 80%; background-color: #f18a6d; '></div>
+            <div style='border-radius: 10px; width:20%; height: 80%; background-color: #f18a6d; '></div>
         </div>
     </div>
 

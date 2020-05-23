@@ -6,6 +6,7 @@ import {
     CurveType,
     ReleaseCurve,
     AttackCurve,
+    DecayCurve,
     handleType
 } from './envelope.service';
 
@@ -56,13 +57,21 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     private readonly envWidth = 240;
 
     private envBody;
-    private envBeginHandle;
-    private envPointHandle;
-    private envEndHandle;
+
+    private beginHandle;
+    private attackHandle;
+    private decayHandle;
+    private sustainHandle;
+    private sustainEndHandle;
+    private releaseHandle;
+
     private qAttackHandle;
     private qReleaseHandle;
+    private qDecayHandle;
 
     private attackPart;
+    private decayPart;
+    private sustainPart;
     private releasePart;
 
     private limitContainer;
@@ -76,11 +85,19 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
             x: null,
             y: null
         },
-        p: {
+        a: {
             x: null,
             y: null
         },
-        e: {
+        d: {
+            x: null,
+            y: null
+        },
+        s: {
+            x: null,
+            y: null
+        },
+        r: {
             x: null,
             y: null
         }
@@ -105,10 +122,12 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     private manipulateEnvelope() {
 
     const b = this.env.b;
-    const p = this.env.p;
-    const e = this.env.e;
+    const a = this.env.a;
+    const d = this.env.d;
+    const s = this.env.s;
+    const r = this.env.r;
 
-    const d = {
+    const data = {
         floor:              this.floor,
         ciel:               this.ciel,
         data:               this.env,
@@ -124,45 +143,77 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
                 ',',
                 b.y,
                 ' ',
-                new AttackCurve(d).asString(),
+                new AttackCurve(data).asString(),
                 ' ',
-                p.x,
+                a.x,
                 ',',
-                p.y,
-                new ReleaseCurve(d).asString(),
+                a.y,
                 ' ',
-                e.x,
+                new DecayCurve(data).asString(),
+                ' ',
+                d.x,
                 ',',
-                e.y
+                d.y,
+                ' ',
+                'Q10,20 ',
+                s.x,
+                ',',
+                s.y,
+                ' ',
+                new ReleaseCurve(data).asString(),
+                ' ',
+                r.x,
+                ',',
+                r.y
             ].join('')
         );
 
         this.renderer.setAttribute(this.attackPart, 'x', b.x);
-        this.renderer.setAttribute(this.attackPart, 'y', p.y);
-        this.renderer.setAttribute(this.attackPart, 'width', (p.x - b.x).toString());
-        this.renderer.setAttribute(this.attackPart, 'height', (b.y - p.y).toString());
+        this.renderer.setAttribute(this.attackPart, 'y', a.y);
+        this.renderer.setAttribute(this.attackPart, 'width', (a.x - b.x).toString());
+        this.renderer.setAttribute(this.attackPart, 'height', (b.y - a.y).toString());
 
-        this.renderer.setAttribute(this.releasePart, 'x', p.x);
-        this.renderer.setAttribute(this.releasePart, 'y', p.y);
-        this.renderer.setAttribute(this.releasePart, 'width', (e.x - p.x).toString());
-        this.renderer.setAttribute(this.releasePart, 'height', (e.y - p.y).toString());
+        this.renderer.setAttribute(this.decayPart, 'x', a.x);
+        this.renderer.setAttribute(this.decayPart, 'y', a.y);
+        this.renderer.setAttribute(this.decayPart, 'width', (d.x - a.x).toString());
+        this.renderer.setAttribute(this.decayPart, 'height', (b.y - a.y).toString());
 
-        this.renderer.setAttribute(this.envBeginHandle, 'cy', b.y);
 
-        this.renderer.setAttribute(this.envBeginHandle, 'cx', b.x);
-        this.renderer.setAttribute(this.envBeginHandle, 'cy', b.y);
+        this.renderer.setAttribute(this.sustainPart, 'x', d.x);
+        this.renderer.setAttribute(this.sustainPart, 'y', d.y);
+        this.renderer.setAttribute(this.sustainPart, 'width', (s.x - d.x).toString());
+        this.renderer.setAttribute(this.sustainPart, 'height', (b.y - s.y).toString());
 
-        this.renderer.setAttribute(this.envPointHandle, 'cx', p.x);
-        this.renderer.setAttribute(this.envPointHandle, 'cy', p.y);
+        this.renderer.setAttribute(this.releasePart, 'x', s.x);
+        this.renderer.setAttribute(this.releasePart, 'y', s.y);
+        this.renderer.setAttribute(this.releasePart, 'width', (r.x - s.x).toString());
+        this.renderer.setAttribute(this.releasePart, 'height', (b.y - s.y).toString());
 
-        this.renderer.setAttribute(this.envEndHandle, 'cx', e.x);
-        this.renderer.setAttribute(this.envEndHandle, 'cy', e.y);
+        this.renderer.setAttribute(this.beginHandle, 'cx', b.x);
+        this.renderer.setAttribute(this.beginHandle, 'cy', b.y);
 
-        this.renderer.setAttribute(this.qReleaseHandle, 'cx', new ReleaseCurve(d).asArray()[0].toString());
-        this.renderer.setAttribute(this.qReleaseHandle, 'cy', new ReleaseCurve(d).asArray()[1].toString());
+        this.renderer.setAttribute(this.attackHandle, 'cx', a.x);
+        this.renderer.setAttribute(this.attackHandle, 'cy', a.y);
 
-        this.renderer.setAttribute(this.qAttackHandle, 'cx', new AttackCurve(d).asArray()[0].toString());
-        this.renderer.setAttribute(this.qAttackHandle, 'cy', new AttackCurve(d).asArray()[1].toString());
+        this.renderer.setAttribute(this.decayHandle, 'cx', d.x);
+        this.renderer.setAttribute(this.decayHandle, 'cy', d.y);
+
+        this.renderer.setAttribute(this.sustainHandle, 'cx', s.x);
+        this.renderer.setAttribute(this.sustainHandle, 'cy', s.y);
+
+        this.renderer.setAttribute(this.releaseHandle, 'cx', r.x);
+        this.renderer.setAttribute(this.releaseHandle, 'cy', r.y);
+
+        this.renderer.setAttribute(this.qAttackHandle, 'cx', new AttackCurve(data).asArray()[0].toString());
+        this.renderer.setAttribute(this.qAttackHandle, 'cy', new AttackCurve(data).asArray()[1].toString());
+
+        this.renderer.setAttribute(this.qDecayHandle, 'cx', new DecayCurve(data).asArray()[0].toString());
+        this.renderer.setAttribute(this.qDecayHandle, 'cy', new DecayCurve(data).asArray()[1].toString());
+
+
+        // this.renderer.setAttribute(this.qReleaseHandle, 'cx', new ReleaseCurve(d).asArray()[0].toString());
+        // this.renderer.setAttribute(this.qReleaseHandle, 'cy', new ReleaseCurve(d).asArray()[1].toString());
+
 
     }
 
@@ -170,11 +221,16 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.env.b.x = this.Xmargin;
         this.env.b.y = this.floor;
 
-        this.env.p.x = 70;
-        this.env.p.y = 40;
+        this.env.a.x = 70;
+        this.env.a.y = 30;
 
-        this.env.e.x = this.containerWidth - this.Xmargin;
-        this.env.e.y = this.floor;
+        this.env.d.x = 100;
+        this.env.d.y = 50;
+        this.env.s.x = 200;
+        this.env.s.y = 50;
+
+        this.env.r.x = this.containerWidth - this.Xmargin;
+        this.env.r.y = this.floor;
     }
 
     private initContainer() {
@@ -195,31 +251,61 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.appendChild(this.envelopeContainer, this.envBody);
 
         this.renderer.appendChild(this.envelopeContainer, this.attackPart);
+        this.renderer.appendChild(this.envelopeContainer, this.decayPart);
+        this.renderer.appendChild(this.envelopeContainer, this.sustainPart);
         this.renderer.appendChild(this.envelopeContainer, this.releasePart);
 
         this.renderer.appendChild(this.envelopeContainer, this.qAttackHandle);
-        this.renderer.appendChild(this.envelopeContainer, this.qReleaseHandle);
+        // this.renderer.appendChild(this.envelopeContainer, this.qDecayHandle);
+        // this.renderer.appendChild(this.envelopeContainer, this.qReleaseHandle);
 
-        this.renderer.appendChild(this.envelopeContainer, this.envBeginHandle);
-        this.renderer.appendChild(this.envelopeContainer, this.envPointHandle);
-        this.renderer.appendChild(this.envelopeContainer, this.envEndHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.beginHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.attackHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.decayHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.sustainHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.releaseHandle);
 
     }
 
     private newHandlePoint(handletype, x: number, y: number): void {
         const handle = handleType[handletype];
         switch (handletype) {
-            case(handleType[0]): {
-                // this.env.b.x = x;
-                break;
-            }
             case(handleType[1]): {
-                this.env.p.x = x <= this.env.b.x ? this.env.b.x : x >= this.env.e.x ? this.env.e.x : x;
-                this.env.p.y = y;
+                this.env.a.x = (x <= this.env.b.x)
+                ? this.env.a.x
+                : (x >= this.env.d.x)
+                ? this.env.d.x
+                : x;
                 break;
             }
             case(handleType[2]): {
-                this.env.e.x = x;
+                this.env.d.x = (x <= this.env.a.x)
+                ? this.env.a.x
+                : (x < this.env.s.x)
+                ? x
+                : this.env.s.x;
+                ['d', 's'].forEach( k => {
+                    this.env[k].y = (y <= this.env.a.y)
+                    ? this.env.a.y
+                    : (y >= this.env.b.y)
+                    ? this.env.b.y
+                    : y;
+                });
+                break;
+            }
+            case(handleType[3]): {
+                this.env.s.x = (x <= this.env.d.x)
+                ? this.env.d.x
+                :  (x < this.env.r.x)
+                ? x
+                : this.env.r.x;
+                ['d', 's'].forEach( k => {
+                    this.env[k].y = (y <= this.env.a.y)
+                    ? this.env.a.y
+                    : (y >= this.env.b.y)
+                    ? this.env.b.y
+                    : y;
+                });
             }
         }
     }
@@ -232,13 +318,19 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.envBody = this.envService.getEnvBody();
-        this.envBeginHandle = this.envService.getEnvHandle(this.handleClicked, handleType.begin);
-        this.envPointHandle = this.envService.getEnvHandle(this.handleClicked, handleType.point);
-        this.envEndHandle = this.envService.getEnvHandle(this.handleClicked, handleType.end);
+        this.beginHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopePart.begin);
+        this.attackHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopePart.attack);
+        this.decayHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopePart.decay);
+        this.sustainHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopePart.sustain);
+        this.releaseHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopePart.release);
+
         this.qAttackHandle = this.envService.qHandle();
+        this.qDecayHandle = this.envService.qHandle();
         this.qReleaseHandle = this.envService.qHandle();
 
         this.attackPart = this.envService.getEnvPart(this.partClicked, EnvelopePart.attack);
+        this.decayPart = this.envService.getEnvPart(this.partClicked, EnvelopePart.attack);
+        this.sustainPart = this.envService.getEnvPart(this.partClicked, EnvelopePart.sustain);
         this.releasePart = this.envService.getEnvPart(this.partClicked, EnvelopePart.release);
     }
 
@@ -262,34 +354,31 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.manipulateEnvelope();
     }
 
-        // hostlistener events
+    public handleClicked = (handle) => {
 
-        public handleClicked = (handle) => {
+        this.handleCurrentlyClicked = true;
+        this.activeHandle = handleType[parseInt(handle.id, 10)];
 
-            this.handleCurrentlyClicked = true;
-            this.activeHandle = handleType[parseInt(handle.id, 10)];
+        const mouseUp = (() => {
+            this.handleCurrentlyClicked = false;
+        } );
 
-            const mouseUp = (() => {
-                this.handleCurrentlyClicked = false;
-            } );
+        const mouseMove = (({x, y}) => {
+            if (this.handleCurrentlyClicked) {
+                const newX = x - this.svgContCoords.left;
+                const newY = y - this.svgContCoords.top;
+                this.newHandlePoint(
+                    this.activeHandle,
+                    (newX < 0) ? 0 : newX,
+                    (newY < 0) ? 0 : newY,
+                );
+                this.manipulateEnvelope();
+            }
+        });
 
-            const mouseMove = (({x, y}) => {
-                if (this.handleCurrentlyClicked) {
-                    const newX = x - this.svgContCoords.left;
-                    const newY = y - this.svgContCoords.top;
-                    this.newHandlePoint(
-                        this.activeHandle,
-                        (newX < 0) ? 0 : newX,
-                        (newY < 0) ? 0 : newY,
-                    );
-                    this.manipulateEnvelope();
-                }
-            });
+        this.windowEvents.enableDragAndDrop(mouseUp, mouseMove);
+    }
 
-            this.windowEvents.enableDragAndDrop(mouseUp, mouseMove);
-        }
-
-        // hostlistener events end
 }
 
 

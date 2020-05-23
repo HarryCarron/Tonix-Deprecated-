@@ -1,5 +1,5 @@
 .topbar{
-    height:35px;
+    height:25px;
     background-color:#f5a792;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -54,7 +54,7 @@
 .osc-rack{
     display: flex;
     flex-direction: column;
-    width: 350px;
+    width: 330px;
     font-size:0.5em;
     overflow-y: scroll;
     -ms-overflow-style: none;
