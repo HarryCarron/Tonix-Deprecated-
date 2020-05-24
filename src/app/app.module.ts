@@ -13,7 +13,7 @@ import { PartialsComponent } from './components/oscillator/partials/partials.com
 import { from, fromEventPattern } from 'rxjs';
 import { PartialsSelectorComponent } from './components/oscillator/partials/partials-selector/partials-selector.component';
 import { EffectsRackComponent } from './effects-rack/effects-rack.component';
-import { AdrEnvelopeComponent } from './components/oscillator/settings-rack/adr-envelope/adr-envelope.component';
+import { AdsrEnvelopeComponent } from './components/oscillator/settings-rack/adsr-envelope/adsr-envelope.component';
 import { PianoRollComponent } from './components/piano-roll/piano-roll.component';
 
 @NgModule({
@@ -26,7 +26,7 @@ import { PianoRollComponent } from './components/piano-roll/piano-roll.component
     PartialsComponent,
     PartialsSelectorComponent,
     EffectsRackComponent,
-    AdrEnvelopeComponent,
+    AdsrEnvelopeComponent,
     PianoRollComponent
   ],
   imports: [

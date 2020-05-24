@@ -1,4 +1,4 @@
-import { WindowEventsService } from './../../../../services/events/window-events.service';
+import { WindowEventsService } from '../../../../services/events/window-events.service';
 
 import {
     EnvelopeService,
@@ -7,7 +7,8 @@ import {
     ReleaseCurve,
     AttackCurve,
     DecayCurve,
-    handleType
+    handleType,
+    SustainCurve
 } from './envelope.service';
 
 import {
@@ -25,7 +26,7 @@ import {
   templateUrl: './adr-envelope.component.html',
   styleUrls: ['./adr-envelope.component.css']
 })
-export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
+export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
   constructor(
         private renderer: Renderer2,
@@ -37,6 +38,7 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
 
     activeReleaseCurve = CurveType.linear;
     activeAttackCurve = CurveType.linear;
+    activeDecayCurve = CurveType.linear;
 
 
     curvesSelectorItems = ['Lin', 'Exp', 'Cos'];
@@ -69,6 +71,10 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
     private qReleaseHandle;
     private qDecayHandle;
 
+    /*
+    * Parts: Parts refer to a bounding box which enclose each section of the envelope.
+    * They also have a click handler for manipulating curve type.
+    */
     private attackPart;
     private decayPart;
     private sustainPart;
@@ -132,6 +138,7 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         ciel:               this.ciel,
         data:               this.env,
         attackType:         this.activeAttackCurve,
+        decayType:         this.activeDecayCurve,
         releaseType:        this.activeReleaseCurve,
         xMargin:            this.Xmargin
     };
@@ -142,26 +149,19 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
                 b.x,
                 ',',
                 b.y,
-                ' ',
                 new AttackCurve(data).asString(),
-                ' ',
                 a.x,
                 ',',
                 a.y,
-                ' ',
                 new DecayCurve(data).asString(),
-                ' ',
                 d.x,
                 ',',
                 d.y,
-                ' ',
-                'Q10,20 ',
+                new SustainCurve(data).asString(),
                 s.x,
                 ',',
                 s.y,
-                ' ',
                 new ReleaseCurve(data).asString(),
-                ' ',
                 r.x,
                 ',',
                 r.y
@@ -211,8 +211,8 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.setAttribute(this.qDecayHandle, 'cy', new DecayCurve(data).asArray()[1].toString());
 
 
-        // this.renderer.setAttribute(this.qReleaseHandle, 'cx', new ReleaseCurve(d).asArray()[0].toString());
-        // this.renderer.setAttribute(this.qReleaseHandle, 'cy', new ReleaseCurve(d).asArray()[1].toString());
+        this.renderer.setAttribute(this.qReleaseHandle, 'cx', new ReleaseCurve(data).asArray()[0].toString());
+        this.renderer.setAttribute(this.qReleaseHandle, 'cy', new ReleaseCurve(data).asArray()[1].toString());
 
 
     }
@@ -256,8 +256,8 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.appendChild(this.envelopeContainer, this.releasePart);
 
         this.renderer.appendChild(this.envelopeContainer, this.qAttackHandle);
-        // this.renderer.appendChild(this.envelopeContainer, this.qDecayHandle);
-        // this.renderer.appendChild(this.envelopeContainer, this.qReleaseHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.qDecayHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.qReleaseHandle);
 
         this.renderer.appendChild(this.envelopeContainer, this.beginHandle);
         this.renderer.appendChild(this.envelopeContainer, this.attackHandle);
@@ -329,27 +329,40 @@ export class AdrEnvelopeComponent implements OnInit, AfterViewInit {
         this.qReleaseHandle = this.envService.qHandle();
 
         this.attackPart = this.envService.getEnvPart(this.partClicked, EnvelopePart.attack);
-        this.decayPart = this.envService.getEnvPart(this.partClicked, EnvelopePart.attack);
+        this.decayPart = this.envService.getEnvPart(this.partClicked, EnvelopePart.decay);
         this.sustainPart = this.envService.getEnvPart(this.partClicked, EnvelopePart.sustain);
         this.releasePart = this.envService.getEnvPart(this.partClicked, EnvelopePart.release);
     }
 
     partClicked = (type) => {
 
-        if (type === EnvelopePart.attack) {
-            if (this.activeAttackCurve === 2) {
-                this.activeAttackCurve = 0;
-            } else {
-                this.activeAttackCurve = this.activeAttackCurve + 1;
+        switch (type) {
+            case EnvelopePart.attack: {
+                if (this.activeAttackCurve === 2) {
+                    this.activeAttackCurve = 0;
+                } else {
+                    this.activeAttackCurve = this.activeAttackCurve + 1;
+                }
+                break;
             }
-        }
+            case EnvelopePart.decay: {
+                if (this.activeDecayCurve === 2) {
+                    this.activeDecayCurve = 0;
+                } else {
+                    this.activeDecayCurve = this.activeDecayCurve + 1;
+                }
+                break;
+            }
+            case EnvelopePart.release: {
+                if (type === EnvelopePart.release) {
+                    if (this.activeReleaseCurve === 2) {
+                        this.activeReleaseCurve = 0;
+                    } else {
+                        this.activeReleaseCurve = this.activeReleaseCurve + 1;
+                    }
+                }
+            }
 
-        if (type === EnvelopePart.release) {
-            if (this.activeReleaseCurve === 2) {
-                this.activeReleaseCurve = 0;
-            } else {
-                this.activeReleaseCurve = this.activeReleaseCurve + 1;
-            }
         }
         this.manipulateEnvelope();
     }

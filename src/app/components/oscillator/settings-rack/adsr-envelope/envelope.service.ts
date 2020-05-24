@@ -38,9 +38,11 @@ export class EnvelopeService {
     const handle = this.renderer.createElement('circle', 'svg');
     this.renderer.setAttribute(handle, 'r', '4');
     this.renderer.setAttribute(handle, 'stroke', '1');
-    this.renderer.setAttribute(handle, 'style', this.envStyle);
     this.renderer.setAttribute(handle, 'fill-opacity', '0.2');
     this.renderer.setAttribute(handle, 'cursor', 'move');
+    this.renderer.setAttribute(handle, 'stroke-width', '2');
+    this.renderer.setAttribute(handle, 'stroke', 'white');
+    this.renderer.setAttribute(handle, 'fill', 'white');
     this.renderer.setAttribute(handle, 'id', handletype);
     this.renderer.listen(handle, 'mousedown', () => {  callback(handle); });
     return handle;
@@ -51,7 +53,7 @@ export class EnvelopeService {
     this.renderer.setAttribute(qhandle, 'r', '4');
     this.renderer.setAttribute(qhandle, 'stroke-width', '1');
     this.renderer.setAttribute(qhandle, 'fill', 'white');
-    this.renderer.setAttribute(qhandle, 'stroke', 'white');
+    this.renderer.setAttribute(qhandle, 'stroke', 'yellow');
     this.renderer.setAttribute(qhandle, 'fill-opacity', '0.2');
     return qhandle;
   }
@@ -116,6 +118,7 @@ abstract class Curve {
     protected ciel: number;
     protected _output: QArray;
     protected releaseType: CurveType;
+    protected decayType: CurveType;
     protected attackType: CurveType;
     protected xMargin: number;
     protected data: any;
@@ -134,17 +137,39 @@ abstract class Curve {
         this.floor          = input.floor;
         this.ciel           = input.ciel;
         this.attackType     = input.attackType;
+        this.decayType      = input.decayType;
         this.releaseType    = input.releaseType;
         this.xMargin        = input.xMargin;
         this.data           = input.data;
     }
 
     public asString = (): string => {
-        return `Q${this.output[0]},${this.output[1]}`;
+        return ` Q${this.output[0]},${this.output[1]} `;
     }
 
     public asArray = (): QArray => {
         return this.output;
+    }
+}
+
+export class SustainCurve extends Curve {
+
+
+    constructor(data) {
+        super(data);
+        this.calculate();
+    }
+
+    calculate = () => {
+        /*
+        * Not actually a curve but a Q value is needed to complete the path.
+        * Calculate will return a a Q value which just keeps the sustain line flat.
+        */
+        const d = this.data;
+        this.output = [
+            d.s.x,
+            d.s.y
+        ];
     }
 }
 
@@ -161,17 +186,17 @@ export class ReleaseCurve extends Curve {
         switch (this.releaseType) {
             case CurveType.linear: {
                 this.output = [
-                    d.a.x + (d.r.x - d.a.x) / 2,
-                    d.a.y + ((d.r.y - d.a.y) / 2)
+                    d.s.x + ((d.r.x - d.s.x) / 2),
+                    d.s.y + ((d.r.y - d.s.y) / 2)
                 ];
                 break;
             }
             case CurveType.exponential: {
-                this.output = [d.a.x, d.b.y];
+                this.output = [d.s.x, d.b.y];
                 break;
             }
             case CurveType.cosine: {
-                this.output = [d.r.x, d.a.y];
+                this.output = [d.r.x, d.s.y];
             }
         }
     }
@@ -184,14 +209,14 @@ export class AttackCurve extends Curve {
         this.calculate();
     }
 
-    calculate = () => {
+    calculate = (): void => {
         const d = this.data;
 
         switch (this.attackType) {
             case CurveType.linear: {
                 this.output = [
-                    d.b.x + ((d.a.x - d.b.x) / 2),
-                    10
+                    d.b.x + (Math.round(d.a.x - d.b.x) / 2),
+                    d.a.y + ((d.b.y - d.a.y) / 2)
                 ];
                 break;
             }
@@ -215,20 +240,20 @@ export class DecayCurve extends Curve {
     calculate = () => {
         const d = this.data;
 
-        switch (this.attackType) {
+        switch (this.decayType) {
             case CurveType.linear: {
                 this.output = [
-                    10,
-                    30
+                    d.a.x + ((d.d.x - d.a.x) / 2),
+                    d.a.y + ((d.d.y - d.a.y) / 2)
                 ];
                 break;
             }
             case CurveType.exponential: {
-                this.output = [10, 30];
+                this.output = [d.a.x, d.d.y];
                 break;
             }
             case CurveType.cosine: {
-                this.output = [10, 30];
+                this.output = [d.d.x, d.a.y];
             }
         }
     }

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdrEnvelopeComponent } from './adr-envelope.component';
+import { AdsrEnvelopeComponent } from './adsr-envelope.component';
 
 describe('AdrEnvelopeComponent', () => {
-  let component: AdrEnvelopeComponent;
-  let fixture: ComponentFixture<AdrEnvelopeComponent>;
+  let component: AdsrEnvelopeComponent;
+  let fixture: ComponentFixture<AdsrEnvelopeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdrEnvelopeComponent ]
+      declarations: [ AdsrEnvelopeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AdrEnvelopeComponent);
+    fixture = TestBed.createComponent(AdsrEnvelopeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
