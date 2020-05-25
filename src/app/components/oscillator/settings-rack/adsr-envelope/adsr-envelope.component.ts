@@ -1,4 +1,6 @@
 import { WindowEventsService } from '../../../../services/events/window-events.service';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, } from '@angular/forms';
+import { UtilitiesService } from './../../../../services/utilities.service';
 
 import {
     EnvelopeService,
@@ -18,20 +20,40 @@ import {
     ViewChild,
     ElementRef,
     Renderer2,
-    HostListener
+    HostListener,
+    forwardRef
 } from '@angular/core';
 
+import {FLOOR, CIEL } from './envelope.service';
+
+export interface Ienvelope {
+    attack: number;
+    decay: number;
+    sustain: number;
+    release: number;
+    attackCurve: string;
+    decayCurve: string;
+    releaseCurve: string;
+}
+
+
 @Component({
-  selector: 'app-adr-envelope',
-  templateUrl: './adr-envelope.component.html',
-  styleUrls: ['./adr-envelope.component.css']
+  selector: 'app-adsr-envelope',
+  templateUrl: './adsr-envelope.component.html',
+  styleUrls: ['./adsr-envelope.component.css'],
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => AdsrEnvelopeComponent),
+    multi: true
+}]
 })
 export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
   constructor(
         private renderer: Renderer2,
         private envService: EnvelopeService,
-        private windowEvents: WindowEventsService
+        private windowEvents: WindowEventsService,
+        private utils: UtilitiesService
     ) {
         this.envService.renderer = renderer;
     }
@@ -40,6 +62,12 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
     activeAttackCurve = CurveType.linear;
     activeDecayCurve = CurveType.linear;
 
+    private leftMargin;
+    private rightMargin;
+    private travelUnit;
+    private secondSector;
+
+    onChange;
 
     curvesSelectorItems = ['Lin', 'Exp', 'Cos'];
 
@@ -48,17 +76,15 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         w: null
     };
 
-    private floor = 110;
-    private ciel = 20;
-
     private containerWidth = null;
     private containerHeight = null;
 
-    // private readonly Ymargin = 20;
     private Xmargin = null;
     private readonly envWidth = 240;
 
     private envBody;
+    private availableTravel: number;
+
 
     private beginHandle;
     private attackHandle;
@@ -86,28 +112,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
     private activeHandle;
 
-    private env = {
-        b: {
-            x: null,
-            y: null
-        },
-        a: {
-            x: null,
-            y: null
-        },
-        d: {
-            x: null,
-            y: null
-        },
-        s: {
-            x: null,
-            y: null
-        },
-        r: {
-            x: null,
-            y: null
-        }
-    };
+    private envelopeData;
 
     private _svgContainer: ElementRef;
     @ViewChild('svgContainer')
@@ -125,30 +130,23 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
     set envelopeContainer(e) {this._envelopeContainer = e.nativeElement; }
     get envelopeContainer() {return this._envelopeContainer; }
 
+
     private manipulateEnvelope() {
 
-    const b = this.env.b;
-    const a = this.env.a;
-    const d = this.env.d;
-    const s = this.env.s;
-    const r = this.env.r;
+    const data = new EnvelopeForSVG(this.envelopeData, this.travelUnit, this.Xmargin);
 
-    const data = {
-        floor:              this.floor,
-        ciel:               this.ciel,
-        data:               this.env,
-        attackType:         this.activeAttackCurve,
-        decayType:         this.activeDecayCurve,
-        releaseType:        this.activeReleaseCurve,
-        xMargin:            this.Xmargin
-    };
+    const b = data.b;
+    const a = data.a;
+    const d = data.d;
+    const s = data.s;
+    const r = data.r;
 
     this.renderer.setAttribute(this.envBody, 'd',
             [
                 'M',
-                b.x,
+                this.Xmargin,
                 ',',
-                b.y,
+                FLOOR,
                 new AttackCurve(data).asString(),
                 a.x,
                 ',',
@@ -190,7 +188,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.setAttribute(this.releasePart, 'height', (b.y - s.y).toString());
 
         this.renderer.setAttribute(this.beginHandle, 'cx', b.x);
-        this.renderer.setAttribute(this.beginHandle, 'cy', b.y);
+        this.renderer.setAttribute(this.beginHandle, 'cy', b.y.toString());
 
         this.renderer.setAttribute(this.attackHandle, 'cx', a.x);
         this.renderer.setAttribute(this.attackHandle, 'cy', a.y);
@@ -210,43 +208,34 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.setAttribute(this.qDecayHandle, 'cx', new DecayCurve(data).asArray()[0].toString());
         this.renderer.setAttribute(this.qDecayHandle, 'cy', new DecayCurve(data).asArray()[1].toString());
 
-
         this.renderer.setAttribute(this.qReleaseHandle, 'cx', new ReleaseCurve(data).asArray()[0].toString());
         this.renderer.setAttribute(this.qReleaseHandle, 'cy', new ReleaseCurve(data).asArray()[1].toString());
 
-
+        this.updateModel();
     }
 
-    private giveTestCords() { // todo: remove me when taking values from ng-model
-        this.env.b.x = this.Xmargin;
-        this.env.b.y = this.floor;
+    private updateModel(): void {
 
-        this.env.a.x = 70;
-        this.env.a.y = 30;
-
-        this.env.d.x = 100;
-        this.env.d.y = 50;
-        this.env.s.x = 200;
-        this.env.s.y = 50;
-
-        this.env.r.x = this.containerWidth - this.Xmargin;
-        this.env.r.y = this.floor;
     }
 
     private initContainer() {
         this.containerHeight = (this.svgContainer as any).clientHeight;
         this.containerWidth = (this.svgContainer as any).clientWidth;
+        this.availableTravel = this.containerWidth - (this.Xmargin * 2);
+        // this.secondSector = this.availableTravel / 5;
+        this.travelUnit = this.availableTravel / 40;
 
         this.containerLimit.h = this.containerHeight;
         this.containerLimit.w = this.containerWidth;
 
         this.Xmargin = (this.containerWidth - this.envWidth) / 2;
 
+        this.leftMargin = this.Xmargin;
+        this.rightMargin = this.containerWidth - this.Xmargin;
+
         this.renderer.setAttribute(this.envelopeContainer, 'height', this.containerHeight);
         this.renderer.setAttribute(this.envelopeContainer, 'width', this.containerWidth);
         this.renderer.appendChild(this.envelopeContainer, this.envBody);
-
-
 
         this.renderer.appendChild(this.envelopeContainer, this.envBody);
 
@@ -265,55 +254,64 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         this.renderer.appendChild(this.envelopeContainer, this.sustainHandle);
         this.renderer.appendChild(this.envelopeContainer, this.releaseHandle);
 
+
     }
 
     private newHandlePoint(handletype, x: number, y: number): void {
         const handle = handleType[handletype];
+        const env = this.envelopeData;
         switch (handletype) {
             case(handleType[1]): {
-                this.env.a.x = (x <= this.env.b.x)
-                ? this.env.a.x
-                : (x >= this.env.d.x)
-                ? this.env.d.x
+                console.log(x);
+                this.envelopeData.attack = (x === this.envelopeData.begin)
+                ? this.envelopeData.begin
+                : (x >= this.envelopeData.decay)
+                ? this.envelopeData.decay
                 : x;
                 break;
             }
-            case(handleType[2]): {
-                this.env.d.x = (x <= this.env.a.x)
-                ? this.env.a.x
-                : (x < this.env.s.x)
-                ? x
-                : this.env.s.x;
-                ['d', 's'].forEach( k => {
-                    this.env[k].y = (y <= this.env.a.y)
-                    ? this.env.a.y
-                    : (y >= this.env.b.y)
-                    ? this.env.b.y
-                    : y;
-                });
-                break;
-            }
-            case(handleType[3]): {
-                this.env.s.x = (x <= this.env.d.x)
-                ? this.env.d.x
-                :  (x < this.env.r.x)
-                ? x
-                : this.env.r.x;
-                ['d', 's'].forEach( k => {
-                    this.env[k].y = (y <= this.env.a.y)
-                    ? this.env.a.y
-                    : (y >= this.env.b.y)
-                    ? this.env.b.y
-                    : y;
-                });
-            }
+            // case(handleType[2]): {
+                // this.envelopeData.decay = (x <= this.envelopeData.attack)
+                // ? this.envelopeData.attack
+                // : (x < this.envelopeData.sustain)
+                // ? x
+                // : this.envelopeData.sustain;
+                // ['decay', 'sustain'].forEach( k => {
+                //     this.envelopeData[k].y = (y <= this.envelopeData.attack.y)
+                //     ? this.envelopeData.attack.y
+                //     : (y >= this.envelopeData.begin.y)
+                //     ? this.envelopeData.begin.y
+                //     : y;
+                // });
+                // break;
+            // }
+            // case(handleType[3]): {
+            //     this.envelopeData.sustain.x = (x <= this.envelopeData.decay.x)
+            //     ? this.envelopeData.decay.x
+            //     :  (x < this.envelopeData.release.x)
+            //     ? x
+            //     : this.envelopeData.release.x;
+            //     ['decay', 'ssustain'].forEach( k => {
+            //         this.envelopeData[k].y = (y <= this.envelopeData.attack.y)
+            //         ? this.envelopeData.attack.y
+            //         : (y >= this.envelopeData.begin.y)
+            //         ? this.envelopeData.begin.y
+            //         : y;
+            //     });
+            //     break;
+            // }
+            // case(handleType[4]): {
+            //     env.r.x = (x <= env.s.x)
+            //     ? env.s.x
+            //     :  (x < this.rightMargin)
+            //     ? x
+            //     : env.r.x;
+            // }
         }
     }
 
     ngAfterViewInit(): void {
         this.initContainer();
-        this.giveTestCords();
-        this.manipulateEnvelope();
     }
 
     ngOnInit(): void {
@@ -336,33 +334,27 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
     partClicked = (type) => {
 
+        const curveToggle = (currentCurve): number =>  {
+            if (currentCurve === 2) {
+                return 0;
+            } else {
+                currentCurve++;
+                return currentCurve;
+            }
+        };
+
         switch (type) {
             case EnvelopePart.attack: {
-                if (this.activeAttackCurve === 2) {
-                    this.activeAttackCurve = 0;
-                } else {
-                    this.activeAttackCurve = this.activeAttackCurve + 1;
-                }
+                this.envelopeData.attackCurve = curveToggle(this.envelopeData.attackCurve);
                 break;
             }
             case EnvelopePart.decay: {
-                if (this.activeDecayCurve === 2) {
-                    this.activeDecayCurve = 0;
-                } else {
-                    this.activeDecayCurve = this.activeDecayCurve + 1;
-                }
+                this.envelopeData.decayCurve = curveToggle(this.envelopeData.decayCurve);
                 break;
             }
             case EnvelopePart.release: {
-                if (type === EnvelopePart.release) {
-                    if (this.activeReleaseCurve === 2) {
-                        this.activeReleaseCurve = 0;
-                    } else {
-                        this.activeReleaseCurve = this.activeReleaseCurve + 1;
-                    }
-                }
+                this.envelopeData.releaseCurve = curveToggle(this.envelopeData.releaseCurve);
             }
-
         }
         this.manipulateEnvelope();
     }
@@ -374,11 +366,12 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
         const mouseUp = (() => {
             this.handleCurrentlyClicked = false;
-        } );
+        });
 
         const mouseMove = (({x, y}) => {
             if (this.handleCurrentlyClicked) {
-                const newX = x - this.svgContCoords.left;
+                const a = (x - this.svgContCoords.left) - this.Xmargin;
+                const newX = ((a / 10) / this.travelUnit);
                 const newY = y - this.svgContCoords.top;
                 this.newHandlePoint(
                     this.activeHandle,
@@ -392,6 +385,103 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         this.windowEvents.enableDragAndDrop(mouseUp, mouseMove);
     }
 
+    // modelaccessor functions
+
+    onTouched = () => {};
+
+    registerOnTouched(fn: () => void): void {
+
+    }
+
+    setDisabledState(isDisabled: boolean): void {}
+
+
+    writeValue(envValues: Ienvelope): void {
+
+        if (envValues) {
+            this.envelopeData = envValues;
+            this.manipulateEnvelope();
+        }
+    }
+
+    registerOnChange(fn: (rating: boolean) => void): void {
+        this.onChange = fn;
+    }
+
 }
 
+
+class EnvelopeForSVG {
+
+    public attackCurve: number;
+
+    public decayCurve: number;
+
+    public releaseCurve: number;
+
+    public Xmargin: number;
+
+    public begin = {
+        x: null,
+        y: null,
+    };
+
+    get b() { return this.begin; }
+
+    public attack = {
+        x: null,
+        y: null,
+    };
+
+    get a() { return this.attack; }
+
+    public decay = {
+        x: null,
+        y: null,
+    };
+
+    get d() { return this.decay; }
+
+    public sustain = {
+        x: null,
+        y: null,
+    };
+
+    get s() { return this.sustain; }
+
+    public release = {
+        x: null,
+        y: null,
+    };
+
+    get r() { return this.release; }
+
+    constructor(data: any, travelUnit: number, Xmargin: number) {
+        this.begin.x =          Xmargin;
+        this.begin.y =          FLOOR;
+
+        this.attack.x =         this.begin.x + ((data.attack * 10) * travelUnit);
+        this.attack.y =         CIEL;
+
+        this.decay.x =          this.attack.x + ((data.decay * 10) * travelUnit);
+
+        this.sustain.y =        (data.sustain * 10) * travelUnit;
+
+        this.decay.y =          (data.sustain * 10) * travelUnit;
+
+        this.sustain.x =        this.decay.x + ((0.4 * 10) * travelUnit);
+
+        this.release.x =        this.sustain.x + (data.release * 10) * travelUnit;
+        this.release.y =        FLOOR;
+
+        this.attackCurve =      data.attackCurve;
+        this.decayCurve =       data.decayCurve;
+        this.releaseCurve =     data.releaseCurve;
+
+        this.Xmargin =          Xmargin;
+    }
+}
+
+
+// env to px calculation : envValues.attack * 10)  * this.travelUnit
 

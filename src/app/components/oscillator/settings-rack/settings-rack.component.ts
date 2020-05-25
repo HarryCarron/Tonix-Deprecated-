@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 import { VoiceService } from '../../../services/voice/voice.service';
 import { Subscription } from 'rxjs';
+
 
 enum settingsRackMenuItem {
     overview,
@@ -19,6 +20,17 @@ export class SettingsRackComponent implements OnInit {
   constructor(private voiceService: VoiceService) { }
 
   private _settingsHolder: any;
+
+  private _data: any;
+
+  @Input('data')
+  set data(d) {
+      this._data = d;
+  }
+
+  get data() {
+      return this._data;
+  }
 
   selectedMenuItem = 1;
 

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { UtilitiesService } from './../../../../services/utilities.service';
+
 
 export enum EnvelopePart {
     begin,
@@ -22,17 +24,22 @@ export enum CurveType {
     cosine
 }
 
+export const FLOOR = 100;
+export const CIEL = 30;
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class EnvelopeService {
 
-  constructor() { }
+  constructor(private utils: UtilitiesService) { }
 
   public renderer;
 
   private readonly envStyle = 'stroke:white; stroke-linecap:round; stroke-width:3px; stroke-linejoin:round; fill: white;';
   private readonly partStyle = 'stroke:white; stroke-linecap:round; stroke-width:3px; stroke-linejoin:round; fill: white;';
+
 
   public getEnvHandle (callback, handletype: EnvelopePart) {
     const handle = this.renderer.createElement('circle', 'svg');
@@ -50,7 +57,7 @@ export class EnvelopeService {
 
   public qHandle () {
     const qhandle = this.renderer.createElement('circle', 'svg');
-    this.renderer.setAttribute(qhandle, 'r', '4');
+    this.renderer.setAttribute(qhandle, 'r', '3');
     this.renderer.setAttribute(qhandle, 'stroke-width', '1');
     this.renderer.setAttribute(qhandle, 'fill', 'white');
     this.renderer.setAttribute(qhandle, 'stroke', 'yellow');
@@ -101,12 +108,15 @@ export class EnvelopeService {
     return part;
   }
 
+
   public getEnvContainer (height: number, width: number, xMargin: number, yMargin: number) {
     const container = this.renderer.createElement('svg');
     this.renderer.setAttribute(container, 'height', height + 'px', 'svg');
     this.renderer.setAttribute(container, 'width', width + 'px', 'svg');
     return container;
   }
+
+
 
 }
 
@@ -134,13 +144,13 @@ abstract class Curve {
     calculate: (d: any) => any;
 
     constructor(input) {
-        this.floor          = input.floor;
-        this.ciel           = input.ciel;
-        this.attackType     = input.attackType;
-        this.decayType      = input.decayType;
-        this.releaseType    = input.releaseType;
-        this.xMargin        = input.xMargin;
-        this.data           = input.data;
+        this.floor          = FLOOR;
+        this.ciel           = CIEL;
+        this.attackType     = input.attackCurve;
+        this.decayType      = input.decayCurve;
+        this.releaseType    = input.releaseCurve;
+        this.xMargin        = input.Xmargin;
+        this.data           = input;
     }
 
     public asString = (): string => {
@@ -183,7 +193,7 @@ export class ReleaseCurve extends Curve {
     calculate = () => {
         const d = this.data;
 
-        switch (this.releaseType) {
+        switch (d.releaseCurve) {
             case CurveType.linear: {
                 this.output = [
                     d.s.x + ((d.r.x - d.s.x) / 2),
@@ -212,7 +222,7 @@ export class AttackCurve extends Curve {
     calculate = (): void => {
         const d = this.data;
 
-        switch (this.attackType) {
+        switch (d.attackCurve) {
             case CurveType.linear: {
                 this.output = [
                     d.b.x + (Math.round(d.a.x - d.b.x) / 2),
@@ -240,7 +250,7 @@ export class DecayCurve extends Curve {
     calculate = () => {
         const d = this.data;
 
-        switch (this.decayType) {
+        switch (d.decayCurve) {
             case CurveType.linear: {
                 this.output = [
                     d.a.x + ((d.d.x - d.a.x) / 2),

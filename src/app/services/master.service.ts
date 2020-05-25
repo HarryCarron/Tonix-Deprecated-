@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { waveType, defaultWaveForm, waveTypeEnum} from './../objects/types';
 import { UtilitiesService } from './utilities.service';
+import { CurveType } from './../components/oscillator/settings-rack/adsr-envelope/envelope.service';
 
 const BASE_OSC_NAME = 'OSCILLATOR';
 const BASE_OSC_PITCH = 0.00;
@@ -48,6 +49,15 @@ export class Oscillator {
     public pitch: number;
     public gain: number;
     public partials: number[];
+    public amp = { // todo temp
+        attack : 0.4,
+        decay : 0.3,
+        sustain : 1,
+        release : 2,
+        attackCurve: CurveType.linear,
+        decayCurve: CurveType.linear,
+        releaseCurve: CurveType.linear
+    };
 
     public isLastOsc: boolean;
 
