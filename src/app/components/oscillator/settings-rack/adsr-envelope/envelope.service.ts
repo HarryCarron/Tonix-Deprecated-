@@ -1,32 +1,8 @@
 import { Injectable } from '@angular/core';
 import { UtilitiesService } from './../../../../services/utilities.service';
+import { FLOOR, CIEL } from './envelope.constants';
 
-
-export enum EnvelopePart {
-    begin,
-    attack,
-    decay,
-    sustain,
-    release
-}
-
-export enum handleType {
-    attack,
-    decay,
-    sustain,
-    sustainEnd,
-    release
-}
-
-export enum CurveType {
-    linear,
-    exponential,
-    cosine
-}
-
-export const FLOOR = 100;
-export const CIEL = 30;
-
+import { EnvelopeHandleType, CurveType, EnvelopeSector } from './envelope-objects/envelope.objects';
 
 @Injectable({
   providedIn: 'root'
@@ -40,8 +16,7 @@ export class EnvelopeService {
   private readonly envStyle = 'stroke:white; stroke-linecap:round; stroke-width:3px; stroke-linejoin:round; fill: white;';
   private readonly partStyle = 'stroke:white; stroke-linecap:round; stroke-width:3px; stroke-linejoin:round; fill: white;';
 
-
-  public getEnvHandle (callback, handletype: EnvelopePart) {
+  public getEnvHandle (callback, handletype: EnvelopeHandleType) {
     const handle = this.renderer.createElement('circle', 'svg');
     this.renderer.setAttribute(handle, 'r', '4');
     this.renderer.setAttribute(handle, 'stroke', '1');
@@ -87,42 +62,39 @@ export class EnvelopeService {
     return body;
   }
 
-  public getEnvPart (f, type: EnvelopePart) {
+    public getEnvSector (f: (any) => any, type: EnvelopeSector) {
 
-    const part = this.renderer.createElement('rect', 'svg');
-    this.renderer.setAttribute(part, 'fill', 'white');
-    this.renderer.setAttribute(part, 'fill-opacity', 0.3);
-    this.renderer.setAttribute(part, 'stroke', 'white');
-    this.renderer.setAttribute(part, 'stroke-width', 1);
-    this.renderer.setAttribute(part, 'transition', 0.4);
-    this.renderer.setAttribute(part, 'cursor', 'pointer');
-    this.renderer.setAttribute(part, 'opacity', 0);
-    this.renderer.listen(part, 'mouseenter', (evt: any) => {
-        this.renderer.setAttribute(part, 'opacity', 0.7);
-      });
-    this.renderer.listen(part, 'mouseleave', (evt: any) => {
-        this.renderer.setAttribute(part, 'opacity', 0);
-    });
-    this.renderer.listen(part, 'click', () => { f(type); });
+        const sector = this.renderer.createElement('rect', 'svg');
+        this.renderer.setAttribute(sector, 'fill', 'white');
+        this.renderer.setAttribute(sector, 'fill-opacity', 0.3);
+        this.renderer.setAttribute(sector, 'stroke', 'white');
+        this.renderer.setAttribute(sector, 'stroke-width', 1);
+        this.renderer.setAttribute(sector, 'transition', 0.4);
+        this.renderer.setAttribute(sector, 'cursor', 'pointer');
+        this.renderer.setAttribute(sector, 'opacity', 0);
+        this.renderer.listen(sector, 'mouseenter', (evt: any) => {
+            this.renderer.setAttribute(sector, 'opacity', 0.7);
+            });
+        this.renderer.listen(sector, 'mouseleave', (evt: any) => {
+            this.renderer.setAttribute(sector, 'opacity', 0);
+        });
+        this.renderer.listen(sector, 'click', () => { f(type); });
 
-    return part;
-  }
+        return sector;
+    }
 
-
-  public getEnvContainer (height: number, width: number, xMargin: number, yMargin: number) {
-    const container = this.renderer.createElement('svg');
-    this.renderer.setAttribute(container, 'height', height + 'px', 'svg');
-    this.renderer.setAttribute(container, 'width', width + 'px', 'svg');
-    return container;
-  }
-
-
+    public getEnvContainer (height: number, width: number, xMargin: number, yMargin: number) {
+        const container = this.renderer.createElement('svg');
+        this.renderer.setAttribute(container, 'height', height + 'px', 'svg');
+        this.renderer.setAttribute(container, 'width', width + 'px', 'svg');
+        return container;
+    }
 
 }
 
 type QArray = [number, number];
 
-abstract class Curve {
+abstract class EnvelopePartBase {
 
     protected floor: number;
     protected ciel: number;
@@ -133,13 +105,17 @@ abstract class Curve {
     protected xMargin: number;
     protected data: any;
 
-    get output(): QArray {
+    protected isStaccato: boolean;
+
+    get Qoutput(): QArray {
         // round all numbers of data
         if (!this._output) { return; }
         return this._output.map((d) => Math.round(d)) as QArray;
     }
 
-    set output(d) { this._output = d; }
+    set Qoutput(d) { this._output = d; }
+
+    protected pointOutput = [];
 
     calculate: (d: any) => any;
 
@@ -153,16 +129,24 @@ abstract class Curve {
         this.data           = input;
     }
 
-    public asString = (): string => {
-        return ` Q${this.output[0]},${this.output[1]} `;
+    public asArray = (): QArray => {
+        return this.Qoutput;
     }
 
-    public asArray = (): QArray => {
-        return this.output;
-    }
+    asString = () => ` Q${this.Qoutput[0]},${this.Qoutput[1]} ${this.pointOutput[0]},${this.pointOutput[1]}`;
+
 }
 
-export class SustainCurve extends Curve {
+export class Begin extends EnvelopePartBase {
+    constructor(data) {
+        super(data);
+    }
+
+    public asString = (): string => `M${this.xMargin} ${this.floor}`;
+
+}
+
+export class Sustain extends EnvelopePartBase {
 
 
     constructor(data) {
@@ -175,15 +159,18 @@ export class SustainCurve extends Curve {
         * Not actually a curve but a Q value is needed to complete the path.
         * Calculate will return a a Q value which just keeps the sustain line flat.
         */
-        const d = this.data;
-        this.output = [
+       const d = this.data;
+       this.pointOutput = [d.s.x, d.s.y];
+
+
+        this.Qoutput = [
             d.s.x,
             d.s.y
         ];
     }
 }
 
-export class ReleaseCurve extends Curve {
+export class Release extends EnvelopePartBase {
 
     constructor(data) {
         super(data);
@@ -193,26 +180,30 @@ export class ReleaseCurve extends Curve {
     calculate = () => {
         const d = this.data;
 
+        this.pointOutput = [d.r.x, d.r.y];
+
         switch (d.releaseCurve) {
             case CurveType.linear: {
-                this.output = [
+                this.Qoutput = [
                     d.s.x + ((d.r.x - d.s.x) / 2),
                     d.s.y + ((d.r.y - d.s.y) / 2)
                 ];
                 break;
             }
             case CurveType.exponential: {
-                this.output = [d.s.x, d.b.y];
+                this.Qoutput = [d.s.x, d.b.y];
                 break;
             }
             case CurveType.cosine: {
-                this.output = [d.r.x, d.s.y];
+                this.Qoutput = [d.r.x, d.s.y];
             }
         }
     }
+
+    asString = () => ` Q${this.Qoutput[0]},${this.Qoutput[1]} ${this.pointOutput[0]},${this.pointOutput[1]}`;
 }
 
-export class AttackCurve extends Curve {
+export class Attack extends EnvelopePartBase {
 
     constructor(data) {
         super(data);
@@ -222,26 +213,30 @@ export class AttackCurve extends Curve {
     calculate = (): void => {
         const d = this.data;
 
+        this.pointOutput = [d.a.x, d.a.y];
+
         switch (d.attackCurve) {
             case CurveType.linear: {
-                this.output = [
+                this.Qoutput = [
                     d.b.x + (Math.round(d.a.x - d.b.x) / 2),
                     d.a.y + ((d.b.y - d.a.y) / 2)
                 ];
                 break;
             }
             case CurveType.exponential: {
-                this.output = [d.a.x, d.b.y];
+                this.Qoutput = [d.a.x, d.b.y];
                 break;
             }
             case CurveType.cosine: {
-                this.output = [d.b.x, d.a.y];
+                this.Qoutput = [d.b.x, d.a.y];
             }
         }
     }
+
+
 }
 
-export class DecayCurve extends Curve {
+export class Decay extends EnvelopePartBase {
     constructor(data) {
         super(data);
         this.calculate();
@@ -250,22 +245,67 @@ export class DecayCurve extends Curve {
     calculate = () => {
         const d = this.data;
 
+        this.pointOutput = [d.d.x, d.d.y];
+
         switch (d.decayCurve) {
             case CurveType.linear: {
-                this.output = [
+                this.Qoutput = [
                     d.a.x + ((d.d.x - d.a.x) / 2),
                     d.a.y + ((d.d.y - d.a.y) / 2)
                 ];
                 break;
             }
             case CurveType.exponential: {
-                this.output = [d.a.x, d.d.y];
+                this.Qoutput = [d.a.x, d.d.y];
                 break;
             }
             case CurveType.cosine: {
-                this.output = [d.d.x, d.a.y];
+                this.Qoutput = [d.d.x, d.a.y];
             }
         }
+    }
+
+}
+export class StacattoRelease {
+
+    constructor(data) {
+        this.data = data;
+        this.calculate();
+    }
+
+    data: any;
+    pointOutput: [number, number];
+    Qoutput: [number, number];
+
+    calculate() {
+        const d = this.data;
+
+        this.pointOutput = [d.r.x, d.r.y];
+
+        switch (d.decayCurve) {
+            case CurveType.linear: {
+                this.Qoutput = [
+                    d.a.x + ((d.r.x - d.a.x) / 2),
+                    d.a.y + ((d.b.y - d.a.y) / 2)
+                ];
+                break;
+            }
+            case CurveType.exponential: {
+                this.Qoutput = [d.a.x, d.d.y];
+                break;
+            }
+            case CurveType.cosine: {
+                this.Qoutput = [d.d.x, d.a.y];
+            }
+        }
+    }
+
+    asArray = (): QArray => {
+        return this.Qoutput;
+    }
+
+    asString() {
+        return ` Q${this.Qoutput[0]},${this.Qoutput[1]} ${this.pointOutput[0]},${this.pointOutput[1]}`;
     }
 
 }

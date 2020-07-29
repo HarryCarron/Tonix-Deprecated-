@@ -21,7 +21,11 @@
 
         
     </div>
-    <div class='settingContainer'>
-        <app-adsr-envelope [(ngModel)]='data.amp'></app-adsr-envelope>
+    <div *ngIf="overviewSelected" class='settingContainer'>
+    </div>
+    <div *ngIf="envelopeSelected" class='settingContainer'>
+        <app-adsr-envelope [(ngModel)]='data.amp' [staccato]='true'></app-adsr-envelope>
+    </div>
+    <div *ngIf="partialsSelected" class='settingContainer'>
     </div>
 </div>

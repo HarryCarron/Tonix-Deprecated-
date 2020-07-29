@@ -1,42 +1,15 @@
+
 import { Injectable } from '@angular/core';
 import { waveType, defaultWaveForm, waveTypeEnum} from './../objects/types';
 import { UtilitiesService } from './utilities.service';
-import { CurveType } from './../components/oscillator/settings-rack/adsr-envelope/envelope.service';
+import { CurveType } from './../components/oscillator/settings-rack/adsr-envelope/envelope-objects/envelope.objects';
+
+
 
 const BASE_OSC_NAME = 'OSCILLATOR';
 const BASE_OSC_PITCH = 0.00;
 const BASE_OSC_GAIN = 5;
 
-
-@Injectable({
-  providedIn: 'root'
-})
-export class MasterService {
-
-    public oscillators: Oscillator[];
-
-  constructor(private utils: UtilitiesService) {
-    this.oscillators = this.makeOscillators(null);
-  }
-
-    private makeOscillators = (waveTypeIn: waveType | null): any => { // todo: return type, osc type
-
-        // pass true for isOn prop so only first oscillator is active
-
-        return this.utils.a(2).map((i, v, o) =>
-            new Oscillator(
-            i + 1, i,
-            waveTypeIn,
-            i === 0,
-            null,
-            null,
-            [0.1, 0.5, 0.9],
-            i + 1 === o.length)
-            );
-
-    }
-
-}
 
 export class Oscillator {
 
@@ -102,6 +75,37 @@ export class Oscillator {
         this.gain = pitch || BASE_OSC_GAIN;
         this.partials = partialCount;
         this.isLastOsc = isLastOsc;
+
+    }
+
+}
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class MasterService {
+
+    public oscillators: Oscillator[];
+
+  constructor(private utils: UtilitiesService) {
+    this.oscillators = this.makeOscillators(null);
+  }
+
+    private makeOscillators = (waveTypeIn: waveType | null): any => { // todo: return type, osc type
+
+        // pass true for isOn prop so only first oscillator is active
+
+        return this.utils.a(2).map((i, v, o) =>
+            new Oscillator(
+            i + 1, i,
+            waveTypeIn,
+            i === 0,
+            null,
+            null,
+            [0.1, 0.5, 0.9],
+            i + 1 === o.length)
+            );
 
     }
 

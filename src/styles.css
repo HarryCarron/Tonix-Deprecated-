@@ -65,6 +65,10 @@ body, html {
     flex-direction: row;
 }
 
+.app-standardText {
+    font-size: 1.3em;
+}
+
 select {
     -webkit-appearance: none;
     -moz-appearance: none;
