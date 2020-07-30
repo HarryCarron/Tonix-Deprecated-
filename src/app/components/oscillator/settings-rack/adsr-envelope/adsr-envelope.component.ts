@@ -15,6 +15,7 @@ import {
     ModelToCoordData,
     EnvelopeSector,
     CurveType,
+    CurveTypeShort,
     EnvelopeHandleType,
 } from './envelope-objects/envelope.objects';
 
@@ -69,6 +70,10 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
     // #region [ Props ]
 
+    sectorForLoop = ['attack', 'decay', 'sustain', 'release'];
+
+    CurveType = CurveTypeShort;
+    viewEnvValues;
     private leftMargin;
     private rightMargin;
     private travelUnit;
@@ -76,9 +81,15 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
     onChange;
 
+    _isOn: boolean;
+
     @Input() staccato = false;
 
-    // curvesSelectorItems = ['Lin', 'Exp', 'Cos'];
+    @Input()
+    set isOn(o) {
+        this._isOn = o;
+        this.turnOn(o);
+    }
 
     private containerLimit = {
         h: null,
@@ -253,14 +264,15 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         this.staccato ?  new StacattoRelease(data).asArray()[0].toString() : new Release(data).asArray()[0].toString());
         this.renderer.setAttribute(this.qReleaseHandle, 'cy',
         this.staccato ? new StacattoRelease(data).asArray()[1].toString() : new Release(data).asArray()[1].toString());
-        this.onChange(
-            new CoordsToModel(
-                {
-                coords: this.envData,
-                staccato: this.staccato
-                }
-            )
+
+        const e = new CoordsToModel(
+            {
+            coords: this.envData,
+            staccato: this.staccato
+            }
         );
+        this.viewEnvValues = e;
+        this.onChange(e);
     }
 
     private newHandlePoint(
@@ -385,7 +397,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.envBody = this.envService.getEnvBody();
+        this.envBody = this.envService.getEnvBody(this.Xmargin, this.rightMargin);
         this.beginHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.begin);
         this.attackHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.attack);
 
@@ -411,6 +423,22 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
 
  // #region [ Events ]
+
+
+
+    private turnOn(on): void {
+        if (this.attackHandle) {
+            this.renderer.setAttribute(this.attackHandle, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.beginHandle, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.releaseHandle, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.envBody, 'opacity', on ? '1' : '0.6');
+            this.renderer.setAttribute(this.qAttackHandle, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.qReleaseHandle, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.attackSector, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.releaseSector, 'visibility', on ? 'visible' : 'hidden');
+        }
+    }
+
     sectorClicked = (type) => {
 
         const curveToggle = (currentCurve): number =>  {

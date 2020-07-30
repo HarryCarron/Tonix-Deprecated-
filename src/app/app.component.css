@@ -22,6 +22,8 @@
     background-color:#f7c9bd;
     overflow: hidden;
     font-family: Helvetica, Arial, sans-serif;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
 }
 
 .oscName {
@@ -54,7 +56,7 @@
 .osc-rack{
     display: flex;
     flex-direction: column;
-    width: 330px;
+    width: 320px;
     font-size:0.5em;
     overflow-y: scroll;
     -ms-overflow-style: none;

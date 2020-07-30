@@ -23,11 +23,11 @@ export class Oscillator {
     public gain: number;
     public partials: number[];
     public amp = { // todo temp
-        attack : 0.4,
+        attack : 1,
         decay : 0.3,
         sustain : 1,
-        release : 2,
-        attackCurve: CurveType.linear,
+        release : 1.5,
+        attackCurve: CurveType.exponential,
         decayCurve: CurveType.linear,
         releaseCurve: CurveType.linear
     };

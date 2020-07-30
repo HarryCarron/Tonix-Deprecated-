@@ -1,8 +1,27 @@
-<div class='h-100 d-flex'>
+<div class='h-100' stye='display:flex; flex-direction: column'>
 
-    <div class='h-100 w-100' #svgContainer>
+    <div class='w-100' style='height: 85%;' #svgContainer>
         <svg #envelopeContainer>
         </svg> 
+    </div>
+    <div style='height: 15%; font-size: 1.25em; font-weight: bold; text-transform: uppercase;' class='d-flex'>
+        
+        <div style='flex:auto' class='centerChild d-flex'>
+            <!-- attack -->
+            A: {{viewEnvValues?.attack}} - {{CurveType[viewEnvValues?.attackCurve]}}
+        </div>
+        <div style='flex:auto' [ngStyle]="{'opacity' : staccato ? '0.6' : '1'}" class='centerChild'>
+            <!-- decay -->
+            D: {{ staccato ? '0' : viewEnvValues?.decay}}
+        </div>
+        <div style='flex:auto' [ngStyle]="{'opacity' : staccato ? '0.6' : '1'}" class='centerChild'>
+            <!-- sustain -->
+            S: {{ staccato ? '0' : viewEnvValues?.sustain}}
+        </div>
+        <div style='flex:auto' class='centerChild'>
+            <!-- release -->
+            R: {{viewEnvValues?.release}} - {{CurveType[viewEnvValues?.releaseCurve]}}
+        </div>
     </div>
 
 </div>

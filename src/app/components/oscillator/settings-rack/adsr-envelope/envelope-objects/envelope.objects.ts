@@ -37,3 +37,9 @@ export enum CurveType {
     exponential,
     cosine
 }
+
+export enum CurveTypeShort {
+    lin,
+    exp,
+    cos
+}

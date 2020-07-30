@@ -55,21 +55,15 @@ textarea:focus, input:focus {
     border-radius: 3px;
 }
 
-
-.partialContainer {
-    transition: 0.3s;
-    margin: 8px;
-    height: 0;
-    background-color: #303134;
-    overflow: hidden;
-}
-
 .partials-numInput {
     width: 100%;
     background-color: transparent;
     border: none;
-    color: #5be279;
-    font-size: 8px;
     text-align: center;
     font-weight: bold;
+}
+
+.indContainer {
+    flex: auto;
+    margin-top: auto;
 }

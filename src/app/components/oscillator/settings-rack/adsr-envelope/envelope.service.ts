@@ -51,7 +51,7 @@ export class EnvelopeService {
     this.renderer.setAttribute(part, 'opacity', 0);
   }
 
-  public getEnvBody () {
+  public getEnvBody (xMargin, rightMargin) {
     const body = this.renderer.createElement('path', 'svg');
     this.renderer.setAttribute(body, 'fill-opacity', '0.3');
     this.renderer.setAttribute(body, 'stroke', 'white');
@@ -59,6 +59,20 @@ export class EnvelopeService {
     this.renderer.setAttribute(body, 'stroke-linecap', 'round');
     this.renderer.setAttribute(body, 'fill', 'white');
     this.renderer.setAttribute(body, 'stroke-linejoin', 'round');
+
+    // const line = this.renderer.createElement('line', 'svg');
+    // this.renderer.setAttribute(line, 'x1', xMargin);
+    // this.renderer.setAttribute(line, 'y1', FLOOR);
+
+    // this.renderer.setAttribute(line, 'x2', xMargin);
+    // this.renderer.setAttribute(line, 'y2', CIEL);
+    // this.renderer.setAttribute(line, 'stroke', 'white');
+    // this.renderer.setAttribute(line, 'stroke-width', 1);
+    // this.renderer.setAttribute(line, 'stroke-dasharray', 4);
+    // this.renderer.setAttribute(line, 'id', 'hey');
+
+
+    // this.renderer.appendChild(body, line);
     return body;
   }
 
@@ -282,7 +296,7 @@ export class StacattoRelease {
 
         this.pointOutput = [d.r.x, d.r.y];
 
-        switch (d.decayCurve) {
+        switch (d.releaseCurve) {
             case CurveType.linear: {
                 this.Qoutput = [
                     d.a.x + ((d.r.x - d.a.x) / 2),
@@ -291,11 +305,11 @@ export class StacattoRelease {
                 break;
             }
             case CurveType.exponential: {
-                this.Qoutput = [d.a.x, d.d.y];
+                this.Qoutput = [d.a.x, FLOOR];
                 break;
             }
             case CurveType.cosine: {
-                this.Qoutput = [d.d.x, d.a.y];
+                this.Qoutput = [d.r.x, d.a.y];
             }
         }
     }

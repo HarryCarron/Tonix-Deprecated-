@@ -10,7 +10,7 @@
         <div class='settingsRackButton h-100 centerChild'
             [ngClass]="{ 'selected' : envelopeSelected }"
             (click)="selectMenuItem(1)">
-            Envelope
+            Amp
         </div>
 
         <div class='settingsRackButton h-100 centerChild'
@@ -24,8 +24,9 @@
     <div *ngIf="overviewSelected" class='settingContainer'>
     </div>
     <div *ngIf="envelopeSelected" class='settingContainer'>
-        <app-adsr-envelope [(ngModel)]='data.amp' [staccato]='true'></app-adsr-envelope>
+        <app-adsr-envelope [(ngModel)]='data.amp' [isOn]='data.isOn' [staccato]='true'></app-adsr-envelope>
     </div>
     <div *ngIf="partialsSelected" class='settingContainer'>
+        <app-partials [partials]='data.partials'></app-partials>
     </div>
 </div>

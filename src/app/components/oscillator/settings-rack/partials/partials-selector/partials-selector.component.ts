@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { PARTIAL_CONTAINER_HEIGHT } from './../../../../services/master.service';
+import { PARTIAL_CONTAINER_HEIGHT } from './../../../../../services/master.service';
 import { noop } from 'rxjs';
 
 @Component({
@@ -35,7 +35,7 @@ export class PartialsSelectorComponent implements AfterViewInit {
         return this.partialsCanvas.getContext('2d');
     }
 
-    private readonly PARTIAL_FILL_COL = '#5be279';
+    private readonly PARTIAL_FILL_COL = 'white';
 
     get partialsCanvas(): HTMLCanvasElement {
         return this._partialCanvas;
@@ -67,9 +67,12 @@ export class PartialsSelectorComponent implements AfterViewInit {
 
         this.partials.forEach( (p, i) => {
             this.partialCanvasContext.beginPath();
-            this.partialCanvasContext.rect(this.pWidth * i, 100, this.pWidth, ((p * 100) || 0.1) * -1);
-            this.partialCanvasContext.fillStyle = this.PARTIAL_FILL_COL;
-            this.partialCanvasContext.fill();
+            // this.partialCanvasContext.fillStyle = this.PARTIAL_FILL_COL;
+            this.partialCanvasContext.strokeStyle = '#FF0000';
+            this.partialCanvasContext.lineWidth = 1;
+            // this.partialCanvasContext.fill();
+            this.partialCanvasContext.strokeRect(this.pWidth * i, 100, this.pWidth, ((p * 100) || 0.1) * -1);
+
         });
     }
 

@@ -3,7 +3,7 @@ import { LedComponent } from './../led/led.component';
 import { SettingsRackComponent } from './settings-rack/settings-rack.component';
 import { VoiceService } from './../../services/voice/voice.service';
 import { Subscription, Observable } from 'rxjs';
-import { PartialsComponent } from './partials/partials.component';
+// import { PartialsComponent } from './partials/partials.component';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 
