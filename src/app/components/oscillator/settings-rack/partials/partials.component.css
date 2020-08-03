@@ -56,11 +56,12 @@ textarea:focus, input:focus {
 }
 
 .partials-numInput {
-    width: 100%;
+    width: 80%;
     background-color: transparent;
     border: none;
     text-align: center;
     font-weight: bold;
+    font-size: 1.25em;
 }
 
 .indContainer {

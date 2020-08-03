@@ -1,5 +1,5 @@
 import { Injectable, HostListener } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, noop } from 'rxjs';
 
 export enum windowEventType {
     mouseup,
@@ -17,20 +17,25 @@ export class WindowEventsService {
     private mouseUpSubject = new Subject();
     private mouseMoveSubject = new Subject();
 
-    @HostListener('window:mouseup', ['$event'])
+    @HostListener('window:mousemove', ['$event'])
+    onMouseMove(e) {
+      console.log(e);
+    }
 
     public enableDragAndDrop(mouseupCallback, mousemoveCallback) {
-        this.mouseUp = window.addEventListener('mouseup',
-            (event) => {
-            mouseupCallback(); this.destroyEvents(); });
+        // window.addEventListener('mouseup',
+        //     (event) => {
+        //     mouseupCallback(); this.destroyEvents(); });
 
-        this.mouseMove = window.addEventListener('mousemove',
-            ({clientX, clientY}) => { mousemoveCallback({x: clientX, y: clientY}); });
+        // window.addEventListener('mousemove',
+        //     ({clientX, clientY}) => { mousemoveCallback({x: clientX, y: clientY}); });
     }
 
     public destroyEvents() {
-        this.mouseUp = null;
-        this.mouseMove = null;
+        window.removeEventListener('mousemove', (event) => {
+            noop();
+        });
+
     }
 
   constructor() { }

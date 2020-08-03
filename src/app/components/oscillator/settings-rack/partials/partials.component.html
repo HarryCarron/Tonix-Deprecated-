@@ -1,10 +1,14 @@
 <div class='h-100'>
 
-    <div style='height: 80%; display: flex; align-items: flex-end;'>
+    <div #partialsSelector
+    style='height: 80%; display: flex; align-items: flex-end;'>
         <div *ngFor='let p of partials'
-        class='h-100 indContainer' style=' display: flex; flex-direction: column;'>
-            <div style='margin-top: auto;' class='centerChild' [ngStyle]="{'height' : (p * 100)+ '%' }">
-                <div class='centerChild' style='background-color: #F8BEAE; border: 1px solid #ffe2e2; border-radius: 2px; width: 80%; height: 100%;'>
+        class='h-100 indContainer' style=' display: flex; flex-direction: column; padding: 10px;'>
+            <div style='margin-top: auto;' class='centerChild'
+            [ngStyle]="{'height' : (p) + '%' }">
+                <div class='centerChild'
+                [ngStyle]="{'width': (90 - partials.length) + '%' }"
+                style='background-color: #F8BEAE; border: 1px solid #ffe2e2; border-radius: 2px; width: 80%; height: 100%;'>
                     <span [hidden]="hideP(p)">{{p}}</span>
                 </div>
             </div>
@@ -26,10 +30,10 @@
                 <div style='width:50%;' class='centerChild'>
                     <input class='partials-numInput'
                     [(ngModel)]='partialCount'
-                    (change)='updatePartials(partialCount);'
+                    (ngModelChange)='updatePartials(partialCount);'
                     type="number"
                     [disabled]="partialSelectionDisabled"
-                    min="0"
+                    min="1"
                     max='32'>
                 </div>
             </div>

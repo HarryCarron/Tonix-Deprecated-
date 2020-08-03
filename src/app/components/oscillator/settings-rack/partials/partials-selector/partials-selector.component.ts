@@ -63,17 +63,17 @@ export class PartialsSelectorComponent implements AfterViewInit {
     }
 
     draw(): void {
-        this.partialCanvasContext.clearRect(0, 0, this.partialSelectorWidth, 100);
+        // this.partialCanvasContext.clearRect(0, 0, this.partialSelectorWidth, 100);
 
-        this.partials.forEach( (p, i) => {
-            this.partialCanvasContext.beginPath();
-            // this.partialCanvasContext.fillStyle = this.PARTIAL_FILL_COL;
-            this.partialCanvasContext.strokeStyle = '#FF0000';
-            this.partialCanvasContext.lineWidth = 1;
-            // this.partialCanvasContext.fill();
-            this.partialCanvasContext.strokeRect(this.pWidth * i, 100, this.pWidth, ((p * 100) || 0.1) * -1);
+        // this.partials.forEach( (p, i) => {
+        //     this.partialCanvasContext.beginPath();
+        //     // this.partialCanvasContext.fillStyle = this.PARTIAL_FILL_COL;
+        //     this.partialCanvasContext.strokeStyle = '#FF0000';
+        //     this.partialCanvasContext.lineWidth = 1;
+        //     // this.partialCanvasContext.fill();
+        //     this.partialCanvasContext.strokeRect(this.pWidth * i, 100, this.pWidth, ((p * 100) || 0.1) * -1);
 
-        });
+        // });
     }
 
     partialsClicked(): void {

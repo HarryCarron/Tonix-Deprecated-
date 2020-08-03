@@ -70,7 +70,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
     // #region [ Props ]
 
-    sectorForLoop = ['attack', 'decay', 'sustain', 'release'];
+    sectorForLoop = ['attack', 'decay', 'sustain', 'release']; // todo: get from enum
 
     CurveType = CurveTypeShort;
     viewEnvValues;
@@ -476,6 +476,8 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         });
 
         const mouseMove = (({x, y}) => {
+            console.log(x, y);
+
             if (this.handleCurrentlyClicked) {
                 const newX = x - this.svgContCoords.left;
                 const newY = y - this.svgContCoords.top;

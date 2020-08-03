@@ -1,0 +1,13 @@
+.container {
+    background-color: #fdb49f;
+    margin: 0 10px 10px 10px;
+    border-radius: 5px;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-content: center;
+    align-items: flex-start;
+    align-content: center;
+}

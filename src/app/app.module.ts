@@ -15,6 +15,7 @@ import { PartialsSelectorComponent } from './components/oscillator/settings-rack
 import { EffectsRackComponent } from './effects-rack/effects-rack.component';
 import { AdsrEnvelopeComponent } from './components/oscillator/settings-rack/adsr-envelope/adsr-envelope.component';
 import { PianoRollComponent } from './components/piano-roll/piano-roll.component';
+import { SimpleEqComponent } from './components/simple-eq/simple-eq.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { PianoRollComponent } from './components/piano-roll/piano-roll.component
     PartialsSelectorComponent,
     EffectsRackComponent,
     AdsrEnvelopeComponent,
-    PianoRollComponent
+    PianoRollComponent,
+    SimpleEqComponent
   ],
   imports: [
     BrowserModule,
