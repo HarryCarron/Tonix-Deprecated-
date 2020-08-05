@@ -68,3 +68,11 @@ textarea:focus, input:focus {
     flex: auto;
     margin-top: auto;
 }
+
+.drag{
+    cursor: grab;
+}
+
+.drag :active {
+    cursor: grabbing;
+}

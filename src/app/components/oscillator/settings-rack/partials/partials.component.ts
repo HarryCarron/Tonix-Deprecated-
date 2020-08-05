@@ -22,12 +22,15 @@ export class PartialsComponent implements OnChanges, OnInit {
         this._partialSelector = e;
     }
 
+    get partialUnit(): number {
+        return this.partialsSelectorBounding.width / this.partials.length;
+    }
+
     get partialSelector() {
         return this._partialSelector;
     }
 
     get partialsSelectorBounding() {
-        console.log(this.partialSelector.getBoundingClientRect());
         return this.partialSelector.getBoundingClientRect();
     }
 
@@ -78,36 +81,28 @@ export class PartialsComponent implements OnChanges, OnInit {
         this.partialEntryMoving = false;
     }
 
-    @HostListener('window:click', ['$event'])
-    mouseClick({clientX: x, clientY: y}) {
-        this.partialEntryActive({clientX: x, clientY: y});
-    }
-
     @HostListener('window:mousemove', ['$event'])
     partialEntryActive({clientX: x, clientY: y}) {
         if (this.partialEntryMoving) {
             const newx = x - this.partialsSelectorBounding.x;
             const newy = this.partialsSelectorBounding.bottom - y;
             if (newy >= 100 || newy === 0) { return; }
-            console.log(newy);
-            if (newx < this.partialsSelectorWidth / this.partials.length) {
-                this.partials[1] = y;
-            } else {
-                this.partials[
-                    parseInt(((newx) / 100).toFixed(), 10)
-                ] = newy;
-            }
-            console.log(this.partials);
-
+            this.partials[
+                Math.floor(
+                    newx /
+                    (this.partialsSelectorBounding.width /
+                        this.partials.length)
+                )
+            ] = newy / 10;
         }
     }
 
     mouseMove = (e) => {
-        console.log('mouse moving', e);
+
     }
 
     mouseUp = () => {
-        console.log('events destoyed');
+
     }
 
     setPartials(): void {
@@ -118,7 +113,7 @@ export class PartialsComponent implements OnChanges, OnInit {
     }
 
     hideP(n: number): boolean {
-        return (n * 10) < (0.1 * 10);
+        return (n * 10) <= 10;
     }
 
     updatePartials(partialCount: number): void {
@@ -134,7 +129,6 @@ export class PartialsComponent implements OnChanges, OnInit {
     }
 
     ngOnInit() {
-        console.log(this.partials);
     }
 
 }

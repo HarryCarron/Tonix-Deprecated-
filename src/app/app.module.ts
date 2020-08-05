@@ -16,6 +16,7 @@ import { EffectsRackComponent } from './effects-rack/effects-rack.component';
 import { AdsrEnvelopeComponent } from './components/oscillator/settings-rack/adsr-envelope/adsr-envelope.component';
 import { PianoRollComponent } from './components/piano-roll/piano-roll.component';
 import { SimpleEqComponent } from './components/simple-eq/simple-eq.component';
+import { EffectRackComponent } from './components/effect-rack/effect-rack.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { SimpleEqComponent } from './components/simple-eq/simple-eq.component';
     EffectsRackComponent,
     AdsrEnvelopeComponent,
     PianoRollComponent,
-    SimpleEqComponent
+    SimpleEqComponent,
+    EffectRackComponent
   ],
   imports: [
     BrowserModule,

@@ -6,18 +6,17 @@
             <div class='content-wrapper h-100 d-flex'>
                 <div class='osc-rack h-100'>
                     <ng-container *ngFor='let osc of oscillators; let i = index'>
-                        <app-oscillator [data]="osc" ></app-oscillator>
+                        <app-oscillator [data]="osc"></app-oscillator>
                     </ng-container>
-                    <!-- <app-simple-eq></app-simple-eq> -->
-                    <div style='height: 30px; background-color: #ff9170'>
-
-                    </div>
                 </div>
-                <div>
-                    <!-- <app-piano-roll></app-piano-roll> -->
-
-                </div>
+                <app-effect-rack></app-effect-rack>
             </div>
+            <div style='height: 30px; background-color: #ff9170'>
+
+            </div>
+
+
         </div>
+
     </div>
 </div>
