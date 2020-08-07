@@ -17,6 +17,7 @@ import { AdsrEnvelopeComponent } from './components/oscillator/settings-rack/ads
 import { PianoRollComponent } from './components/piano-roll/piano-roll.component';
 import { SimpleEqComponent } from './components/simple-eq/simple-eq.component';
 import { EffectRackComponent } from './components/effect-rack/effect-rack.component';
+import { NgxSelectModule } from 'ngx-select-ex';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { EffectRackComponent } from './components/effect-rack/effect-rack.compon
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    NgxSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

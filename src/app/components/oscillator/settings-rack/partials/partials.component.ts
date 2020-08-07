@@ -8,7 +8,7 @@ import { WindowEventsService } from '../../../../services/events/window-events.s
   templateUrl: './partials.component.html',
   styleUrls: ['./partials.component.css']
 })
-export class PartialsComponent implements OnChanges, OnInit {
+export class PartialsComponent implements OnChanges {
 
     constructor(
         private windowEvnt: WindowEventsService
@@ -86,49 +86,41 @@ export class PartialsComponent implements OnChanges, OnInit {
         if (this.partialEntryMoving) {
             const newx = x - this.partialsSelectorBounding.x;
             const newy = this.partialsSelectorBounding.bottom - y;
-            if (newy >= 100 || newy === 0) { return; }
-            this.partials[
-                Math.floor(
-                    newx /
-                    (this.partialsSelectorBounding.width /
-                        this.partials.length)
-                )
-            ] = newy / 10;
+
+            if (newy >= 101 || newy === 0 || newx <= 0) { return; }
+
+            const hoveredPartial = Math.floor(
+                newx / (this.partialsSelectorBounding.width /
+                    this.partials.length)
+            );
+            if (!!this.partials[hoveredPartial] || this.partials[hoveredPartial] === 0) {
+                this.partials[hoveredPartial] = parseFloat((newy / 100).toFixed(2));
+            }
         }
     }
 
-    mouseMove = (e) => {
+    randomisePartials() {
 
+        const r = u => Math.floor(Math.random() * u) + 1;
+
+        this.partials = Array
+        .from({length: r(32)})
+        .map(a => r(10) / 10);
+
+        console.log(this.partials);
     }
 
-    mouseUp = () => {
-
-    }
-
-    setPartials(): void {
-        this.windowEvnt.enableDragAndDrop(
-            this.mouseUp,
-            this.mouseMove
-        );
-    }
-
-    hideP(n: number): boolean {
-        return (n * 10) <= 10;
-    }
-
-    updatePartials(partialCount: number): void {
-        if (this.partials.length < partialCount)  {
-            this.partials = (this.partials || []).concat([0]);
-        } else {
-            this.partials = this.partials.filter((p, i, o) => i + 1 !== o.length);
+    updatePartials(mode: boolean): void {
+        if (mode && this.partials.length < 32)  {
+            this.partials.push(0);
+        } else if (!mode && this.partials.length > 0) {
+            this.partials.pop();
         }
     }
 
     ngOnChanges() {
         this.partialCount = this.partials.length;
-    }
-
-    ngOnInit() {
+        console.log(this.partials);
     }
 
 }

@@ -6,6 +6,10 @@ textarea:focus, input:focus {
     outline: none;
 }
 
+.trans {
+    transition: 2s;
+}
+
 .partialsInteractiveContainer {
     display: -ms-flexbox;
     display: -webkit-flex;

@@ -476,8 +476,6 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         });
 
         const mouseMove = (({x, y}) => {
-            console.log(x, y);
-
             if (this.handleCurrentlyClicked) {
                 const newX = x - this.svgContCoords.left;
                 const newY = y - this.svgContCoords.top;

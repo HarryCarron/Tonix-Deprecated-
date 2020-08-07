@@ -1,42 +1,46 @@
 <div class='h-100'>
 
     <div #partialsSelector
-    style='height: 80%; display: flex; align-items: flex-end;'>
+    style='height: 85%; display: flex; align-items: flex-end; padding: 5px;'>
         <div *ngFor='let p of partials'
         class='h-100 indContainer drag'
         style=' display: flex; flex-direction: column;'>
-            <div style='margin-top: auto;' class='centerChild'
-            [ngStyle]="{'height' : (p * 10) + '%' }">
+            <div style='margin-top: auto; ' class='centerChild trans'
+            [ngStyle]="{'height' : (p * 100) + '%' }">
                 <div class='centerChild'
                 [ngStyle]="{'width': (90 - partials.length) + '%' }"
                 style='background-color: #F8BEAE; border: 1px solid #ffe2e2; border-radius: 2px; width: 80%; height: 100%;'>
-                    <span [hidden]="hideP(p)">{{ (p / 10).toFixed(1) }}</span>
+                    <div [hidden]='(p * 100 <= 10) || partials.length > 15'>{{ (p * 100).toFixed() }}</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div style='height: 20%; font-size: 1.25em;
+    <div style='height: 15%; font-size: 1.25em;
     font-weight: bold;
     text-transform: uppercase;'>
         <div class='d-flex h-100'>
-            <div style='width:70%;' class='h-100'></div>
+            <div style='width:60%;' class='h-100'>
+                <div style='width: 60px; cursor: pointer;' class='h-100 centerChild' (click)='randomisePartials()'>
+                    RANDOM
+                </div>
+                
+            </div>
         
-            <div class='h-100 centerChild' style='width:30%;' class='h-100 d-flex'>
-        
-                <div style='width:50%;' class='centerChild'>
-                    COUNT: 
+            <div class='h-100 centerChild' style='width:40%;' class='h-100 d-flex'>
+
+                <div class='centerChild' style='width: 20px; cursor: pointer' (click)="updatePartials(false)">
+                    <i class="fas fa-minus"></i>
                 </div>
         
-                <div style='width:50%;' class='centerChild'>
-                    <input class='partials-numInput'
-                    [(ngModel)]='partialCount'
-                    (ngModelChange)='updatePartials(partialCount);'
-                    type="number"
-                    [disabled]="partialSelectionDisabled"
-                    min="1"
-                    max='32'>
+                <div style='width: 70px;' class='centerChild'>
+                    COUNT: {{partials.length}}
                 </div>
+
+                <div class='centerChild' style='width: 20px; cursor: pointer' (click)="updatePartials(true)">
+                    <i class="fas fa-plus"></i>
+                </div>
+        
             </div>
          </div>
     </div>

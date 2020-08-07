@@ -5,11 +5,13 @@
         <div class='synth'>
             <div class='content-wrapper h-100 d-flex'>
                 <div class='osc-rack h-100'>
+                    <!-- <ngx-select style='margin: 10px 10px 0 10px' [(ngModel)]="itemId"></ngx-select> -->
+
                     <ng-container *ngFor='let osc of oscillators; let i = index'>
                         <app-oscillator [data]="osc"></app-oscillator>
                     </ng-container>
                 </div>
-                <app-effect-rack></app-effect-rack>
+                <!-- <app-effect-rack></app-effect-rack> -->
             </div>
             <div style='height: 30px; background-color: #ff9170'>
 
