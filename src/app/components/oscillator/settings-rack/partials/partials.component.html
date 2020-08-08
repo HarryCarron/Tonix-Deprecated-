@@ -1,16 +1,16 @@
 <div class='h-100'>
 
     <div #partialsSelector
-    style='height: 85%; display: flex; align-items: flex-end; padding: 5px;'>
+    style='height: 85%; display: flex; align-items: flex-end; padding: 15px 5px 0 5px;'>
         <div *ngFor='let p of partials'
         class='h-100 indContainer drag'
-        style=' display: flex; flex-direction: column;'>
-            <div style='margin-top: auto; ' class='centerChild trans'
+        style=' display: flex; flex-direction: column; cursor: pointer;'>
+            <div style='margin-top: auto; transition: 1s; ' class='centerChild trans'
             [ngStyle]="{'height' : (p * 100) + '%' }">
                 <div class='centerChild'
                 [ngStyle]="{'width': (90 - partials.length) + '%' }"
                 style='background-color: #F8BEAE; border: 1px solid #ffe2e2; border-radius: 2px; width: 80%; height: 100%;'>
-                    <div [hidden]='(p * 100 <= 10) || partials.length > 15'>{{ (p * 100).toFixed() }}</div>
+                    <!-- <div [hidden]='(p * 100 <= 10) || partials.length > 15'>{{ (p * 100).toFixed() }}</div> -->
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
                 </div>
         
                 <div style='width: 70px;' class='centerChild'>
-                    COUNT: {{partials.length}}
+                    COUNT: {{partials?.length}}
                 </div>
 
                 <div class='centerChild' style='width: 20px; cursor: pointer' (click)="updatePartials(true)">

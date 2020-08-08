@@ -27,6 +27,6 @@
         <app-adsr-envelope [(ngModel)]='data.amp' [isOn]='data.isOn' [staccato]='true'></app-adsr-envelope>
     </div>
     <div *ngIf="partialsSelected" class='settingContainer'>
-        <app-partials [partials]='data.partials'></app-partials>
+        <app-partials [(ngModel)]='data.partials'></app-partials>
     </div>
 </div>

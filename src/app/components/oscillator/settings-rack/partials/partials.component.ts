@@ -2,19 +2,27 @@ import { Component, OnInit, Input, OnChanges, forwardRef, HostListener, ViewChil
 import { VoiceService } from './../../../../services/voice/voice.service';
 import { PARTIAL_CONTAINER_HEIGHT } from './../../../../services/master.service';
 import { WindowEventsService } from '../../../../services/events/window-events.service';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-partials',
   templateUrl: './partials.component.html',
-  styleUrls: ['./partials.component.css']
+  styleUrls: ['./partials.component.css'],
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => PartialsComponent),
+    multi: true
+}]
 })
-export class PartialsComponent implements OnChanges {
+export class PartialsComponent {
 
     constructor(
         private windowEvnt: WindowEventsService
     ) { }
 
     private _partialSelector;
+
+    private onChange;
 
     @ViewChild('partialsSelector', {static: true})
 
@@ -73,6 +81,7 @@ export class PartialsComponent implements OnChanges {
     startPartialEntry(r) {
          if (this.clickIsWithinContainer(r)) {
             this.partialEntryMoving = true;
+            this.partialEntryActive(r);
          }
     }
 
@@ -85,29 +94,33 @@ export class PartialsComponent implements OnChanges {
     partialEntryActive({clientX: x, clientY: y}) {
         if (this.partialEntryMoving) {
             const newx = x - this.partialsSelectorBounding.x;
-            const newy = this.partialsSelectorBounding.bottom - y;
-
-            if (newy >= 101 || newy === 0 || newx <= 0) { return; }
+            const newy = (this.partialsSelectorBounding.bottom - y) + 8;
 
             const hoveredPartial = Math.floor(
                 newx / (this.partialsSelectorBounding.width /
                     this.partials.length)
             );
+            const newValue = parseFloat((newy / 100).toFixed(2));
+
             if (!!this.partials[hoveredPartial] || this.partials[hoveredPartial] === 0) {
-                this.partials[hoveredPartial] = parseFloat((newy / 100).toFixed(2));
+                if (newValue >= 1) {
+                    this.partials[hoveredPartial] = 1;
+                } else if (newValue <= 0) {
+                    this.partials[hoveredPartial] = 0;
+                } else {
+                    this.partials[hoveredPartial] = newValue;
+                }
             }
+            this.onChange(this.partials);
         }
     }
 
     randomisePartials() {
-
         const r = u => Math.floor(Math.random() * u) + 1;
-
         this.partials = Array
         .from({length: r(32)})
         .map(a => r(10) / 10);
-
-        console.log(this.partials);
+        this.onChange(this.partials);
     }
 
     updatePartials(mode: boolean): void {
@@ -118,9 +131,20 @@ export class PartialsComponent implements OnChanges {
         }
     }
 
-    ngOnChanges() {
-        this.partialCount = this.partials.length;
-        console.log(this.partials);
+    onTouched = () => {};
+
+    registerOnTouched(fn: () => void): void {}
+
+    setDisabledState(isDisabled: boolean): void {}
+
+    writeValue(partialValues): void {
+        if (partialValues) {
+            this.partials = partialValues;
+        }
+    }
+
+    registerOnChange(fn: () => void): void {
+        this.onChange = fn;
     }
 
 }
