@@ -48,6 +48,10 @@ export class PartialsComponent {
 
     defaultHeight = PARTIAL_CONTAINER_HEIGHT;
 
+    t = () => console.log(this.hoveredPartial);
+
+    hoveredPartial = {};
+
     partialCount: number;
 
     @Input() showPartials: boolean;

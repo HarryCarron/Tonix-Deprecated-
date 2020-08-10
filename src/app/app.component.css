@@ -24,6 +24,7 @@
     font-family: Helvetica, Arial, sans-serif;
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
+    height: 528px;
 }
 
 .oscName {
@@ -124,4 +125,11 @@
     padding: 2px;
     letter-spacing: 2px;
     text-align: center;
+}
+
+
+
+.ngx-select {
+    font-family: Helvetica, sans-serif;
+    font-size: 0.9em !important;
 }

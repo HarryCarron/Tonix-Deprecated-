@@ -1,0 +1,18 @@
+export enum effects {
+    AutoPan,
+    AutoFilter,
+    AutoWah,
+    Bitcrusher,
+    Chorus,
+    Distortion,
+    FeedbackDelay,
+    Freeverb,
+    FrequencyShifter,
+    Phaser,
+    PingPongDelay,
+    PitchShift,
+    Reverb,
+    StereoWidener,
+    Tremolo,
+    Vibrato,
+}

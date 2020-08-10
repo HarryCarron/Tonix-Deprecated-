@@ -23,13 +23,13 @@ export class Oscillator {
     public gain: number;
     public partials: number[];
     public amp = { // todo temp
-        attack : 1,
+        attack : 0.3,
         decay : 0.3,
         sustain : 1,
-        release : 1.5,
-        attackCurve: CurveType.exponential,
+        release : 2.7,
+        attackCurve: CurveType.linear,
         decayCurve: CurveType.linear,
-        releaseCurve: CurveType.linear
+        releaseCurve: CurveType.exponential
     };
 
     public isLastOsc: boolean;
@@ -100,10 +100,10 @@ export class MasterService {
             new Oscillator(
             i + 1, i,
             waveTypeIn,
-            i === 0,
+            true,
             null,
             null,
-            [0.1, 0.5, 0.9],
+            [0.1, 0.5, 0.9, 0.1, 0.1, 0.9, 0.4],
             i + 1 === o.length)
             );
 

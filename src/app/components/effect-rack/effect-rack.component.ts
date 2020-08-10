@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { effects } from './objects/effects-rack.objects';
+import { UtilitiesService } from '../../services/utilities.service';
 
 @Component({
   selector: 'app-effect-rack',
@@ -7,7 +9,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EffectRackComponent implements OnInit {
 
-  constructor() { }
+  constructor(private utils: UtilitiesService) { }
+
+  effectsOptions = this.utils.definitionArrayFromEnum(effects);
 
   ngOnInit(): void {
   }

@@ -18,6 +18,7 @@ import { PianoRollComponent } from './components/piano-roll/piano-roll.component
 import { SimpleEqComponent } from './components/simple-eq/simple-eq.component';
 import { EffectRackComponent } from './components/effect-rack/effect-rack.component';
 import { NgxSelectModule } from 'ngx-select-ex';
+import { SelectDropDownModule } from 'ngx-select-dropdown';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { NgxSelectModule } from 'ngx-select-ex';
   imports: [
     BrowserModule,
     FormsModule,
-    NgxSelectModule
+    NgxSelectModule,
+    SelectDropDownModule
   ],
   providers: [],
   bootstrap: [AppComponent]
