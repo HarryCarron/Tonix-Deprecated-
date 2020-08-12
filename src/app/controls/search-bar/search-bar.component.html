@@ -1,0 +1,20 @@
+<div style='background-color: #f18a6d; overflow:hidden; padding: 10px; margin: 10px; border-radius: 3px; cursor: pointer; transition: 0.2s;'
+(click)='setOpenState(true)'
+(mouseleave)='setOpenState(false)'
+[style.height] = "searchBarOpen ? '250px' : '10px'"
+[style.boxShadow] = "searchBarOpen ? '5px 10px #e284695' : '0px'">
+    <div style='height: 45px;' style='display:flex; '>
+        <div style='flex-grow:1'>
+            Explore FXs
+        </div>
+        <div style='flex-basis: 10%;' class='centerChild'>
+            <i class="fas fa-caret-down" style='font-size: 10px;'></i>
+        </div>
+    </div>
+
+    <div style='margin-top:20px;'>
+        <div *ngFor='let option of options' style='padding: 5px;'>
+            {{option}}
+        </div>
+    </div>
+</div>

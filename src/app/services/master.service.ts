@@ -29,7 +29,7 @@ export class Oscillator {
         release : 2.7,
         attackCurve: CurveType.linear,
         decayCurve: CurveType.linear,
-        releaseCurve: CurveType.exponential
+        releaseCurve: CurveType.linear
     };
 
     public isLastOsc: boolean;

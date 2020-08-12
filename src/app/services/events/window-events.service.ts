@@ -17,10 +17,7 @@ export class WindowEventsService {
     private mouseUpSubject = new Subject();
     private mouseMoveSubject = new Subject();
 
-    @HostListener('window:mousemove', ['$event'])
-    onMouseMove(e) {
-      console.log(e);
-    }
+
 
     public enableDragAndDrop(mouseupCallback, mousemoveCallback) {
         // window.addEventListener('mouseup',

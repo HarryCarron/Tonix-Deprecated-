@@ -18,7 +18,8 @@ import { PianoRollComponent } from './components/piano-roll/piano-roll.component
 import { SimpleEqComponent } from './components/simple-eq/simple-eq.component';
 import { EffectRackComponent } from './components/effect-rack/effect-rack.component';
 import { NgxSelectModule } from 'ngx-select-ex';
-import { SelectDropDownModule } from 'ngx-select-dropdown';
+import { SearchBarComponent } from './controls/search-bar/search-bar.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -33,13 +34,14 @@ import { SelectDropDownModule } from 'ngx-select-dropdown';
     AdsrEnvelopeComponent,
     PianoRollComponent,
     SimpleEqComponent,
-    EffectRackComponent
+    EffectRackComponent,
+    SearchBarComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     NgxSelectModule,
-    SelectDropDownModule
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

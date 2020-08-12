@@ -18,7 +18,7 @@ export class EnvelopeService {
 
   public getEnvHandle (callback, handletype: EnvelopeHandleType) {
     const handle = this.renderer.createElement('circle', 'svg');
-    this.renderer.setAttribute(handle, 'r', '4');
+    this.renderer.setAttribute(handle, 'r', '3');
     this.renderer.setAttribute(handle, 'stroke', '1');
     this.renderer.setAttribute(handle, 'fill-opacity', '0.2');
     this.renderer.setAttribute(handle, 'cursor', 'move');
@@ -55,7 +55,7 @@ export class EnvelopeService {
     const body = this.renderer.createElement('path', 'svg');
     this.renderer.setAttribute(body, 'fill-opacity', '0.3');
     this.renderer.setAttribute(body, 'stroke', 'white');
-    this.renderer.setAttribute(body, 'stroke-width', '1.5');
+    this.renderer.setAttribute(body, 'stroke-width', '1');
     this.renderer.setAttribute(body, 'stroke-linecap', 'round');
     this.renderer.setAttribute(body, 'fill', 'white');
     this.renderer.setAttribute(body, 'stroke-linejoin', 'round');

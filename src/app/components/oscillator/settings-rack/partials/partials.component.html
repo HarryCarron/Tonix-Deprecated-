@@ -1,7 +1,7 @@
 <div class='h-100'>
 
     <div #partialsSelector
-    style='height: 85%; display: flex; align-items: flex-end; padding: 15px 5px 0 5px;'>
+    style='height: 85%; display: flex; align-items: flex-end;'>
         <div *ngFor='let p of partials; let pIndex = index'
         (moueenter)='hoveredPartial[pIndex] = true'
         (moueenter)='hoveredPartial[pIndex] = false'
@@ -12,7 +12,7 @@
                 <div class='centerChild'
                 (click)='t()'
                 [ngStyle]="{'width': (90 - partials.length) + '%', 'background-color' : hoveredPartial[pIndex] ? '#ffe9e2' : '#F8BEAE' }"
-                style='border: 1px solid #ffe2e2; border-radius: 2px; width: 80%; height: 100%;'>
+                style='border: 1px solid #ffe2e2; border-radius: 2px; width: 80%; height: 100%; margin-top:5px;'>
                     <!-- <div [hidden]='(p * 100 <= 10) || partials.length > 15'>{{ (p * 100).toFixed() }}</div> -->
                 </div>
             </div>

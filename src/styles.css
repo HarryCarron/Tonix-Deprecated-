@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,900;1,500;1,900&display=swap');
+@import "~@ng-select/ng-select/themes/material.theme.css";
 
 body, html {
     height: 100vh !important;
@@ -83,9 +84,10 @@ select {
     width: 100%;
  }
  
- * {
-     color: white;
- }
+    * {
+        color: white;
+        font-size:8px;
+    }
 
  .label {
     font-size: 1.2em;
