@@ -21,6 +21,7 @@ import { NgxSelectModule } from 'ngx-select-ex';
 import { SearchBarComponent } from './controls/search-bar/search-bar.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+
 @NgModule({
   declarations: [
     AppComponent,

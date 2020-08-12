@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { waveType, defaultWaveForm, waveTypeEnum} from './../objects/types';
 import { UtilitiesService } from './utilities.service';
 import { CurveType } from './../components/oscillator/settings-rack/adsr-envelope/envelope-objects/envelope.objects';
+import * as Tone from 'tone';
 
 
 
