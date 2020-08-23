@@ -55,7 +55,7 @@ export class EnvelopeService {
     const body = this.renderer.createElement('path', 'svg');
     this.renderer.setAttribute(body, 'fill-opacity', '0.3');
     this.renderer.setAttribute(body, 'stroke', 'white');
-    this.renderer.setAttribute(body, 'stroke-width', '1');
+    this.renderer.setAttribute(body, 'stroke-width', '2');
     this.renderer.setAttribute(body, 'stroke-linecap', 'round');
     this.renderer.setAttribute(body, 'fill', 'white');
     this.renderer.setAttribute(body, 'stroke-linejoin', 'round');
@@ -76,7 +76,7 @@ export class EnvelopeService {
     return body;
   }
 
-    public getEnvSector (f: (any) => any, type: EnvelopeSector) {
+    public getEnvSector (f: (any) => any, type: EnvelopeSector, callback: (arg0: any, arg1: any) => any) {
 
         const sector = this.renderer.createElement('rect', 'svg');
         this.renderer.setAttribute(sector, 'fill', 'white');
@@ -86,9 +86,11 @@ export class EnvelopeService {
         this.renderer.setAttribute(sector, 'transition', 0.4);
         this.renderer.setAttribute(sector, 'cursor', 'pointer');
         this.renderer.setAttribute(sector, 'opacity', 0);
-        this.renderer.listen(sector, 'mouseenter', (evt: any) => {
-            this.renderer.setAttribute(sector, 'opacity', 0.7);
-            });
+
+        this.renderer.listen(sector, 'mouseenter', () => {
+            callback(this.renderer, sector);
+        });
+
         this.renderer.listen(sector, 'mouseleave', (evt: any) => {
             this.renderer.setAttribute(sector, 'opacity', 0);
         });

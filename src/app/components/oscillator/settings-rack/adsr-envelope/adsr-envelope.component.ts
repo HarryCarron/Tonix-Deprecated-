@@ -42,7 +42,8 @@ import {
     ElementRef,
     Renderer2,
     forwardRef,
-    Input
+    Input,
+    HostListener
 } from '@angular/core';
 
 import { FLOOR, CIEL } from './envelope.constants';
@@ -396,13 +397,28 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
     }
 
+    showSectorHighlighter(renderer, sectorHighlighter) {
+        if (!this.handleCurrentlyClicked) {
+            renderer.setAttribute(sectorHighlighter, 'opacity', 1);
+        }
+
+    }
+
     ngOnInit(): void {
         this.envBody = this.envService.getEnvBody(this.Xmargin, this.rightMargin);
         this.beginHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.begin);
         this.attackHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.attack);
 
-        this.attackSector = this.envService.getEnvSector(this.sectorClicked, EnvelopeSector.attack);
-        this.releaseSector = this.envService.getEnvSector(this.sectorClicked, EnvelopeSector.release);
+        this.attackSector = this.envService.getEnvSector(
+            this.sectorClicked,
+            EnvelopeSector.attack,
+            (rendered, sectorHighlighter) => this.showSectorHighlighter(rendered, sectorHighlighter));
+
+        this.releaseSector = this.envService.getEnvSector(
+            this.sectorClicked,
+            EnvelopeSector.release,
+            (rendered, sectorHighlighter) =>  this.showSectorHighlighter(rendered, sectorHighlighter));
+
         if (!this.staccato) {
             this.decayHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.decay);
             this.qDecayHandle = this.envService.qHandle();
@@ -423,7 +439,6 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
 
  // #region [ Events ]
-
 
 
     private turnOn(on): void {
@@ -466,29 +481,32 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         this.render();
     }
 
+
+
+    @HostListener('document:mousemove', ['$event'])
+    mouseMove({x, y}): void {
+        if (this.handleCurrentlyClicked) {
+            const newX = x - this.svgContCoords.left;
+            const newY = y - this.svgContCoords.top;
+            this.newHandlePoint(
+                this.activeHandle,
+                (newX < 0) ? 0 : newX,
+                (newY < 0) ? 0 : newY,
+            );
+            this.render();
+        }
+    }
+
+    @HostListener('document:mouseup', ['$event'])
+    mouseUp() {
+        this.handleCurrentlyClicked = false;
+    }
+
+
     public handleClicked = (handle) => {
 
         this.handleCurrentlyClicked = true;
         this.activeHandle = parseInt(handle.id, 10);
-
-        const mouseUp = (() => {
-            this.handleCurrentlyClicked = false;
-        });
-
-        const mouseMove = (({x, y}) => {
-            if (this.handleCurrentlyClicked) {
-                const newX = x - this.svgContCoords.left;
-                const newY = y - this.svgContCoords.top;
-                this.newHandlePoint(
-                    this.activeHandle,
-                    (newX < 0) ? 0 : newX,
-                    (newY < 0) ? 0 : newY,
-                );
-                this.render();
-            }
-        });
-
-        this.windowEvents.enableDragAndDrop(mouseUp, mouseMove);
     }
  // #endregion
 

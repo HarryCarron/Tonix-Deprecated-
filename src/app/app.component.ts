@@ -80,16 +80,12 @@ export class AppComponent implements OnInit {
         const reverb = new Tone.Reverb(1000);
         const osc = new Tone.Oscillator(note + (nextOctave || this.currentOctave))
         .connect(ampEnv)
-        .connect(reverb).start();
+        .connect(reverb);
         // trigger the envelopes attack and release "8t" apart
         ampEnv.triggerAttackRelease(3);
     }
 
     ngOnInit() {
-
-
-        
-
         this.now = Tone.now();
     }
 }
