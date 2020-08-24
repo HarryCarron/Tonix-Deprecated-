@@ -59,6 +59,7 @@ export class EnvelopeService {
     this.renderer.setAttribute(body, 'stroke-linecap', 'round');
     this.renderer.setAttribute(body, 'fill', 'white');
     this.renderer.setAttribute(body, 'stroke-linejoin', 'round');
+    // this.renderer.setAttribute(body, 'fill', 'url(#grad1)');
 
     // const line = this.renderer.createElement('line', 'svg');
     // this.renderer.setAttribute(line, 'x1', xMargin);

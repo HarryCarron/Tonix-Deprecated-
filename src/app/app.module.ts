@@ -20,6 +20,7 @@ import { EffectRackComponent } from './components/effect-rack/effect-rack.compon
 import { NgxSelectModule } from 'ngx-select-ex';
 import { SearchBarComponent } from './controls/search-bar/search-bar.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SettingsMenuComponent } from './settings-menu/settings-menu.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     PianoRollComponent,
     SimpleEqComponent,
     EffectRackComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    SettingsMenuComponent
   ],
   imports: [
     BrowserModule,

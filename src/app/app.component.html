@@ -1,24 +1,27 @@
 
-<div class='fullExpand centerChild'>
-    <div>
-        <div class='topbar'></div>
-        <div class='synth'>
-            <div class='content-wrapper d-flex' style='height: 95%;'>
-                <div class='osc-rack h-100'>
-                    <!-- <ngx-select style='margin: 10px 10px 0 10px' [(ngModel)]="itemId"></ngx-select> -->
-
-                    <ng-container *ngFor='let osc of oscillators; let i = index'>
-                        <app-oscillator [data]="osc"></app-oscillator>
-                    </ng-container>
+<div class='h-100 w-100 d-flex flex-column' (click)='t()'>
+    <app-settings-menu></app-settings-menu>
+    <div class='flex-grow-1 centerChild' style='transition: 0.5s;' [ngClass]="{'bodyLocked': lockBody}">
+        <div>
+            <div class='topbar'></div>
+            <div class='synth'>
+                <div class='content-wrapper d-flex' style='height: 95%;'>
+                    <div class='osc-rack h-100'>
+                        <ng-container *ngFor='let osc of oscillators; let i = index'>
+                            <app-oscillator [data]="osc"></app-oscillator>
+                        </ng-container>
+                    </div>
+                    <app-effect-rack></app-effect-rack>
                 </div>
-                <app-effect-rack></app-effect-rack>
+                <div style='height: 5%; background-color: #ff9170;'>
+
+                </div>
+    
+    
             </div>
-            <div style='height: 5%; background-color: #ff9170'>
-
-            </div>
-
-
+    
         </div>
-
     </div>
+    
 </div>
+

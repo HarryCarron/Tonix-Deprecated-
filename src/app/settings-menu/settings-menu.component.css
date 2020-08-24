@@ -1,0 +1,24 @@
+
+
+/* * {
+    font-family: 'Open Sans', sans-serif;
+} */
+
+.title {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 800;
+    font-size: 1.2em;
+}
+
+.settingsContainer {
+    transition: 0.2s;
+    height: 60px;
+    background-color: red;
+    display: flex;
+    flex-basis: 40px;
+}
+
+.menuItem {
+    color:#ff9170;
+    font-size: 2em;
+}

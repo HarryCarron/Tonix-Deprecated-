@@ -54,6 +54,11 @@
     display: flex;
 }
 
+.bodyLocked {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
 .osc-rack{
     display: flex;
     flex-direction: column;

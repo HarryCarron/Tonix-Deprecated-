@@ -1,10 +1,7 @@
 // todo: change naming convention: 'parts' to be called 'sectors'
 // todo: remove dynamic container width code: not needed: move container size to constants
 // todo: type all props
-// // todo: add staccato implementation of this.newHandlePoint()
-// // todo: name renderer regions
-// // todo: move all interfaces, enums etc to envelope-objects
-// // todo: fine tune new clas contr args corectly one object arg with interface and document
+
 
 import { WindowEventsService } from '../../../../services/events/window-events.service';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
@@ -23,6 +20,8 @@ import {
     ModelToCoord,
     CoordsToModel
 } from './envelope-objects/model-coord-interface.object';
+
+import { AnimationService } from './../../../../services/animation/animation.service'
 
 import {
     EnvelopeService,
@@ -64,7 +63,8 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         private renderer: Renderer2,
         private envService: EnvelopeService,
         private windowEvents: WindowEventsService,
-        private utils: UtilitiesService
+        private utils: UtilitiesService,
+        private animation: AnimationService
     ) {
         this.envService.renderer = renderer;
     }

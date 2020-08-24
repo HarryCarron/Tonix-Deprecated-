@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { MasterService, Oscillator } from './services/master.service';
-import { FormsModule } from '@angular/forms';
-import { MouseMetricsComponent } from './developerTools/mouse-metrics/mouse-metrics.component';
-
-import { OscillatorComponent } from './components/oscillator/oscillator.component';
+import { AnimationService } from './services/animation/animation.service';
 
 import * as Tone from 'tone';
 import { Frequency } from 'tone';
@@ -14,7 +11,7 @@ import { Frequency } from 'tone';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-    constructor(private masterSrv: MasterService) {}
+    constructor(private masterSrv: MasterService, private ani: AnimationService) {}
 
     private voice;
     private now;
@@ -27,6 +24,8 @@ export class AppComponent implements OnInit {
     }).toDestination();
 
     oscillators: Oscillator[] = this.masterSrv.oscillators;
+
+    lockBody = false;
 
     @HostListener('document:keydown', ['$event'])
     keyPress({which, repeat}) {
@@ -85,7 +84,21 @@ export class AppComponent implements OnInit {
         ampEnv.triggerAttackRelease(3);
     }
 
+    t() {
+        Tone.start();
+    }
+
     ngOnInit() {
-        this.now = Tone.now();
+
+        const kickSynth = new Tone.MembraneSynth().toDestination();
+
+        const track = (time) => {
+            kickSynth.triggerAttackRelease('C3', '4n', time, 0.1);
+            console.log(Tone.Transport.position);
+        };
+        kickSynth.connect(new Tone.Reverb(1000));
+        const loopBeat = new Tone.Loop(track, '4n');
+        Tone.Transport.start();
+        // loopBeat.start(0);
     }
 }
