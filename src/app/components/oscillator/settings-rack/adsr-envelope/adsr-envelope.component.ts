@@ -515,7 +515,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
             currentCurve++;
             return currentCurve;
         }
-    };
+    }
 
     sectorClicked = (type) => {
 

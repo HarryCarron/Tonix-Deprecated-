@@ -38,7 +38,6 @@ export class AnimationService {
             requestAnimationFrame(animate);
             } else {
                 console.log(stopData, manipData);
-                
             // todo: some kind of success callback
             }
         };
