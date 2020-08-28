@@ -5,22 +5,44 @@ import { Injectable } from '@angular/core';
 })
 export class AnimationService {
 
-  constructor() {
+    private fps = 20;
+    private now;
+    private then;
+    private interval = 1000 / this.fps;
+    private delta;
 
+  constructor() {}
 
-  }
+    public valueToValueAnimation(aniCallback, data: any[], stopData: any[]) {
 
+        let manipData = data;
+        const travelTime = 10;
+        const travelUnits = data.map((d, i) =>
+        Math.round(Math.abs(d - stopData[i]) / travelTime)
+        );
 
-  public valueToValueAnimation(aniCallback, valuesStart) {
+        const animate = () => {
 
-    let originalValue = valuesStart;
+            manipData = manipData
+            .map((d, i) => {
+                const stopValue = stopData[i];
+                if (d === stopValue) {
+                    return d;
+                } else {
+                    return  Math.round(d > stopValue ? d - travelUnits[i] : d + travelUnits[i]);
+                }
+            });
 
-    const animate = () => {
-        originalValue = originalValue.map(v => v + 1);
-        aniCallback(originalValue);
-        requestAnimationFrame(animate);
-    };
+            aniCallback(manipData);
+            if (!manipData.every((d, i) => d >= stopData[i]) ) {
+            requestAnimationFrame(animate);
+            } else {
+                console.log(stopData, manipData);
+                
+            // todo: some kind of success callback
+            }
+        };
 
     animate();
-  }
-}
+    }
+    }

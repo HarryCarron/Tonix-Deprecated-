@@ -40,6 +40,22 @@ export class EnvelopeService {
     return qhandle;
   }
 
+  public gridLines(xMargin: number, index: number, availableTravel: number, division: number) {
+
+    const gridLine = this.renderer.createElement('line', 'svg');
+    this.renderer.setAttribute(gridLine, 'x1', index === 0 ? xMargin : xMargin + ((availableTravel / division) * index));
+    this.renderer.setAttribute(gridLine, 'x2', index === 0 ? xMargin : xMargin + ((availableTravel / division) * index));
+    this.renderer.setAttribute(gridLine, 'y1', CIEL);
+    this.renderer.setAttribute(gridLine, 'y2', FLOOR);
+    this.renderer.setAttribute(gridLine, 'stroke-linecap', 'round');
+    this.renderer.setAttribute(gridLine, 'stroke-dasharray', '2,5');
+    this.renderer.setAttribute(gridLine, 'stroke', 'rgb(255,255,255)');
+    this.renderer.setAttribute(gridLine, 'stroke-opacity', '0.8');
+    this.renderer.setAttribute(gridLine, 'stroke-width:', 2);
+    return gridLine;
+  }
+
+
   public limitContainer() {
     const part = this.renderer.createElement('rect', 'svg');
     this.renderer.setAttribute(part, 'fill', 'white');
@@ -116,7 +132,7 @@ abstract class EnvelopePartBase {
     protected floor: number;
     protected ciel: number;
     protected _output: QArray;
-    protected releaseType: CurveType;
+    public releaseType: CurveType;
     protected decayType: CurveType;
     protected attackType: CurveType;
     protected xMargin: number;

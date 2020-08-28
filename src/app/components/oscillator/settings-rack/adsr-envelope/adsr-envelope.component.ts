@@ -21,7 +21,7 @@ import {
     CoordsToModel
 } from './envelope-objects/model-coord-interface.object';
 
-import { AnimationService } from './../../../../services/animation/animation.service'
+import { AnimationService } from './../../../../services/animation/animation.service';
 
 import {
     EnvelopeService,
@@ -71,6 +71,11 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
     // #region [ Props ]
 
+    arr = [0, 1, 2, 3];
+    FLOOR = FLOOR;
+    CIEL = CIEL;
+    test;
+
     sectorForLoop = ['attack', 'decay', 'sustain', 'release']; // todo: get from enum
 
     CurveType = CurveTypeShort;
@@ -100,11 +105,11 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
     private containerWidth = null;
     private containerHeight = null;
 
-    private Xmargin = null;
+    public Xmargin = null;
     private readonly envWidth = 240;
 
     private envBody;
-    private availableTravel: number;
+    availableTravel: number;
 
     private attackCurve;
     private decayCurve;
@@ -190,7 +195,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
     // #region [ Render ]
 
-    private render() {
+    private render(animatedCurve?: EnvelopeSector) {
 
         const data = this.envData;
 
@@ -202,6 +207,48 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
         // envelope line
 
+        if (animatedCurve) {
+            const ra = new StacattoRelease(data);
+            const current = new StacattoRelease(data);
+            data.releaseCurve = this.curveToggle(ra.data.releaseCurve);
+            const finish = new StacattoRelease(data);
+
+            this.animation.valueToValueAnimation(
+                (de) => {
+
+
+                this.renderer.setAttribute(this.qReleaseHandle, 'cx',
+                de[0]);
+                this.renderer.setAttribute(this.qReleaseHandle, 'cy',
+                de[1]);
+
+                this.renderer.setAttribute(this.envBody, 'd',
+                    [
+                        new Begin(data).asString(),
+                        new Attack(data).asString(),
+                        this.staccato ? '' : new Decay(data).asString(),
+                        this.staccato ? '' : new Sustain(data).asString(),
+                        `Q${de[0]},${de[1]}, ${de[2]},${de[3]},`
+                    ].join('')
+                );
+                // Q${this.Qoutput[0]},${this.Qoutput[1]} ${this.pointOutput[0]},${this.pointOutput[1]}`
+
+            },
+            [
+                current.asArray()[0],
+                current.asArray()[1],
+                current.pointOutput[0],
+                current.pointOutput[1]
+            ]
+            ,
+            [
+                finish.asArray()[0],
+                finish.asArray()[1],
+                finish.pointOutput[0],
+                finish.pointOutput[1]
+            ]);
+        }
+
         this.renderer.setAttribute(this.envBody, 'd',
             [
                 new Begin(data).asString(),
@@ -211,6 +258,8 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
                 this.staccato ? new StacattoRelease(data).asString() : new Release(data).asString(),
             ].join('')
         );
+
+
 
         // begin handle
 
@@ -358,6 +407,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         this.containerHeight = (this.svgContainer as any).clientHeight;
         this.containerWidth = (this.svgContainer as any).clientWidth;
         this.availableTravel = this.containerWidth - (this.Xmargin * 2);
+        this.test = this.availableTravel / 4;
 
         this.travelUnit = this.availableTravel / 40;
 
@@ -369,31 +419,34 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         this.leftMargin = this.Xmargin;
         this.rightMargin = this.containerWidth - this.Xmargin;
 
+        [0, 1, 2, 3].forEach(n => this.renderer.appendChild(this.envelopeContainer,
+            this.envService.gridLines(this.Xmargin, n, this.availableTravel, 4)
+        ));
+
         this.renderer.setAttribute(this.envelopeContainer, 'height', this.containerHeight);
         this.renderer.setAttribute(this.envelopeContainer, 'width', this.containerWidth);
         this.renderer.appendChild(this.envelopeContainer, this.envBody);
 
-        this.renderer.appendChild(this.envelopeContainer, this.beginHandle);
-        this.renderer.appendChild(this.envelopeContainer, this.attackHandle);
-
-        this.renderer.appendChild(this.envelopeContainer, this.envBody);
-
         this.renderer.appendChild(this.envelopeContainer, this.qAttackHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.qReleaseHandle);
+
+        this.renderer.appendChild(this.envelopeContainer, this.attackSector);
+        this.renderer.appendChild(this.envelopeContainer, this.releaseSector);
 
         if (!this.staccato) {
             this.renderer.appendChild(this.envelopeContainer, this.qDecayHandle);
             this.renderer.appendChild(this.envelopeContainer, this.decayHandle);
         }
 
-        this.renderer.appendChild(this.envelopeContainer, this.qReleaseHandle);
-
         if (!this.staccato) {
             this.renderer.appendChild(this.envelopeContainer, this.sustainHandle);
         }
         this.renderer.appendChild(this.envelopeContainer, this.releaseHandle);
 
-        this.renderer.appendChild(this.envelopeContainer, this.attackSector);
-        this.renderer.appendChild(this.envelopeContainer, this.releaseSector);
+        this.renderer.appendChild(this.envelopeContainer, this.beginHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.attackHandle);
+
+
 
     }
 
@@ -406,6 +459,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.envBody = this.envService.getEnvBody(this.Xmargin, this.rightMargin);
+
         this.beginHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.begin);
         this.attackHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.attack);
 
@@ -454,10 +508,19 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         }
     }
 
+    private curveToggle = (currentCurve): number =>  {
+        if (currentCurve >= 2) {
+            return 0;
+        } else {
+            currentCurve++;
+            return currentCurve;
+        }
+    };
+
     sectorClicked = (type) => {
 
         const curveToggle = (currentCurve): number =>  {
-            if (currentCurve === 2) {
+            if (currentCurve === 1) {
                 return 0;
             } else {
                 currentCurve++;
@@ -467,18 +530,18 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
         switch (type) {
             case EnvelopeSector.attack: {
-                this.envData.attackCurve = curveToggle(this.envData.attackCurve);
+                // this.envData.attackCurve = curveToggle(this.envData.attackCurve);
                 break;
             }
             case EnvelopeSector.decay: {
-                this.envData.decayCurve = curveToggle(this.envData.decayCurve);
+                // this.envData.decayCurve = curveToggle(this.envData.decayCurve);
                 break;
             }
             case EnvelopeSector.release: {
-                this.envData.releaseCurve = curveToggle(this.envData.releaseCurve);
+                // this.envData.releaseCurve = curveToggle(this.envData.releaseCurve);
             }
         }
-        this.render();
+        this.render(type);
     }
 
 

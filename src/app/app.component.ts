@@ -85,20 +85,20 @@ export class AppComponent implements OnInit {
     }
 
     t() {
-        Tone.start();
+        // Tone.start();
     }
 
     ngOnInit() {
 
-        const kickSynth = new Tone.MembraneSynth().toDestination();
+        // const kickSynth = new Tone.MembraneSynth().toDestination();
 
-        const track = (time) => {
-            kickSynth.triggerAttackRelease('C3', '4n', time, 0.1);
-            console.log(Tone.Transport.position);
-        };
-        kickSynth.connect(new Tone.Reverb(1000));
-        const loopBeat = new Tone.Loop(track, '4n');
-        Tone.Transport.start();
-        // loopBeat.start(0);
+        // const track = (time) => {
+        //     kickSynth.triggerAttackRelease('C3', '4n', time, 0.1);
+        //     console.log(Tone.Transport.position);
+        // };
+        // kickSynth.connect(new Tone.Reverb(1000));
+        // const loopBeat = new Tone.Loop(track, '4n');
+        // Tone.Transport.start();
+        // // loopBeat.start(0);
     }
 }
