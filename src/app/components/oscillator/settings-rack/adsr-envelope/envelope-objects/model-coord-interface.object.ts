@@ -31,11 +31,8 @@ export class CoordsToModel {
 export class ModelToCoord {
 
     public attackCurve: number;
-
     public decayCurve: number;
-
     public releaseCurve: number;
-
     public Xmargin: number;
 
     public begin = {
@@ -79,36 +76,29 @@ export class ModelToCoord {
 
     }
 
-    private x = (n: number) => parseInt(n.toFixed(), 10);
-
     constructor(data: ModelToCoordData) {
 
-        this.travelUnit =           data.travelUnits;
+        this.travelUnit = data.travelUnits;
 
-        this.begin.x =              data.xMargin;
-        this.begin.y =              FLOOR;
-        this.attack.x = this.x(this.begin.x + ((data.envelopModelValues.attack * 10) * data.travelUnits));
-
-        this.attack.y =             CIEL;
-
+        this.begin.x = data.xMargin;
+        this.begin.y = FLOOR;
+        this.attack.x = this.begin.x + ((data.envelopModelValues.attack * 10) * data.travelUnits);
+        this.attack.y = CIEL;
         if (data.staccato) {
             this.release.x = (this.attack.x) + ((data.envelopModelValues.release * 10) * data.travelUnits);
-
-
-            this.release.y =        FLOOR;
+            this.release.y = FLOOR;
         } else {
-            this.decay.x =          this.attack.x + ((data.envelopModelValues.decay * 10) * data.travelUnits);
-            this.sustain.y =        ((FLOOR - CIEL) / 10) * (data.envelopModelValues.sustain * 10);
-            this.decay.y =          this.sustain.y;
-            this.sustain.x =        this.decay.x + ((0.4 * 10) * data.envelopModelValues.travelUnit);
-            this.release.x =        this.sustain.x + (data.envelopModelValues.release * 10) * data.travelUnits;
-            this.release.y =        FLOOR;
+            this.decay.x = this.attack.x + ((data.envelopModelValues.decay * 10) * data.travelUnits);
+            this.sustain.y = ((FLOOR - CIEL) / 10) * (data.envelopModelValues.sustain * 10);
+            this.decay.y = this.sustain.y;
+            this.sustain.x = this.decay.x + ((0.4 * 10) * data.envelopModelValues.travelUnit);
+            this.release.x = this.sustain.x + (data.envelopModelValues.release * 10) * data.travelUnits;
+            this.release.y = FLOOR;
         }
 
-        this.attackCurve =          data.envelopModelValues.attackCurve;
-        this.decayCurve =           data.envelopModelValues.decayCurve;
-        this.releaseCurve =         data.envelopModelValues.releaseCurve;
-
-        this.Xmargin =              data.xMargin;
+        this.attackCurve = data.envelopModelValues.attackCurve;
+        this.decayCurve =  data.envelopModelValues.decayCurve;
+        this.releaseCurve = data.envelopModelValues.releaseCurve;
+        this.Xmargin = data.xMargin;
     }
 }

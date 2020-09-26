@@ -11,7 +11,6 @@ import { SettingsRackComponent } from './components/oscillator/settings-rack/set
 import { PartialsComponent } from './components/oscillator/settings-rack/partials/partials.component';
 
 import { from, fromEventPattern } from 'rxjs';
-import { PartialsSelectorComponent } from './components/oscillator/settings-rack/partials/partials-selector/partials-selector.component';
 import { EffectsRackComponent } from './effects-rack/effects-rack.component';
 import { AdsrEnvelopeComponent } from './components/oscillator/settings-rack/adsr-envelope/adsr-envelope.component';
 import { PianoRollComponent } from './components/piano-roll/piano-roll.component';
@@ -31,7 +30,6 @@ import { SettingsMenuComponent } from './settings-menu/settings-menu.component';
     LedComponent,
     SettingsRackComponent,
     PartialsComponent,
-    PartialsSelectorComponent,
     EffectsRackComponent,
     AdsrEnvelopeComponent,
     PianoRollComponent,

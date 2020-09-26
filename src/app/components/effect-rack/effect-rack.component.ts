@@ -23,6 +23,7 @@ export class EffectRackComponent implements OnInit {
       {
         displayName: 'Auto Pan',
         id: effects.AutoPan,
+        description: 'Alters the volume of your signal from left, to right of your stereo output'
       },
       {
         displayName: 'Auto Filter',

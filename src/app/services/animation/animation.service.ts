@@ -1,47 +1,64 @@
 import { Injectable } from '@angular/core';
+import { interval } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnimationService {
 
-    private fps = 20;
-    private now;
-    private then;
-    private interval = 1000 / this.fps;
-    private delta;
-
   constructor() {}
 
-    public valueToValueAnimation(aniCallback, data: any[], stopData: any[]) {
+    public valueToValueAnimation(
+        aniCallback: (arg: number[]) => void,
+        data: number[],
+        stopData: number[],
+        duration: number = 10
+        ) {
 
         let manipData = data;
-        const travelTime = 10;
-        const travelUnits = data.map((d, i) =>
-        Math.round(Math.abs(d - stopData[i]) / travelTime)
-        );
+        let validators;
+        const greatThanVal = (v, i) => v < stopData[i];
+        const lessThanVal = (v, i) => v > stopData[i];
+
+        function prepare(d) {
+            validators = d.map(da => {
+                if (da >= stopData[1]) {
+                    return greatThanVal;
+                } else {
+                    return lessThanVal;
+                }
+            });
+        }
+
+        prepare(data);
+
+        const sanitise = v => v.map(va => Math.round(va));
+
+        data = sanitise(data);
+        stopData = sanitise(stopData);
+         const travelUnits = data.map((d, i) => Math.abs(d - stopData[i]) / duration );
 
         const animate = () => {
+
+            const then = performance.now();
 
             manipData = manipData
             .map((d, i) => {
                 const stopValue = stopData[i];
-                if (d === stopValue) {
-                    return d;
-                } else {
-                    return  Math.round(d > stopValue ? d - travelUnits[i] : d + travelUnits[i]);
-                }
+                return (d === stopValue) ? d : d > stopValue ? d - travelUnits[i] : d + travelUnits[i];
             });
 
             aniCallback(manipData);
-            if (!manipData.every((d, i) => d >= stopData[i]) ) {
-            requestAnimationFrame(animate);
+
+            if (validators.every(v => !!v())) {
+                requestAnimationFrame(animate);
+
             } else {
-                console.log(stopData, manipData);
+
             // todo: some kind of success callback
             }
         };
 
-    animate();
-    }
+        animate();
+        }
     }

@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Alata&family=Open+Sans&display=swap');
 @import "~@ng-select/ng-select/themes/material.theme.css";
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;800&display=swap');
 
 body, html {
     height: 100vh !important;

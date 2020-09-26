@@ -55,6 +55,19 @@ export class EnvelopeService {
     return gridLine;
   }
 
+  public gridNumber(xMargin: number, index: number, availableTravel: number, division: number) {
+
+    const gridNumber = this.renderer.createElement('text', 'svg');
+    this.renderer.setAttribute(gridNumber, 'x', index === 0 ? xMargin : (xMargin + ((availableTravel / division) * index)) - 3);
+    this.renderer.setAttribute(gridNumber, 'y', FLOOR + 15);
+    this.renderer.setAttribute(gridNumber, 'fill', 'rgb(255,255,255)');
+    this.renderer.setAttribute(gridNumber, 'stroke-opacity', '0.8');
+
+    const value = this.renderer.createText(index);
+    this.renderer.appendChild(gridNumber, value);
+    return gridNumber;
+  }
+
 
   public limitContainer() {
     const part = this.renderer.createElement('rect', 'svg');

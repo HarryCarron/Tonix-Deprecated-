@@ -4,6 +4,9 @@ import { PARTIAL_CONTAINER_HEIGHT } from './../../../../services/master.service'
 import { WindowEventsService } from '../../../../services/events/window-events.service';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
+import { AnimationService } from './../../../../services/animation/animation.service';
+import { UtilitiesService } from './../../../../services/utilities.service';
+
 @Component({
   selector: 'app-partials',
   templateUrl: './partials.component.html',
@@ -17,7 +20,9 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 export class PartialsComponent {
 
     constructor(
-        private windowEvnt: WindowEventsService
+        private windowEvnt: WindowEventsService,
+        private animation: AnimationService,
+        private utils: UtilitiesService
     ) { }
 
     private _partialSelector;
@@ -48,7 +53,6 @@ export class PartialsComponent {
 
     defaultHeight = PARTIAL_CONTAINER_HEIGHT;
 
-    t = () => console.log(this.hoveredPartial);
 
     hoveredPartial = {};
 
@@ -79,6 +83,8 @@ export class PartialsComponent {
         return true;
 
     }
+
+    t = () => console.log(this.hoveredPartial);
 
 
     @HostListener('window:mousedown', ['$event'])
@@ -121,9 +127,18 @@ export class PartialsComponent {
 
     randomisePartials() {
         const r = u => Math.floor(Math.random() * u) + 1;
-        this.partials = Array
+
+        const randomPs = this.partials = Array
         .from({length: r(32)})
         .map(a => r(10) / 10);
+
+        this.animation.valueToValueAnimation(
+            (d) => {this.partials = d; console.log(d); },
+            randomPs.map(p => 0),
+            randomPs
+        );
+
+
         this.onChange(this.partials);
     }
 
@@ -143,7 +158,11 @@ export class PartialsComponent {
 
     writeValue(partialValues): void {
         if (partialValues) {
-            this.partials = partialValues;
+            this.animation.valueToValueAnimation(
+                (d) => {this.partials = d; console.log(d); },
+                partialValues.map(p => 0),
+                partialValues
+            );
         }
     }
 

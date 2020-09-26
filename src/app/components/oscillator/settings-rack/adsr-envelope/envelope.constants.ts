@@ -1,3 +1,3 @@
-export const FLOOR = 100;
-export const CIEL = 20;
+export const FLOOR = 90;
+export const CIEL = 10;
 

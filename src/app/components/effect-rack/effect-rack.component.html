@@ -29,6 +29,9 @@
                     <div style='padding: 3px; font-weight: bold; flex-grow: 1'>
                         {{liveEffect.name}}
                     </div>
+                    <div>
+                        
+                    </div>
                     <div style='flex-basis: 10%; cursor: pointer'
                     (click)='removeLiveEffect(effectIndex);'
                     class='centerChild'>
@@ -38,7 +41,8 @@
 
                 <div style='display: flex; margin-top: 10px; padding-bottom: 5px;'>
                     <div *ngFor='let param of liveEffect.params' class='centerChild'>
-                        <b>{{param}}</b> 
+                        <b>{{param}}</b>
+                        
                         <app-knob style='margin: 0 10px;'></app-knob>
 
                     </div>

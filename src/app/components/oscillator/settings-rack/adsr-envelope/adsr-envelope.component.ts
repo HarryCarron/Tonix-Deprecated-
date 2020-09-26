@@ -61,29 +61,22 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
   constructor(
         private renderer: Renderer2,
-        private envService: EnvelopeService,
-        private windowEvents: WindowEventsService,
-        private utils: UtilitiesService,
-        private animation: AnimationService
+        private envService: EnvelopeService, // ? considering changing name to envelope factory
+        private windowEvents: WindowEventsService
     ) {
         this.envService.renderer = renderer;
     }
 
     // #region [ Props ]
 
-    arr = [0, 1, 2, 3];
     FLOOR = FLOOR;
     CIEL = CIEL;
-    test;
-
-    sectorForLoop = ['attack', 'decay', 'sustain', 'release']; // todo: get from enum
 
     CurveType = CurveTypeShort;
     viewEnvValues;
-    private leftMargin;
     private rightMargin;
     private travelUnit;
-    private secondSector;
+
 
     onChange;
 
@@ -97,49 +90,35 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         this.turnOn(o);
     }
 
-    private containerLimit = {
-        h: null,
-        w: null
-    };
-
     private containerWidth = null;
     private containerHeight = null;
 
     public Xmargin = null;
-    private readonly envWidth = 240;
+    private readonly ENV_WIDTH = 240;
 
     private envBody;
     availableTravel: number;
 
-    private attackCurve;
-    private decayCurve;
-    private releaseCurve;
-
     private envData;
 
-    private beginHandle;
-    private attackHandle;
-    private decayHandle;
-    private sustainHandle;
-    private sustainEndHandle;
-    private releaseHandle;
+    private svgnode_beginHandle;
+    private svgnode_attackHandle;
+    private svgnode_decayHandle;
+    private svgnode_sustainHandle;
+    private svgnode_sustainEndHandle;
+    private svgnode_releaseHandle;
 
-    private qAttackHandle;
-    private qReleaseHandle;
-    private qDecayHandle;
+    private svgnode_qAttackHandle;
+    private svgnode_qReleaseHandle;
+    private svgnode_qDecayHandle;
 
-    private attackSector;
-    private decaySector;
-    private sustainSector;
-    private releaseSector;
-
-    private limitContainer;
+    private svgnode_attackSector;
+    private svgnode_releaseSector;
 
     private handleCurrentlyClicked = false;
 
     private activeHandle;
 
-    private envelopeData;
     // #endregion
 
     // #region [ TemplateBinding ]
@@ -205,50 +184,6 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         const s = data.s;
         const r = data.r;
 
-        // envelope line
-
-        if (animatedCurve) {
-            const ra = new StacattoRelease(data);
-            const current = new StacattoRelease(data);
-            data.releaseCurve = this.curveToggle(ra.data.releaseCurve);
-            const finish = new StacattoRelease(data);
-
-            this.animation.valueToValueAnimation(
-                (de) => {
-
-
-                this.renderer.setAttribute(this.qReleaseHandle, 'cx',
-                de[0]);
-                this.renderer.setAttribute(this.qReleaseHandle, 'cy',
-                de[1]);
-
-                this.renderer.setAttribute(this.envBody, 'd',
-                    [
-                        new Begin(data).asString(),
-                        new Attack(data).asString(),
-                        this.staccato ? '' : new Decay(data).asString(),
-                        this.staccato ? '' : new Sustain(data).asString(),
-                        `Q${de[0]},${de[1]}, ${de[2]},${de[3]},`
-                    ].join('')
-                );
-                // Q${this.Qoutput[0]},${this.Qoutput[1]} ${this.pointOutput[0]},${this.pointOutput[1]}`
-
-            },
-            [
-                current.asArray()[0],
-                current.asArray()[1],
-                current.pointOutput[0],
-                current.pointOutput[1]
-            ]
-            ,
-            [
-                finish.asArray()[0],
-                finish.asArray()[1],
-                finish.pointOutput[0],
-                finish.pointOutput[1]
-            ]);
-        }
-
         this.renderer.setAttribute(this.envBody, 'd',
             [
                 new Begin(data).asString(),
@@ -259,70 +194,67 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
             ].join('')
         );
 
-
-
         // begin handle
 
-        this.renderer.setAttribute(this.beginHandle, 'cx', b.x);
-        this.renderer.setAttribute(this.beginHandle, 'cy', b.y.toString());
+        this.renderer.setAttribute(this.svgnode_beginHandle, 'cx', b.x);
+        this.renderer.setAttribute(this.svgnode_beginHandle, 'cy', b.y.toString());
 
         // attack handle
 
-        this.renderer.setAttribute(this.attackHandle, 'cx', a.x);
-        this.renderer.setAttribute(this.attackHandle, 'cy', a.y);
+        this.renderer.setAttribute(this.svgnode_attackHandle, 'cx', a.x);
+        this.renderer.setAttribute(this.svgnode_attackHandle, 'cy', a.y);
 
         if (!this.staccato) {
 
             // decay handle
-            this.renderer.setAttribute(this.decayHandle, 'cx', d.x);
-            this.renderer.setAttribute(this.decayHandle, 'cy', d.y);
+            this.renderer.setAttribute(this.svgnode_decayHandle, 'cx', d.x);
+            this.renderer.setAttribute(this.svgnode_decayHandle, 'cy', d.y);
 
             // decay q point
-            this.renderer.setAttribute(this.qDecayHandle, 'cx', new Decay(data).asArray()[0].toString());
-            this.renderer.setAttribute(this.qDecayHandle, 'cy', new Decay(data).asArray()[1].toString());
+            this.renderer.setAttribute(this.svgnode_qDecayHandle, 'cx', new Decay(data).asArray()[0].toString());
+            this.renderer.setAttribute(this.svgnode_qDecayHandle, 'cy', new Decay(data).asArray()[1].toString());
 
             // sustain handle
-            this.renderer.setAttribute(this.sustainHandle, 'cx', s.x);
-            this.renderer.setAttribute(this.sustainHandle, 'cy', s.y);
+            this.renderer.setAttribute(this.svgnode_sustainHandle, 'cx', s.x);
+            this.renderer.setAttribute(this.svgnode_sustainHandle, 'cy', s.y);
         }
 
         // release handle
-        this.renderer.setAttribute(this.releaseHandle, 'cx', r.x);
-        this.renderer.setAttribute(this.releaseHandle, 'cy', r.y);
+        this.renderer.setAttribute(this.svgnode_releaseHandle, 'cx', r.x);
+        this.renderer.setAttribute(this.svgnode_releaseHandle, 'cy', r.y);
 
         // attack q point
-        this.renderer.setAttribute(this.qAttackHandle, 'cx', new Attack(data).asArray()[0].toString());
-        this.renderer.setAttribute(this.qAttackHandle, 'cy', new Attack(data).asArray()[1].toString());
-
+        this.renderer.setAttribute(this.svgnode_qAttackHandle, 'cx', new Attack(data).asArray()[0].toString());
+        this.renderer.setAttribute(this.svgnode_qAttackHandle, 'cy', new Attack(data).asArray()[1].toString());
 
         // attack sector
 
-        this.renderer.setAttribute(this.attackSector, 'x', b.x);
-        this.renderer.setAttribute(this.attackSector, 'y', a.y);
-        this.renderer.setAttribute(this.attackSector, 'width', (a.x - this.Xmargin).toString());
-        this.renderer.setAttribute(this.attackSector, 'height', (FLOOR - a.y).toString());
+        this.renderer.setAttribute(this.svgnode_attackSector, 'x', b.x);
+        this.renderer.setAttribute(this.svgnode_attackSector, 'y', a.y);
+        this.renderer.setAttribute(this.svgnode_attackSector, 'width', (a.x - this.Xmargin).toString());
+        this.renderer.setAttribute(this.svgnode_attackSector, 'height', (FLOOR - a.y).toString());
 
         // release sector
 
-        this.renderer.setAttribute(this.releaseSector, 'x', a.x);
-        this.renderer.setAttribute(this.releaseSector, 'y', a.y);
-        this.renderer.setAttribute(this.releaseSector, 'width', (r.x - a.x).toString());
-        this.renderer.setAttribute(this.releaseSector, 'height', (FLOOR - a.y).toString());
+        this.renderer.setAttribute(this.svgnode_releaseSector, 'x', a.x);
+        this.renderer.setAttribute(this.svgnode_releaseSector, 'y', a.y);
+        this.renderer.setAttribute(this.svgnode_releaseSector, 'width', (r.x - a.x).toString());
+        this.renderer.setAttribute(this.svgnode_releaseSector, 'height', (FLOOR - a.y).toString());
 
         // release q handle
-        this.renderer.setAttribute(this.qReleaseHandle, 'cx',
+        this.renderer.setAttribute(this.svgnode_qReleaseHandle, 'cx',
         this.staccato ?  new StacattoRelease(data).asArray()[0].toString() : new Release(data).asArray()[0].toString());
-        this.renderer.setAttribute(this.qReleaseHandle, 'cy',
+        this.renderer.setAttribute(this.svgnode_qReleaseHandle, 'cy',
         this.staccato ? new StacattoRelease(data).asArray()[1].toString() : new Release(data).asArray()[1].toString());
 
-        const e = new CoordsToModel(
+        const dataForModel = new CoordsToModel(
             {
             coords: this.envData,
             staccato: this.staccato
             }
         );
-        this.viewEnvValues = e;
-        this.onChange(e);
+        this.viewEnvValues = dataForModel;
+        this.onChange(dataForModel);
     }
 
     private newHandlePoint(
@@ -406,45 +338,39 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
         this.containerHeight = (this.svgContainer as any).clientHeight;
         this.containerWidth = (this.svgContainer as any).clientWidth;
+        this.Xmargin = Math.abs(this.containerWidth - this.ENV_WIDTH) / 2;
         this.availableTravel = this.containerWidth - (this.Xmargin * 2);
-        this.test = this.availableTravel / 4;
 
         this.travelUnit = this.availableTravel / 40;
-
-        this.containerLimit.h = this.containerHeight;
-        this.containerLimit.w = this.containerWidth;
-
-        this.Xmargin = (this.containerWidth - this.envWidth) / 2;
-
-        this.leftMargin = this.Xmargin;
         this.rightMargin = this.containerWidth - this.Xmargin;
 
-        [0, 1, 2, 3].forEach(n => this.renderer.appendChild(this.envelopeContainer,
-            this.envService.gridLines(this.Xmargin, n, this.availableTravel, 4)
-        ));
+        [0, 1, 2, 3, 4].forEach(n => {
+            this.renderer.appendChild(this.envelopeContainer, this.envService.gridLines(this.Xmargin, n, this.availableTravel, 4));
+            this.renderer.appendChild(this.envelopeContainer, this.envService.gridNumber(this.Xmargin, n, this.availableTravel, 4));
+        });
 
         this.renderer.setAttribute(this.envelopeContainer, 'height', this.containerHeight);
         this.renderer.setAttribute(this.envelopeContainer, 'width', this.containerWidth);
         this.renderer.appendChild(this.envelopeContainer, this.envBody);
 
-        this.renderer.appendChild(this.envelopeContainer, this.qAttackHandle);
-        this.renderer.appendChild(this.envelopeContainer, this.qReleaseHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.svgnode_qAttackHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.svgnode_qReleaseHandle);
 
-        this.renderer.appendChild(this.envelopeContainer, this.attackSector);
-        this.renderer.appendChild(this.envelopeContainer, this.releaseSector);
+        this.renderer.appendChild(this.envelopeContainer, this.svgnode_attackSector);
+        this.renderer.appendChild(this.envelopeContainer, this.svgnode_releaseSector);
 
         if (!this.staccato) {
-            this.renderer.appendChild(this.envelopeContainer, this.qDecayHandle);
-            this.renderer.appendChild(this.envelopeContainer, this.decayHandle);
+            this.renderer.appendChild(this.envelopeContainer, this.svgnode_qDecayHandle);
+            this.renderer.appendChild(this.envelopeContainer, this.svgnode_decayHandle);
         }
 
         if (!this.staccato) {
-            this.renderer.appendChild(this.envelopeContainer, this.sustainHandle);
+            this.renderer.appendChild(this.envelopeContainer, this.svgnode_sustainHandle);
         }
-        this.renderer.appendChild(this.envelopeContainer, this.releaseHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.svgnode_releaseHandle);
 
-        this.renderer.appendChild(this.envelopeContainer, this.beginHandle);
-        this.renderer.appendChild(this.envelopeContainer, this.attackHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.svgnode_beginHandle);
+        this.renderer.appendChild(this.envelopeContainer, this.svgnode_attackHandle);
 
 
 
@@ -460,28 +386,28 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.envBody = this.envService.getEnvBody(this.Xmargin, this.rightMargin);
 
-        this.beginHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.begin);
-        this.attackHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.attack);
+        this.svgnode_beginHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.begin);
+        this.svgnode_attackHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.attack);
 
-        this.attackSector = this.envService.getEnvSector(
+        this.svgnode_attackSector = this.envService.getEnvSector(
             this.sectorClicked,
             EnvelopeSector.attack,
             (rendered, sectorHighlighter) => this.showSectorHighlighter(rendered, sectorHighlighter));
 
-        this.releaseSector = this.envService.getEnvSector(
+        this.svgnode_releaseSector = this.envService.getEnvSector(
             this.sectorClicked,
             EnvelopeSector.release,
             (rendered, sectorHighlighter) =>  this.showSectorHighlighter(rendered, sectorHighlighter));
 
         if (!this.staccato) {
-            this.decayHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.decay);
-            this.qDecayHandle = this.envService.qHandle();
+            this.svgnode_decayHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.decay);
+            this.svgnode_qDecayHandle = this.envService.qHandle();
         }
-        this.releaseHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.release);
-        this.sustainHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.sustain);
+        this.svgnode_releaseHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.release);
+        this.svgnode_sustainHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.sustain);
 
-        this.qAttackHandle = this.envService.qHandle();
-        this.qReleaseHandle = this.envService.qHandle();
+        this.svgnode_qAttackHandle = this.envService.qHandle();
+        this.svgnode_qReleaseHandle = this.envService.qHandle();
 
     }
 
@@ -495,16 +421,16 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
  // #region [ Events ]
 
 
-    private turnOn(on): void {
-        if (this.attackHandle) {
-            this.renderer.setAttribute(this.attackHandle, 'visibility', on ? 'visible' : 'hidden');
-            this.renderer.setAttribute(this.beginHandle, 'visibility', on ? 'visible' : 'hidden');
-            this.renderer.setAttribute(this.releaseHandle, 'visibility', on ? 'visible' : 'hidden');
+    private turnOn(on): void { // todo: sort this
+        if (this.svgnode_attackHandle) {
+            this.renderer.setAttribute(this.svgnode_attackHandle, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.svgnode_beginHandle, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.svgnode_releaseHandle, 'visibility', on ? 'visible' : 'hidden');
             this.renderer.setAttribute(this.envBody, 'opacity', on ? '1' : '0.6');
-            this.renderer.setAttribute(this.qAttackHandle, 'visibility', on ? 'visible' : 'hidden');
-            this.renderer.setAttribute(this.qReleaseHandle, 'visibility', on ? 'visible' : 'hidden');
-            this.renderer.setAttribute(this.attackSector, 'visibility', on ? 'visible' : 'hidden');
-            this.renderer.setAttribute(this.releaseSector, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.svgnode_qAttackHandle, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.svgnode_qReleaseHandle, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.svgnode_attackSector, 'visibility', on ? 'visible' : 'hidden');
+            this.renderer.setAttribute(this.svgnode_releaseSector, 'visibility', on ? 'visible' : 'hidden');
         }
     }
 
@@ -530,15 +456,15 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
         switch (type) {
             case EnvelopeSector.attack: {
-                // this.envData.attackCurve = curveToggle(this.envData.attackCurve);
+                this.envData.attackCurve = curveToggle(this.envData.attackCurve);
                 break;
             }
             case EnvelopeSector.decay: {
-                // this.envData.decayCurve = curveToggle(this.envData.decayCurve);
+                this.envData.decayCurve = curveToggle(this.envData.decayCurve);
                 break;
             }
             case EnvelopeSector.release: {
-                // this.envData.releaseCurve = curveToggle(this.envData.releaseCurve);
+                this.envData.releaseCurve = curveToggle(this.envData.releaseCurve);
             }
         }
         this.render(type);
