@@ -333,6 +333,12 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
     // #region [ Initialisation ]
 
+    // {'opacity' : staccato ? '0.6' : '1'}
+
+    dimIfStaccato() {
+      return {'opacity' : this.staccato ? '0.6' : '1'};
+    }
+
     private initContainer() {
 
         this.containerHeight = (this.svgContainer as any).clientHeight;

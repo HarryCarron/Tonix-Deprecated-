@@ -1,27 +1,20 @@
-<div class='h-100' stye='display:flex; flex-direction: column'>
+<div class='h-100'>
 
-    <div class='w-100' style='height: 85%;' #svgContainer>
-        <svg #envelopeContainer>
-
-
-        </svg>
+    <div class='w-100 svg-container' #svgContainer>
+        <svg #envelopeContainer></svg>
     </div>
-    <div style='height: 15%; font-size: 1.25em; font-weight: bold; text-transform: uppercase;' class='d-flex'>
-        
-        <div style='flex-basis: 25%;' class='centerChild d-flex'>
-            <!-- attack -->
+
+    <div class='d-flex data-view'>
+        <div class='centerChild flex-grow-1'>
             A: {{viewEnvValues?.attack}} - {{CurveType[viewEnvValues?.attackCurve]}}
         </div>
-        <div style='flex-basis: 25%;' [ngStyle]="{'opacity' : staccato ? '0.6' : '1'}" class='centerChild'>
-            <!-- decay -->
+        <div class='centerChild flex-grow-1' [ngStyle]="dimIfStaccato()" >
             D: {{ staccato ? '0' : viewEnvValues?.decay}}
         </div>
-        <div style='flex-basis: 25%;' [ngStyle]="{'opacity' : staccato ? '0.6' : '1'}" class='centerChild'>
-            <!-- sustain -->
+        <div class='centerChild flex-grow-1' [ngStyle]="dimIfStaccato()">
             S: {{ staccato ? '0' : viewEnvValues?.sustain}}
         </div>
-        <div style='flex-basis: 25%;' class='centerChild'>
-            <!-- release -->
+        <div class='centerChild flex-grow-1'>
             R: {{viewEnvValues?.release}} - {{CurveType[viewEnvValues?.releaseCurve]}}
         </div>
     </div>

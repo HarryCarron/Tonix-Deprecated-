@@ -1,52 +1,43 @@
 <div class='h-100'>
 
-    <div #partialsSelector
-    style='height: 85%; display: flex; align-items: flex-end;'>
-        <div *ngFor='let p of partials; let pIndex = index'
-        (moueenter)='hoveredPartial[pIndex] = true'
-        (moueenter)='hoveredPartial[pIndex] = false'
-        class='h-100 indContainer drag'
-        style=' display: flex; flex-direction: column; cursor: pointer;'>
-            <div style='margin-top: auto; height: 0; transition: 1s; ' class='centerChild trans'
+    <div #partialsSelector class='d-flex align-items-end svg-container'>
+        <div *ngFor='let p of partials; let i = index;'
+        class='h-100 ind-container d-flex flex-column cursor-pointer'>
+            <div class='centerChild inner-partial-container'
             [ngStyle]="{'height' : (p * 100) + '%'}">
-                <div class='centerChild'
-                (click)='t()'
-                [ngStyle]="{'width': (90 - partials.length) + '%', 'background-color' : hoveredPartial[pIndex] ? '#ffe9e2' : '#F8BEAE' }"
-                style='border: 1px solid #ffe2e2; border-top:1px solid yellow; border-radius: 2px; width: 80%; height: 100%; margin-top:5px;'>
-                    <!-- <div [hidden]='(p * 100 <= 10) || partials.length > 15'>{{ (p * 100).toFixed() }}</div> -->
-                </div>
+                <div class='centerChild inner-inner-partial-container'
+                [ngStyle]="{'width': (90 - partials.length) + '%'}">
+              </div>
             </div>
         </div>
     </div>
 
-    <div style='height: 15%; font-size: 1.25em;
-    font-weight: bold;
-    text-transform: uppercase;'>
+    <div class='control-bar'>
         <div class='d-flex h-100'>
-            <div style='width:60%;' class='h-100'>
-                <div style='width: 60px; cursor: pointer;' class='h-100 centerChild' (click)='randomisePartials()'>
+            <div class='control-bar-left h-100'>
+                <div class='h-100 centerChild random-button' (click)='randomisePartials()'>
                     RANDOM
                 </div>
-                
-            </div>
-        
-            <div class='h-100 centerChild' style='width:40%;' class='h-100 d-flex'>
 
-                <div class='centerChild' style='width: 20px; cursor: pointer' (click)="updatePartials(false)">
+            </div>
+
+            <div class='h-100 centerChild control-bar-right' class='h-100 d-flex'>
+
+                <div class='centerChild increment-container' (click)="updatePartials(false)">
                     <i class="fas fa-minus"></i>
                 </div>
-        
-                <div style='width: 70px;' class='centerChild'>
+
+                <div class='centerChild count-container'>
                     COUNT: {{partials?.length}}
                 </div>
 
-                <div class='centerChild' style='width: 20px; cursor: pointer' (click)="updatePartials(true)">
+                <div class='centerChild increment-container' (click)="updatePartials(true)">
                     <i class="fas fa-plus"></i>
                 </div>
-        
+
             </div>
          </div>
     </div>
 
-    
+
 </div>

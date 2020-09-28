@@ -1,38 +1,10 @@
-
-.nodeStyle {
-    stroke:white;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-    stroke-width:3px;
-    cursor: pointer
+.svg-container {
+  height: 85%;
 }
 
-* {
-
-    font-family: 'Roboto', sans-serif;
+.data-view {
+  height: 15%;
+  font-size: 1.25em;
+  font-weight: bold;
+  text-transform: uppercase;
 }
-
-.partLabel {
-
-    font-weight: bold;
-}
-
-.rightSelector {
-    text-align: right;
-}
-
-.rightMenu {
-    text-align: right;
-}
-
-.partSelector {
-    width: 70%;
-    opacity: 0.8;
-    font-size: 1.2em;
-    letter-spacing: 1.2px;
-}
-
-.partSelectable {
-    font-weight: 300;
-}
-

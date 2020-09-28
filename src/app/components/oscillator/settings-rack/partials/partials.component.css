@@ -6,10 +6,6 @@ textarea:focus, input:focus {
     outline: none;
 }
 
-.trans {
-    transition: 2s;
-}
-
 .partialsInteractiveContainer {
     display: -ms-flexbox;
     display: -webkit-flex;
@@ -68,7 +64,50 @@ textarea:focus, input:focus {
     font-size: 1.25em;
 }
 
-.indContainer {
+.ind-container {
     flex: auto;
     margin-top: auto;
+}
+
+.svg-container{
+  height: 85%;
+  align-items: flex-end;
+}
+.inner-partial-container {
+  margin-top: auto;
+  height: 0;
+  transition: 1s;
+}
+
+.inner-inner-partial-container {
+  border: 1px solid #ffe2e2;
+  border-radius: 2px;
+  width: 80%;
+  height: 100%;
+  margin-top:5px;
+}
+.control-bar {
+  height: 15%; font-size: 1.25em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.control-bar-left{
+  width: 60%;
+}
+.control-bar-right{
+  width: 40%;
+}
+
+.random-button {
+  width: 60px;
+  cursor: pointer;
+}
+
+.count-container {
+  width: 70px;
+}
+
+.increment-container{
+  width: 20px;
+  cursor: pointer;
 }
