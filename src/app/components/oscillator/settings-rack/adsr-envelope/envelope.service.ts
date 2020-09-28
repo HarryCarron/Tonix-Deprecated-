@@ -48,7 +48,7 @@ export class EnvelopeService {
     this.renderer.setAttribute(gridLine, 'y1', CIEL);
     this.renderer.setAttribute(gridLine, 'y2', FLOOR);
     this.renderer.setAttribute(gridLine, 'stroke-linecap', 'round');
-    this.renderer.setAttribute(gridLine, 'stroke-dasharray', '2,5');
+    this.renderer.setAttribute(gridLine, 'stroke-dasharray', '1,5');
     this.renderer.setAttribute(gridLine, 'stroke', 'rgb(255,255,255)');
     this.renderer.setAttribute(gridLine, 'stroke-opacity', '0.8');
     this.renderer.setAttribute(gridLine, 'stroke-width:', 2);

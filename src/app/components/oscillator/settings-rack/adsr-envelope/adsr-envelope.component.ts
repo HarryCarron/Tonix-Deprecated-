@@ -73,22 +73,21 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
     CIEL = CIEL;
 
     CurveType = CurveTypeShort;
-    viewEnvValues;
+    viewEnvValues; // todo think of more elegrant solution to this
     private rightMargin;
     private travelUnit;
-
 
     onChange;
 
     _isOn: boolean;
-
-    @Input() staccato = false;
 
     @Input()
     set isOn(o) {
         this._isOn = o;
         this.turnOn(o);
     }
+
+    @Input() staccato = false;
 
     private containerWidth = null;
     private containerHeight = null;
@@ -446,7 +445,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
     sectorClicked = (type) => {
 
         const curveToggle = (currentCurve): number =>  {
-            if (currentCurve === 1) {
+            if (currentCurve === 2) {
                 return 0;
             } else {
                 currentCurve++;
