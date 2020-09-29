@@ -72,6 +72,7 @@ textarea:focus, input:focus {
 .svg-container{
   height: 85%;
   align-items: flex-end;
+  padding-top:5px;
 }
 .inner-partial-container {
   margin-top: auto;
@@ -81,10 +82,9 @@ textarea:focus, input:focus {
 
 .inner-inner-partial-container {
   border: 1px solid #ffe2e2;
-  border-radius: 2px;
+  background-color: #F6AD99;
   width: 80%;
   height: 100%;
-  margin-top:5px;
 }
 .control-bar {
   height: 15%; font-size: 1.25em;

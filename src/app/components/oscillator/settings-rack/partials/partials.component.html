@@ -1,43 +1,34 @@
 <div class='h-100'>
-
     <div #partialsSelector class='d-flex align-items-end svg-container'>
         <div *ngFor='let p of partials; let i = index;'
         class='h-100 ind-container d-flex flex-column cursor-pointer'>
             <div class='centerChild inner-partial-container'
             [ngStyle]="{'height' : (p * 100) + '%'}">
                 <div class='centerChild inner-inner-partial-container'
+
                 [ngStyle]="{'width': (90 - partials.length) + '%'}">
               </div>
             </div>
         </div>
     </div>
-
     <div class='control-bar'>
         <div class='d-flex h-100'>
             <div class='control-bar-left h-100'>
                 <div class='h-100 centerChild random-button' (click)='randomisePartials()'>
                     RANDOM
                 </div>
-
             </div>
-
             <div class='h-100 centerChild control-bar-right' class='h-100 d-flex'>
-
                 <div class='centerChild increment-container' (click)="updatePartials(false)">
                     <i class="fas fa-minus"></i>
                 </div>
-
                 <div class='centerChild count-container'>
                     COUNT: {{partials?.length}}
                 </div>
-
                 <div class='centerChild increment-container' (click)="updatePartials(true)">
                     <i class="fas fa-plus"></i>
                 </div>
-
             </div>
          </div>
     </div>
-
-
 </div>

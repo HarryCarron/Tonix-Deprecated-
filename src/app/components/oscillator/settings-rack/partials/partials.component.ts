@@ -84,9 +84,6 @@ export class PartialsComponent {
 
     }
 
-    t = () => console.log(this.hoveredPartial);
-
-
     @HostListener('window:mousedown', ['$event'])
     startPartialEntry(r) {
          if (this.clickIsWithinContainer(r)) {
@@ -104,7 +101,7 @@ export class PartialsComponent {
     partialEntryActive({clientX: x, clientY: y}) {
         if (this.partialEntryMoving) {
             const newx = x - this.partialsSelectorBounding.x;
-            const newy = (this.partialsSelectorBounding.bottom - y) + 8;
+            const newy = (this.partialsSelectorBounding.bottom - y);
 
             const hoveredPartial = Math.floor(
                 newx / (this.partialsSelectorBounding.width /
@@ -128,16 +125,9 @@ export class PartialsComponent {
     randomisePartials() {
         const r = u => Math.floor(Math.random() * u) + 1;
 
-        const randomPs = this.partials = Array
+        this.partials = Array
         .from({length: r(32)})
         .map(a => r(10) / 10);
-
-        this.animation.valueToValueAnimation(
-            (d) => {this.partials = d; console.log(d); },
-            randomPs.map(p => 0),
-            randomPs
-        );
-
 
         this.onChange(this.partials);
     }
@@ -158,11 +148,12 @@ export class PartialsComponent {
 
     writeValue(partialValues): void {
         if (partialValues) {
-            this.animation.valueToValueAnimation(
-                (d) => {this.partials = d; console.log(d); },
-                partialValues.map(p => 0),
-                partialValues
-            );
+          this.partials = partialValues;
+            // this.animation.valueToValueAnimation(
+            //     (d) => {this.partials = d; console.log(d); },
+            //     partialValues.map(p => 0),
+            //     partialValues
+            // );
         }
     }
 
