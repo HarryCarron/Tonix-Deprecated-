@@ -35,7 +35,7 @@ export class EnvelopeService {
     this.renderer.setAttribute(qhandle, 'r', '3');
     this.renderer.setAttribute(qhandle, 'stroke-width', '1');
     this.renderer.setAttribute(qhandle, 'fill', 'white');
-    this.renderer.setAttribute(qhandle, 'stroke', 'yellow');
+    this.renderer.setAttribute(qhandle, 'stroke', '#f6c90e');
     this.renderer.setAttribute(qhandle, 'fill-opacity', '0.2');
     return qhandle;
   }
@@ -49,7 +49,7 @@ export class EnvelopeService {
     this.renderer.setAttribute(gridLine, 'y2', FLOOR);
     this.renderer.setAttribute(gridLine, 'stroke-linecap', 'round');
     this.renderer.setAttribute(gridLine, 'stroke-dasharray', '1,5');
-    this.renderer.setAttribute(gridLine, 'stroke', 'rgb(255,255,255)');
+    this.renderer.setAttribute(gridLine, 'stroke', '#90979c');
     this.renderer.setAttribute(gridLine, 'stroke-opacity', '0.8');
     this.renderer.setAttribute(gridLine, 'stroke-width:', 2);
     return gridLine;
@@ -60,7 +60,7 @@ export class EnvelopeService {
     const gridNumber = this.renderer.createElement('text', 'svg');
     this.renderer.setAttribute(gridNumber, 'x', index === 0 ? xMargin : (xMargin + ((availableTravel / division) * index)) - 3);
     this.renderer.setAttribute(gridNumber, 'y', FLOOR + 15);
-    this.renderer.setAttribute(gridNumber, 'fill', 'rgb(255,255,255)');
+    this.renderer.setAttribute(gridNumber, 'fill', '#90979c');
     this.renderer.setAttribute(gridNumber, 'stroke-opacity', '0.8');
 
     const value = this.renderer.createText(index);
@@ -82,7 +82,7 @@ export class EnvelopeService {
 
   public getEnvBody (xMargin, rightMargin) {
     const body = this.renderer.createElement('path', 'svg');
-    this.renderer.setAttribute(body, 'fill-opacity', '0.3');
+    this.renderer.setAttribute(body, 'fill-opacity', '0');
     this.renderer.setAttribute(body, 'stroke', 'white');
     this.renderer.setAttribute(body, 'stroke-width', '2');
     this.renderer.setAttribute(body, 'stroke-linecap', 'round');
@@ -110,8 +110,8 @@ export class EnvelopeService {
 
         const sector = this.renderer.createElement('rect', 'svg');
         this.renderer.setAttribute(sector, 'fill', 'white');
-        this.renderer.setAttribute(sector, 'fill-opacity', 0.3);
-        this.renderer.setAttribute(sector, 'stroke', 'white');
+        this.renderer.setAttribute(sector, 'fill-opacity', 0);
+        this.renderer.setAttribute(sector, 'stroke', '#f6c90e');
         this.renderer.setAttribute(sector, 'stroke-width', 1);
         this.renderer.setAttribute(sector, 'transition', 0.4);
         this.renderer.setAttribute(sector, 'cursor', 'pointer');

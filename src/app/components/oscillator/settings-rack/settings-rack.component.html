@@ -1,25 +1,25 @@
 <div class='settingsRackContainer'>
     <div class='menuContainer'>
 
-        <div class='settingsRackButton h-100 centerChild'
+        <div class='settingsRackButton h-100 centerChild control-label'
             [ngClass]="{ 'selected' : overviewSelected }"
             (click)="selectMenuItem(0)">
             Overview
         </div>
 
-        <div class='settingsRackButton h-100 centerChild'
+        <div class='settingsRackButton h-100 centerChild control-label'
             [ngClass]="{ 'selected' : envelopeSelected }"
             (click)="selectMenuItem(1)">
             Amp
         </div>
 
-        <div class='settingsRackButton h-100 centerChild'
+        <div class='settingsRackButton h-100 centerChild control-label'
             [ngClass]="{ 'selected' : partialsSelected }"
             (click)="selectMenuItem(2)">
             Partials
         </div>
 
-        
+
     </div>
     <div *ngIf="overviewSelected" class='settingContainer'>
     </div>

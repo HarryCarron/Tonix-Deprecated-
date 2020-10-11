@@ -351,7 +351,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
         [0, 1, 2, 3, 4].forEach(n => {
             this.renderer.appendChild(this.envelopeContainer, this.envService.gridLines(this.Xmargin, n, this.availableTravel, 4));
-            this.renderer.appendChild(this.envelopeContainer, this.envService.gridNumber(this.Xmargin, n, this.availableTravel, 4));
+            // this.renderer.appendChild(this.envelopeContainer, this.envService.gridNumber(this.Xmargin, n, this.availableTravel, 4));
         });
 
         this.renderer.setAttribute(this.envelopeContainer, 'height', this.containerHeight);

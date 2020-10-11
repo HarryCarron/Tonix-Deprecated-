@@ -1,6 +1,6 @@
 .topbar{
     height:25px;
-    background-color:#f5a792;
+    background-color:#303841;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
@@ -10,7 +10,7 @@
     font-size: 3em;
     font-weight: 800;
     font-style: italic;
-    
+
 }
 
 .titleContainer{
@@ -19,7 +19,7 @@
 
 
 .synth{
-    background-color:#f7c9bd;
+    background-color:#3a4750;
     overflow: hidden;
     font-family: Helvetica, Arial, sans-serif;
     border-bottom-left-radius: 25px;

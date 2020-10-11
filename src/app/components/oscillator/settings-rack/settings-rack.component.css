@@ -1,6 +1,6 @@
 .settingsRackContainer{
-    background-color:#f18a6d;
-    height: 150px;
+    background-color:#252c33;
+    height: 120px;
     margin: 0 10px 10px 10px;
     border-radius: 5px;
     overflow: hidden;
@@ -18,8 +18,8 @@
 }
 
 .selected{
-    background-color: #e67c5e;
     font-weight: bold;
+    color: white;
 }
 
 
@@ -44,7 +44,7 @@
 .menuContainer{
     display:flex;
     height: 15%;
-    background-color: #f59d84;
+    color: white;
 }
 
 .settingsRackButton{

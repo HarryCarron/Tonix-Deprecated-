@@ -16,7 +16,7 @@ body, html {
 }
 
 .numInput{
-    background-color:#f18a6d;
+    background-color:#252c33;
     border:none;
     color: white;
     text-align:center;
@@ -74,7 +74,7 @@ select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;       /* Remove default arrow */
-    background-color: #f18a6d;
+    background-color: #252c33;
     border: none;
     color: white ;
     text-align: center;
@@ -83,7 +83,7 @@ select {
     border-radius: 4px;
     width: 100%;
  }
- 
+
     * {
         color: white;
         font-size:8px;
@@ -113,4 +113,8 @@ select {
 
 .controlshadow-5 {
     box-shadow: inset -2px 3px 2px rgba(0,0,0,0.2);
+}
+
+.control-label {
+  color: #90979c
 }

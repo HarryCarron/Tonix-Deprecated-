@@ -1,62 +1,62 @@
-<div style='overflow: hidden; border-radius: 5px; width: 190px; height: 80%; background-color: #fdb49f; margin: 10px 10px 10px 0; border-radius: 5px;'>
-    <div style='height: 98%; display: flex; flex-direction: column;'>
-        <div style='height: 24px;' style='display: flex;'>
-            <div class='centerChild' style='width: 15%;'>
-                <app-led></app-led>
-            </div>
-            <div class='centerChild' style='width: 20%'>
-                <span class='label'>
-                    Effects
-                </span>
-            </div>
-            <div style='flex-grow: 1'>
+<div class="effects-rack-container">
+  <div class="effects-rack-inner-container">
+    <div class="heading-container">
+      <div class="centerChild led-container">
+        <app-led></app-led>
+      </div>
+      <div class="centerChild title-container">
+        <span class="label"> Effects </span>
+      </div>
+      <div style="flex-grow: 1"></div>
 
-            </div>
-
-            <div ngbDropdown container="body" style='flex-basis: 10%;' class='centerChild addFXicon'>
-                <i ngbDropdownToggle class="fas fa-plus-circle"></i>
-                <div ngbDropdownMenu >
-                    <button *ngFor='let effect of effects' ngbDropdownItem (click)='FXselectionMade(effect.id)'>
-                        {{effect.displayName}}
-                    </button>
-                </div>
-            </div>
+      <div
+        ngbDropdown
+        container="body"
+        style="flex-basis: 10%"
+        class="centerChild addFXicon"
+      >
+        <i ngbDropdownToggle class="fas fa-plus-circle"></i>
+        <div ngbDropdownMenu>
+          <button
+            *ngFor="let effect of effects"
+            ngbDropdownItem
+            (click)="FXselectionMade(effect.id)"
+          >
+            {{ effect.displayName }}
+          </button>
         </div>
-
-        <div class='noscrollbar' style='flex-grow: 1; overflow-y: auto;'>
-            <div *ngFor='let liveEffect of liveEffects; let effectIndex = index' style='border: 1px solid #eca48f; background-color: #f7ab95; margin: 5px; border-radius: 3px;'>
-                <div style='display:flex; border-bottom: 1px solid #eca48f;'>
-                    <div style='padding: 3px; font-weight: bold; flex-grow: 1'>
-                        {{liveEffect.name}}
-                    </div>
-                    <div>
-                        
-                    </div>
-                    <div style='flex-basis: 10%; cursor: pointer'
-                    (click)='removeLiveEffect(effectIndex);'
-                    class='centerChild'>
-                        <i class="fas fa-minus-circle"></i>
-                    </div>
-                </div>
-
-                <div style='display: flex; margin-top: 10px; padding-bottom: 5px;'>
-                    <div *ngFor='let param of liveEffect.params' class='centerChild'>
-                        <b>{{param}}</b>
-                        
-                        <app-knob style='margin: 0 10px;'></app-knob>
-
-                    </div>
-
-                </div>
-                
-            </div>
-             
-        </div>
-
-
-    </div>
-    <div style='height: 2%; background-color: #ff9170'>
-
+      </div>
     </div>
 
+    <div class="noscrollbar" style="flex-grow: 1; overflow-y: auto">
+      <div
+        *ngFor="let liveEffect of liveEffects; let effectIndex = index"
+        class="py-3"
+      >
+        <div style="display: flex">
+          <div style="padding: 0 8px; font-weight: bold; flex-grow: 1">
+            {{ liveEffect.name }}
+          </div>
+          <div></div>
+          <div
+            style="flex-basis: 10%; cursor: pointer"
+            (click)="removeLiveEffect(effectIndex)"
+            class="centerChild"
+          >
+            <i class="fas fa-minus-circle"></i>
+          </div>
+        </div>
+
+        <div style="display: flex; padding-bottom: 5px">
+          <div *ngFor="let param of liveEffect.params" class="centerChild">
+            <div class="py-2">
+              <b class="control-label">{{ param }}</b>
+            </div>
+            <app-knob style="margin: 0 10px"></app-knob>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="height: 2%; background-color: #252c33"></div>
 </div>

@@ -1,67 +1,68 @@
-<div class='osc-container' [ngClass]="data.isLastOsc ? 'osc-container-margin-last' : 'osc-container-margin'">
-    <div>
-        <div style='height:24px;' class='d-flex oscLabelHeading'>
-            <div style='width:10%;' class='centerChild h-100'>
-                <app-led [(ngModel)]='data.isOn'></app-led>
-            </div>
-            <div style='width:18%;' class='centerChild label'>
-                Waveform
-            </div>
-            <div style='width:18%;' class='centerChild label'> 
-                Detune
-            </div>
-            <div style='width:20%;' class='centerChild label'>
-                Phase
-            </div>
-            <div style='width:20%;' class='centerChild label'>
-                Gain
-            </div>
-        </div>
-        <div style='height:50px;' class='d-flex'>
-            <div style='width:10%;' class='centerChild'>
-                <span class='oscNumber'>{{data.number}}</span>
-            </div>
-    
-            <div style='width: 18%;' class='centerChild'>
-                <select [(ngModel)]='data.waveType'
-                    [disabled] = '!data.isOn'
-                    style= 'width:45px;'
-                    (change)="data.selectWaveForm(data.waveType)">
-                    <option [value]="waveForm"
-                    *ngFor="let waveForm of data.availableWaveForms">
-                        {{waveForm}}
-                    </option>
-                </select>
-            </div>
-    
-            <div style='width: 18%;' class='centerChild'>
-                <input class='numInput'
-                [disabled] = '!data.isOn'
-                [(ngModel)]="data.detune"
-                style= 'width:45px;'
-                type="number"
-                min="-0.99"
-                step="0.01">
-            </div>
-    
-            <div style='width:20%;' class='centerChild'>
-                <app-knob>
-                </app-knob>
-            </div>
-    
-            <div style='width:20%;' class='centerChild'>
-                <app-knob>
-                </app-knob>
-            </div>
-            <div style='width: 10%;' class='centerChild'>
-                <div style='border-radius: 10px; width:20%; height: 80%; background-color: #f18a6d; '></div>
-            </div>
-        </div>
-    
+<div
+  class="osc-container"
+  [ngClass]="
+    data.isLastOsc ? 'osc-container-margin-last' : 'osc-container-margin'
+  "
+>
+  <div>
+    <div class="control-container"></div>
+    <div class="d-flex osc-label-heading">
+      <div style="width: 10%" class="centerChild h-100">
+        <app-led [(ngModel)]="data.isOn"></app-led>
+      </div>
+      <div style="width: 18%" class="centerChild label">Waveform</div>
+      <div style="width: 18%" class="centerChild label">Detune</div>
+      <div style="width: 16%" class="centerChild label">Phase</div>
+      <div style="width: 16%" class="centerChild label">Gain</div>
+      <div style="width: 16%" class="centerChild label">Pan</div>
     </div>
-    
-    <app-settings-rack [data]='data'></app-settings-rack>
+    <div style="height: 50px" class="d-flex">
+      <div style="width: 10%" class="centerChild">
+        <span class="oscNumber">{{ data.number }}</span>
+      </div>
 
+      <div style="width: 18%" class="centerChild">
+        <select
+          [(ngModel)]="data.waveType"
+          [disabled]="!data.isOn"
+          style="width: 45px"
+          (change)="data.selectWaveForm(data.waveType)"
+          class="control-label"
+        >
+          <option
+            [value]="waveForm"
+            *ngFor="let waveForm of data.availableWaveForms"
+          >
+            {{ waveForm }}
+          </option>
+        </select>
+      </div>
 
+      <div style="width: 18%" class="centerChild">
+        <input
+          class="numInput control-label"
+          [disabled]="!data.isOn"
+          [(ngModel)]="data.detune"
+          style="width: 45px"
+          type="number"
+          min="-0.99"
+          step="0.01"
+        />
+      </div>
 
+      <div style="width: 16%" class="centerChild">
+        <app-knob> </app-knob>
+      </div>
+
+      <div style="width: 16%" class="centerChild">
+        <app-knob> </app-knob>
+      </div>
+
+      <div style="width: 16%" class="centerChild">
+        <app-knob> </app-knob>
+      </div>
+    </div>
+  </div>
+
+  <app-settings-rack [data]="data"></app-settings-rack>
 </div>

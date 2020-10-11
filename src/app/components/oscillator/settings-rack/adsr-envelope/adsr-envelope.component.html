@@ -5,16 +5,16 @@
     </div>
 
     <div class='d-flex data-view'>
-        <div class='centerChild flex-grow-1'>
+        <div class='centerChild flex-grow-1 control-label'>
             A: {{viewEnvValues?.attack}} - {{CurveType[viewEnvValues?.attackCurve]}}
         </div>
-        <div class='centerChild flex-grow-1' [ngStyle]="dimIfStaccato()" >
+        <div class='centerChild flex-grow-1 control-label'>
             D: {{ staccato ? '0' : viewEnvValues?.decay}}
         </div>
-        <div class='centerChild flex-grow-1' [ngStyle]="dimIfStaccato()">
+        <div class='centerChild flex-grow-1 control-label'>
             S: {{ staccato ? '0' : viewEnvValues?.sustain}}
         </div>
-        <div class='centerChild flex-grow-1'>
+        <div class='centerChild flex-grow-1 control-label'>
             R: {{viewEnvValues?.release}} - {{CurveType[viewEnvValues?.releaseCurve]}}
         </div>
     </div>
