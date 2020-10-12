@@ -4,7 +4,9 @@
     margin: 0 10px 10px 10px;
     border-radius: 5px;
     overflow: hidden;
+    transition: 0.5s;
 }
+
 
 .settingsHolder{
     transition: 0.5s;

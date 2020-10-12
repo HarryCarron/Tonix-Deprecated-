@@ -73,7 +73,6 @@ input:focus {
 .svg-container {
   height: 75%;
   align-items: flex-end;
-  padding-top: 5px;
 }
 .inner-partial-container {
   margin-top: auto;

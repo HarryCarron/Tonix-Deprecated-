@@ -20,6 +20,7 @@ import { NgxSelectModule } from 'ngx-select-ex';
 import { SearchBarComponent } from './controls/search-bar/search-bar.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SettingsMenuComponent } from './settings-menu/settings-menu.component';
+import { XyPadComponent } from './components/effect-rack/xy-pad/xy-pad.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { SettingsMenuComponent } from './settings-menu/settings-menu.component';
     SimpleEqComponent,
     EffectRackComponent,
     SearchBarComponent,
-    SettingsMenuComponent
+    SettingsMenuComponent,
+    XyPadComponent
   ],
   imports: [
     BrowserModule,
