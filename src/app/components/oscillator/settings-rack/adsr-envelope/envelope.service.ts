@@ -50,8 +50,8 @@ export class EnvelopeService {
     this.renderer.setAttribute(gridLine, 'stroke-linecap', 'round');
     this.renderer.setAttribute(gridLine, 'stroke-dasharray', '1,5');
     this.renderer.setAttribute(gridLine, 'stroke', '#90979c');
-    this.renderer.setAttribute(gridLine, 'stroke-opacity', '0.8');
-    this.renderer.setAttribute(gridLine, 'stroke-width:', 2);
+    this.renderer.setAttribute(gridLine, 'stroke-opacity', '0.5');
+    this.renderer.setAttribute(gridLine, 'stroke-width', 2);
     return gridLine;
   }
 
@@ -83,8 +83,8 @@ export class EnvelopeService {
   public getEnvBody (xMargin, rightMargin) {
     const body = this.renderer.createElement('path', 'svg');
     this.renderer.setAttribute(body, 'fill-opacity', '0');
-    this.renderer.setAttribute(body, 'stroke', '#ea623a');
-    this.renderer.setAttribute(body, 'stroke-width', '5');
+    this.renderer.setAttribute(body, 'stroke', 'white');
+    this.renderer.setAttribute(body, 'stroke-width', '3');
     this.renderer.setAttribute(body, 'stroke-linecap', 'round');
     this.renderer.setAttribute(body, 'fill', 'white');
     this.renderer.setAttribute(body, 'stroke-linejoin', 'round');

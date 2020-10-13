@@ -116,3 +116,11 @@ select {
 .control-label {
   color: #90979c
 }
+
+.dark-2 {
+  background-color: #252c33;
+}
+
+.dark-1 {
+  background-color: #303841
+}

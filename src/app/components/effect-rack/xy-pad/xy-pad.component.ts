@@ -27,6 +27,11 @@ export class XyPadComponent implements OnInit, AfterViewInit {
     right: null,
   };
 
+  private travelUnits = {
+    x: null,
+    y: null,
+  };
+
   private handleCurrentlyClicked = false;
 
   _svgContainer;
@@ -69,7 +74,6 @@ export class XyPadComponent implements OnInit, AfterViewInit {
   @HostListener("document:mouseup", ["$event"])
   mouseUp() {
     this.handleCurrentlyClicked = false;
-    this.beginAnimation();
   }
 
   @HostListener("document:mousemove", ["$event"])
@@ -90,6 +94,14 @@ export class XyPadComponent implements OnInit, AfterViewInit {
           ? this.limits.down
           : newY;
       this.render();
+
+      const min = 0;
+      const max = 1;
+
+      console.log(
+        this.points[0] - 5
+      );
+
     }
   }
 
@@ -97,12 +109,9 @@ export class XyPadComponent implements OnInit, AfterViewInit {
     const r = () => Math.floor(Math.random() * (10 - 1 + 1)) + 1;
 
     const randHandle = this.renderer.createElement("circle", "svg");
-    this.renderer.setAttribute(randHandle, "r", '1');
-    this.renderer.setAttribute(randHandle, "stroke-width", "3");
-    this.renderer.setAttribute(randHandle, "stroke", "#f6c90e");
-    this.renderer.setAttribute(randHandle, "fill", "#f6c90e");
-    this.renderer.setAttribute(randHandle, "fill-opacity", "0.2");
-    this.renderer.setAttribute(randHandle, 'stroke-dasharray', '5,15');
+    this.renderer.setAttribute(randHandle, "r", "1");
+    this.renderer.setAttribute(randHandle, "fill", "white");
+    this.renderer.setAttribute(randHandle, "fill-opacity", "0.1");
     this.renderer.setAttribute(randHandle, "cx", this.points[0]);
     this.renderer.setAttribute(randHandle, "cy", this.points[1]);
     return randHandle;
@@ -117,7 +126,7 @@ export class XyPadComponent implements OnInit, AfterViewInit {
     this.renderer.setAttribute(handle, "style", "cursor: pointer");
     this.renderer.listen(handle, "mousedown", (e) => {
       this.handleCurrentlyClicked = true;
-      this.beginAnimation();
+      // this.beginAnimation();
     });
 
     this.handleNode = handle;
@@ -131,12 +140,12 @@ export class XyPadComponent implements OnInit, AfterViewInit {
 
     const animate = (): void => {
       radius = radius + 0.5;
-      this.renderer.setAttribute(h, 'r', radius.toString());
+      this.renderer.setAttribute(h, "r", radius.toString());
       if (radius >= 5) {
-        opacity = opacity - 0.001;
-        this.renderer.setAttribute(h, 'fill-opacity', opacity.toString());
+        opacity = opacity - 0.005;
+        this.renderer.setAttribute(h, "fill-opacity", opacity.toString());
       }
-      if (radius > 100) {
+      if (radius > 40) {
         cancelAnimationFrame(reqID);
         this.renderer.removeChild(this.svg, h);
       } else {
@@ -164,15 +173,17 @@ export class XyPadComponent implements OnInit, AfterViewInit {
 
   private initLimits() {
     this.limits.up = this.PAD;
-    this.limits.down = (this.svgContainer as any).offsetHeight - this.PAD;
+    this.limits.down = (this.svgContainer as any).offsetHeight - (this.PAD);
     this.limits.left = this.PAD;
-    this.limits.right = (this.svgContainer as any).offsetWidth - this.PAD;
+    this.limits.right = (this.svgContainer as any).offsetWidth - (this.PAD);
+    console.log(
+      this.limits
+    );
   }
   private initContainer() {
     this.renderer.listen(this.svg, "mousedown", (e) => {
       this.handleCurrentlyClicked = true;
       this.mouseMove(e);
-      this.beginAnimation();
     });
   }
   private initPoints() {
@@ -180,12 +191,20 @@ export class XyPadComponent implements OnInit, AfterViewInit {
     this.points[1] = this.limits.down;
   }
 
+  private initTravelUnits() {
+    const xAbs = (this.svg as any).clientHeight - (this.PAD);
+    const yAbs = (this.svg as any).clientWidth - (this.PAD);
+    this.travelUnits.x = xAbs / 100;
+    this.travelUnits.y = yAbs / 100;
+  }
+
   ngAfterViewInit() {
     this.setSVGdimensions();
-    this.initContainer();
-    this.initHandle();
     this.initLimits();
     this.initPoints();
+    this.initTravelUnits();
+    this.initContainer();
+    this.initHandle();
     this.render();
   }
 

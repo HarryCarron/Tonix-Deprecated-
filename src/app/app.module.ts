@@ -21,6 +21,7 @@ import { SearchBarComponent } from './controls/search-bar/search-bar.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SettingsMenuComponent } from './settings-menu/settings-menu.component';
 import { XyPadComponent } from './components/effect-rack/xy-pad/xy-pad.component';
+import { MatrixComponent } from './components/matrix/matrix.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { XyPadComponent } from './components/effect-rack/xy-pad/xy-pad.component
     EffectRackComponent,
     SearchBarComponent,
     SettingsMenuComponent,
-    XyPadComponent
+    XyPadComponent,
+    MatrixComponent
   ],
   imports: [
     BrowserModule,
