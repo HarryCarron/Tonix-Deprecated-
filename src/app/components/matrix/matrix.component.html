@@ -1,5 +1,9 @@
-<div #matrixContainer class='matrix-container dark-1 centerChild'>
-  <div class='inner-matrix-container dark-2'>
-    <svg #svg width='0' height='0'></svg>
+<div class='matrix-container dark-1 centerChild'>
+  <div #matrixContainer class='inner-matrix-container'>
+    <svg #svg width='0' height='0'>
+      <filter id="animationBlur" x="0" y="0">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+      </filter>
+    </svg>
   </div>
 </div>
