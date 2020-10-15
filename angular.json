@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "stepper": {
+    "tonix": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/stepper",
+            "outputPath": "dist/tonix",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -58,18 +58,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "stepper:build"
+            "browserTarget": "tonix:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "stepper:build:production"
+              "browserTarget": "tonix:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "stepper:build"
+            "browserTarget": "tonix:build"
           }
         },
         "test": {
@@ -103,7 +103,7 @@
         }
       }
     },
-    "stepper-e2e": {
+    "tonix-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -112,11 +112,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "stepper:serve"
+            "devServerTarget": "tonix:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "stepper:serve:production"
+              "devServerTarget": "tonix:serve:production"
             }
           }
         },
@@ -132,5 +132,5 @@
       }
     }
   },
-  "defaultProject": "stepper"
+  "defaultProject": "tonix"
 }

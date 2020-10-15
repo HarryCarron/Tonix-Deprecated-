@@ -4,6 +4,7 @@ import {
   ViewChild,
   Renderer2,
   AfterViewInit,
+  NgZone
 } from "@angular/core";
 
 interface NodeSetting {
@@ -17,7 +18,7 @@ interface NodeSetting {
   styleUrls: ["./matrix.component.css"],
 })
 export class MatrixComponent implements OnInit, AfterViewInit {
-  constructor(private render: Renderer2) {}
+  constructor(private render: Renderer2, private  zone: NgZone) {}
 
   readonly NOTE_ON_COL = "white";
   readonly NOTE_OFF_COL = "#252c33";
@@ -53,7 +54,11 @@ export class MatrixComponent implements OnInit, AfterViewInit {
   }
 
   private getNode(id) {
-    return this.nodes[id[0]][id[1]];
+    if (id[0] > -1 && id[1] > -1) {
+      return this.nodes[id[0]][id[1]];
+    }
+    return null;
+
   }
 
   private turnOn(id) {
@@ -67,73 +72,98 @@ export class MatrixComponent implements OnInit, AfterViewInit {
     this.beginAnimation(n);
   }
 
-  private getAnimationRuns(nodeID: [number, number]) {
+  private getAnimationRuns(nodeID: [number, number], numberOfRuns: number) {
     return [
       (id) => {
-        --id[0];
-        if (id[0] <= this.numberOfNodes) {
-          return this.getNode(id);
-        }
+        id[0] = id[0] - numberOfRuns;
+        return this.getNode(id);
       },
       (id) => {
         --id[0];
-        ++id[1];
-        if (id[0] <= this.numberOfNodes && id[1] >= 0) {
-          return this.getNode(id);
-        }
+        id[1] = id[1] + numberOfRuns;
+        return this.getNode(id);
       },
       (id) => {
-        ++id[1];
-        if (id[1] <= this.numberOfNodes) {
-          return this.getNode(id);
-        }
+        id[1] = id[1] - numberOfRuns;
+        return this.getNode(id);
       },
       (id) => {
-        ++id[0];
-        ++id[1];
-        if (id[0] <= this.numberOfNodes && id[1] <= this.numberOfNodes) {
-          return this.getNode(id);
-        }
+        id[0] = id[0] + numberOfRuns;
+        id[1] = id[1] - numberOfRuns;
+        return this.getNode(id);
       },
       (id) => {
-        ++id[0];
-        if (id[0] <= this.numberOfNodes) {
-          return this.getNode(id);
-        }
+        id[0] = id[0] + numberOfRuns;
+        return this.getNode(id);
       },
       (id) => {
-        ++id[0];
-        --id[1];
-        if (id[0] <= this.numberOfNodes && id[1] >= 0) {
-          return this.getNode(id);
-        }
+        id[0] = id[0] + numberOfRuns;
+        id[1] = id[1] - numberOfRuns;
+        return this.getNode(id);
       },
       (id) => {
-        --id[1];
-        if (id[1] >= 0) {
-          return this.getNode(id);
-        }
+        id[1] = id[1] - numberOfRuns;
+        return this.getNode(id);
       },
       (id) => {
-        --id[0];
-        --id[1];
-        if (id[0] >= 0 && id[1] >= 0) {
-          return this.getNode(id);
-        }
+        id[0] = id[0] - numberOfRuns;
+        id[1] = id[1] - numberOfRuns;
+        return this.getNode(id);
       },
     ]
       .map((f) => f([...nodeID]))
       .filter((n) => !!n);
   }
 
-  private beginAnimation(node: any, numberOfRuns: number): void {
+  private beginAnimation(node: any): void {
+
     const [rowID, colID] = this.parseID(node.id);
-    const rippleNodes = this.getAnimationRuns([rowID, colID]);
-    rippleNodes.forEach((an) => {
-      this.render.setAttribute(an, "fill", "white");
-      this.render.setAttribute(an, "fill-opacity", "0.3");
-      this.render.setAttribute(an, "filter", "url(#animationBlur)");
+    const affectedNodes = this.getAnimationRuns([rowID, colID], 1);
+    // rippleNodes.forEach((an) => {
+    //   this.render.setAttribute(an, "fill", "white");
+    // });
+
+    const tempNodes = [...affectedNodes];
+    tempNodes.forEach(tn => {
+      this.render.appendChild(this._svg, tn);
     });
+
+    let requestId = null;
+    let opac = 1; // todo nmake dynamic!!!
+    let interval = 0.1;
+    let stage = 1;
+
+    const animate = (time) => {
+      if (stage === 1) {
+        opac = opac - interval;
+        tempNodes.forEach((n) => {
+          this.render.setAttribute(n, 'opacity', opac.toString());
+          if (opac <= 0.5) {
+            stage = 2;
+          }
+        });
+      }
+      if (stage === 2) {
+        interval = 0.05;
+        opac = opac + interval;
+        tempNodes.forEach((n) => {
+          this.render.setAttribute(n, 'opacity', opac.toString());
+          if (opac === 1) {
+            stage = 3;
+          }
+        });
+      }
+      if (stage === 3) {
+        cancelAnimationFrame(requestId);
+      }
+      requestId = requestAnimationFrame(animate);
+    };
+
+    this.zone.runOutsideAngular(
+      () => {
+        requestId = requestAnimationFrame(animate);
+      }
+    );
   }
 
   private renderNodes(): void {
