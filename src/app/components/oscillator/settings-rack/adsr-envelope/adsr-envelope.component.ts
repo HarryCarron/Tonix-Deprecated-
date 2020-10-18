@@ -100,7 +100,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
     private envData;
 
-    private svgnode_beginHandle;
+    // private svgnode_beginHandle;
     private svgnode_attackHandle;
     private svgnode_decayHandle;
     private svgnode_sustainHandle;
@@ -195,8 +195,8 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
         // begin handle
 
-        this.renderer.setAttribute(this.svgnode_beginHandle, 'cx', b.x);
-        this.renderer.setAttribute(this.svgnode_beginHandle, 'cy', b.y.toString());
+        // this.renderer.setAttribute(this.svgnode_beginHandle, 'cx', b.x);
+        // this.renderer.setAttribute(this.svgnode_beginHandle, 'cy', b.y.toString());
 
         // attack handle
 
@@ -351,7 +351,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
 
         [0, 1, 2, 3, 4].forEach(n => {
             this.renderer.appendChild(this.envelopeContainer, this.envService.gridLines(this.Xmargin, n, this.availableTravel, 4));
-            // this.renderer.appendChild(this.envelopeContainer, this.envService.gridNumber(this.Xmargin, n, this.availableTravel, 4));
+            this.renderer.appendChild(this.envelopeContainer, this.envService.gridNumber(this.Xmargin, n, this.availableTravel, 4));
         });
 
         this.renderer.setAttribute(this.envelopeContainer, 'height', this.containerHeight);
@@ -374,7 +374,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
         }
         this.renderer.appendChild(this.envelopeContainer, this.svgnode_releaseHandle);
 
-        this.renderer.appendChild(this.envelopeContainer, this.svgnode_beginHandle);
+        // this.renderer.appendChild(this.envelopeContainer, this.svgnode_beginHandle);
         this.renderer.appendChild(this.envelopeContainer, this.svgnode_attackHandle);
 
 
@@ -391,7 +391,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.envBody = this.envService.getEnvBody(this.Xmargin, this.rightMargin);
 
-        this.svgnode_beginHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.begin);
+        // this.svgnode_beginHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.begin);
         this.svgnode_attackHandle = this.envService.getEnvHandle(this.handleClicked, EnvelopeHandleType.attack);
 
         this.svgnode_attackSector = this.envService.getEnvSector(
@@ -429,7 +429,7 @@ export class AdsrEnvelopeComponent implements OnInit, AfterViewInit {
     private turnOn(on): void { // todo: sort this
         if (this.svgnode_attackHandle) {
             this.renderer.setAttribute(this.svgnode_attackHandle, 'visibility', on ? 'visible' : 'hidden');
-            this.renderer.setAttribute(this.svgnode_beginHandle, 'visibility', on ? 'visible' : 'hidden');
+            // this.renderer.setAttribute(this.svgnode_beginHandle, 'visibility', on ? 'visible' : 'hidden');
             this.renderer.setAttribute(this.svgnode_releaseHandle, 'visibility', on ? 'visible' : 'hidden');
             this.renderer.setAttribute(this.envBody, 'opacity', on ? '1' : '0.6');
             this.renderer.setAttribute(this.svgnode_qAttackHandle, 'visibility', on ? 'visible' : 'hidden');

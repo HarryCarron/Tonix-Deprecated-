@@ -75,38 +75,38 @@ export class MatrixComponent implements OnInit, AfterViewInit {
   private getAnimationRuns(nodeID: [number, number], numberOfRuns: number) {
     return [
       (id) => {
-        id[0] = id[0] - numberOfRuns;
-        return this.getNode(id);
-      },
-      (id) => {
-        --id[0];
-        id[1] = id[1] + numberOfRuns;
-        return this.getNode(id);
-      },
-      (id) => {
-        id[1] = id[1] - numberOfRuns;
-        return this.getNode(id);
-      },
-      (id) => {
-        id[0] = id[0] + numberOfRuns;
-        id[1] = id[1] - numberOfRuns;
-        return this.getNode(id);
-      },
-      (id) => {
-        id[0] = id[0] + numberOfRuns;
-        return this.getNode(id);
-      },
-      (id) => {
-        id[0] = id[0] + numberOfRuns;
-        id[1] = id[1] - numberOfRuns;
-        return this.getNode(id);
-      },
-      (id) => {
-        id[1] = id[1] - numberOfRuns;
+        id[0] = id[0] - numberOfRuns; // above
         return this.getNode(id);
       },
       (id) => {
         id[0] = id[0] - numberOfRuns;
+        id[1] = id[1] + numberOfRuns; // above right
+        return this.getNode(id);
+      },
+      (id) => {
+        id[1] = id[1] - numberOfRuns; // right
+        return this.getNode(id);
+      },
+      (id) => {
+        id[0] = id[0] + numberOfRuns; // below right
+        id[1] = id[1] - numberOfRuns;
+        return this.getNode(id);
+      },
+      (id) => {
+        id[0] = id[0] + numberOfRuns; // below
+        return this.getNode(id);
+      },
+      (id) => {
+        id[0] = id[0] + numberOfRuns; // below left
+        id[1] = id[1] - numberOfRuns;
+        return this.getNode(id);
+      },
+      (id) => {
+        id[1] = id[1] - numberOfRuns; // left
+        return this.getNode(id);
+      },
+      (id) => {
+        id[0] = id[0] - numberOfRuns; // above left
         id[1] = id[1] - numberOfRuns;
         return this.getNode(id);
       },
@@ -118,42 +118,46 @@ export class MatrixComponent implements OnInit, AfterViewInit {
   private beginAnimation(node: any): void {
 
     const [rowID, colID] = this.parseID(node.id);
-    const affectedNodes = this.getAnimationRuns([rowID, colID], 1);
-    // rippleNodes.forEach((an) => {
-    //   this.render.setAttribute(an, "fill", "white");
-    // });
+    const surroundingNodes = this.getAnimationRuns([rowID, colID], 1);
 
-    const tempNodes = [...affectedNodes];
-    tempNodes.forEach(tn => {
-      this.render.appendChild(this._svg, tn);
-    });
 
     let requestId = null;
-    let opac = 1; // todo nmake dynamic!!!
-    let interval = 0.1;
+    let time = 1; // todo nmake dynamic!!!
+    const interval = 0.05;
     let stage = 1;
 
-    const animate = (time) => {
+    const animate = () => {
+      time = time - interval;
       if (stage === 1) {
-        opac = opac - interval;
-        tempNodes.forEach((n) => {
-          this.render.setAttribute(n, 'opacity', opac.toString());
-          if (opac <= 0.5) {
-            stage = 2;
-          }
+
+        surroundingNodes.forEach((n) => {
+          this.render.setAttribute(n, 'fill', this.NOTE_ON_COL);
         });
+        if (time <= 0.5) {
+          stage = 2;
+        }
       }
       if (stage === 2) {
-        interval = 0.05;
-        opac = opac + interval;
-        tempNodes.forEach((n) => {
-          this.render.setAttribute(n, 'opacity', opac.toString());
-          if (opac === 1) {
+        time = time - interval;
+        surroundingNodes.forEach((n) => {
+          this.render.setAttribute(n, 'fill', this.NOTE_OFF_COL);
+          if (time >= 1) {
             stage = 3;
           }
         });
       }
       if (stage === 3) {
+        // interval = 0.05;
+        // surroundingNodeOpac = surroundingNodeOpac + interval;
+        // surroundingNodes.forEach((n) => {
+        //   this.render.setAttribute(n, 'opacity', surroundingNodeOpac.toString());
+        //   if (surroundingNodeOpac >= 1) {
+        //     stage = 4;
+        //   }
+        // });
+        cancelAnimationFrame(requestId);
+      }
+      if (stage === 4) {
         cancelAnimationFrame(requestId);
       }
       requestId = requestAnimationFrame(animate);
@@ -171,6 +175,7 @@ export class MatrixComponent implements OnInit, AfterViewInit {
       const n = this.render.createElement("rect", "svg");
       this.render.setAttribute(n, "x", nodeSetting.x.toString());
       this.render.setAttribute(n, "y", nodeSetting.y.toString());
+      // this.render.setStyle(n, "transition", "1s");
       this.render.setAttribute(
         n,
         "height",

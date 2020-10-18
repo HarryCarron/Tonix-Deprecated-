@@ -1,0 +1,14 @@
+.matrix-container {
+  overflow: hidden;
+  border-radius: 5px;
+  width: 320px;
+  height: 320px;
+  margin: 10px 10px 10px 0;
+  border-radius: 5px;
+}
+
+.inner-matrix-container {
+  width: 95%;
+  height: 95%;
+}
+
