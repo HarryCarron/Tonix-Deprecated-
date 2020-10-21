@@ -133,210 +133,58 @@ export class Matrix2Component implements OnInit, AfterViewInit {
   }
 
   private getAnimationNodes(node: [number, number], radius: number): any {
-    let nodes = [];
-    if (radius === 1) {
-      return nodes = [
-        () => {
-          const _node = [...node];
-          _node[1] = _node[1] - 1; // above
-          return _node;
-        },
-        () => {
-          const _node = [...node];
-          _node[0] = _node[0] + 1; // right
-          return _node;
-        },
-        () => {
-          const _node = [...node];
-          _node[1] = _node[1] + 1; // below
-          return _node;
-        },
-        () => {
-          const _node = [...node];
-          _node[0] = _node[0] - 1; // left
-          return _node;
-        }
-      ].map(f => f()).filter((n) => !this.nodeIsActive(n as [number, number]));
-    } else {
-      const a = (v) => Array.from(Array(v).keys());
 
+    const nodes = [];
 
-      const startPoint = Math.floor(radius / 2);
-
-      node[1] = node[1] - radius;
-      node[0] = node[0] - startPoint;
-
-      const isOdd = n => n % 2;
-
-      a(radius).forEach((i) => {
-        const _node = [...node];
-        _node[0] = node[0] + (i + 1);
+    [
+      (v) => { v[1] = v[1] - radius; return v; }, // above
+      (v) => { v[1] = v[1] + radius; return v; },  // right
+      (v) => { v[0] = v[0] - radius; return v; }, // left
+      (v) => { v[0] = v[0] + radius; return v; }, // below
+    ].forEach((f, i) => {
+      const _node = f([...node]);
+      if (!this.nodeIsActive(_node as [number, number])) {
         nodes.push(_node);
-      });
-
-      const rightNodes = [...node];
-      rightNodes[1] = rightNodes[1] - startPoint;
-      rightNodes[0] = rightNodes[0] + radius;
-
-      a(radius).forEach(_ => {
-        rightNodes[1] = rightNodes[1] + 1;
-        nodes.push(rightNodes);
-      });
-
-      const bottomNodes = [...node];
-      bottomNodes[0] = bottomNodes[0] - startPoint;
-      bottomNodes[1] = bottomNodes[1] + radius;
-
-      a(radius).forEach(_ => {
-        bottomNodes[1] = bottomNodes[1] + 1;
-        nodes.push(bottomNodes);
-      });
-
-      const leftNodes = [...node];
-      leftNodes[1] = leftNodes[1] - startPoint;
-      leftNodes[0] = leftNodes[0] - radius;
-
-      a(radius).forEach(_ => {
-        leftNodes[1] = leftNodes[1] + 1;
-        nodes.push(leftNodes);
-      });
-
-
-      return nodes.filter((n) => !this.nodeIsActive(n as [number, number]));
-    }
-    // switch (run) {
-    //   case 1: {
-
-    //     ];
-    //   } break;
-    //   case 2: {
-    //     nodes = [
-    //       () => {
-    //         const _node = [...node];
-    //         _node[1] = _node[1] - 2; // above
-    //         return _node;
-    //       },
-    //       () => {
-    //         const _node = [...node];
-    //         _node[0] = _node[0] + 1;
-    //         _node[1] = _node[1] - 2; // above right
-
-    //         return _node;
-    //       },
-    //       () => {
-    //         const _node = [...node];
-    //         _node[0] = _node[0] + 2;
-    //         _node[1] = _node[1] - 1; // right above
-
-    //         return _node;
-    //       },
-    //       () => {
-    //         const _node = [...node];
-    //         _node[0] = _node[0] + 2; // right
-    //         return _node;
-    //       },
-    //       () => {
-    //         const _node = [...node];
-    //         _node[0] = _node[0] + 2; // below right
-    //         _node[1] = _node[1] + 1;
-    //         return _node;
-    //       },
-    //       () => {
-    //         const _node = [...node];
-    //         _node[0] = _node[0] + 1; // right below
-    //         _node[1] = _node[1] + 2;
-    //         return _node;
-    //       },
-    //       () => {
-    //         const _node = [...node];
-    //         _node[1] = _node[1] + 2; // below
-    //         return _node;
-    //       },
-    //       () => {
-    //         const _node = [...node];
-    //         _node[1] = _node[1] + 2; // below left
-    //         _node[0] = _node[0] - 1;
-    //         return _node;
-    //       },
-    //       () => {
-    //         const _node = [...node];
-    //         _node[0] = _node[0] - 2;
-    //         _node[1] = _node[1] + 1; // left below
-
-    //         return _node;
-    //       },
-    //       () => {
-    //         const _node = [...node];
-    //         _node[0] = _node[0] - 2; // left
-    //         return _node;
-    //       },
-    //       () => {
-    //         const _node = [...node];
-    //         _node[0] = _node[0] - 2;
-    //         _node[1] = _node[1] - 1; // left above
-    //         return _node;
-    //       },
-    //       () => {
-    //         const _node = [...node];
-    //         _node[0] = _node[0] - 1;
-    //         _node[1] = _node[1] - 2; // above left
-    //         return _node;
-    //       },
-
-    //     ];
-    //   }
-    // }
-
+      }
+    });
+    return nodes;
   }
 
   private beginAnimation(node: any): void {
     let requestId = null;
     let time = 1;
-    const interval = 0.20;
-    let stage = 2;
+    const interval = 0.60;
+    let stage = 1;
     let initaliseStage = true;
     let animationNodes = [];
 
     const animate = () => {
-      // if (stage === 1) {
-      //   if (initaliseStage) {
-      //     animationNodes = this.getAnimationNodes(node, 1);
-      //     initaliseStage = false;
-      //     animationNodes.forEach((an) => this.toggleNode(an, NodeMode.animate));
-      //   }
-      //   time = time - interval;
-      //   if (time <= 0) {
-      //     stage = 2;
-      //     initaliseStage = true;
-      //     animationNodes.forEach((an) => this.toggleNode(an, NodeMode.off));
-      //   }
-      // }
-
-      if (stage === 2) {
-        if (initaliseStage) {
-          time = 1;
-          animationNodes = this.getAnimationNodes(node, 2);
-          initaliseStage = false;
-          animationNodes.forEach((an) => this.toggleNode(an, NodeMode.animate));
-        }
-        time = time - interval;
-        if (time <= 0) {
-          stage = 3;
-          /// animationNodes.forEach((an) => this.toggleNode(an, NodeMode.off));
-        }
+      if (initaliseStage) {
+        animationNodes.forEach((an) => this.toggleNode(an, NodeMode.off));
+        time = 1;
+        animationNodes = this.getAnimationNodes(node, stage);
+        initaliseStage = false;
+        animationNodes.forEach((an) => this.toggleNode(an, NodeMode.animate));
       }
 
-      if (stage === 3) {
+      time = time - interval;
+
+      if (time <= 0) {
+        stage++;
+        initaliseStage = true;
+      }
+
+      if (stage === 10) {
+        animationNodes.forEach((an) => this.toggleNode(an, NodeMode.off));
         cancelAnimationFrame(requestId);
-        console.log('cancelled');
-      } else {
-        requestId = requestAnimationFrame(animate);
       }
+        requestId = requestAnimationFrame(animate);
     };
 
     this.zone.runOutsideAngular(() => {
       requestId = requestAnimationFrame(animate);
     });
+
   }
 
   private nodeIsActive(node: [number, number]): boolean {
