@@ -136,6 +136,15 @@ export class Matrix2Component implements OnInit, AfterViewInit {
 
     const nodes = [];
 
+    const a = (n) => Array.from(Array(n).keys());
+
+    const odds = a(100).filter(n => n % 2);
+
+    const startAt = Math.floor(odds[radius] / 2);
+
+
+
+
     [
       (v) => { v[1] = v[1] - radius; return v; }, // above
       (v) => { v[1] = v[1] + radius; return v; },  // right
@@ -143,9 +152,24 @@ export class Matrix2Component implements OnInit, AfterViewInit {
       (v) => { v[0] = v[0] + radius; return v; }, // below
     ].forEach((f, i) => {
       const _node = f([...node]);
-      if (!this.nodeIsActive(_node as [number, number])) {
-        nodes.push(_node);
+      i = i + 1;
+      if (i % 2) {
+        _node[0] = _node[0] - startAt;
+        a(
+          odds[radius]
+        ).forEach((_, i) => {
+
+          _node[0] = i === 0 ? _node[0] : (_node[0] + 1);
+          const __node = [..._node];
+          if (!this.nodeIsActive(__node as [number, number])) {
+            nodes.push(__node);
+          }
+        });
+
       }
+      // if (!this.nodeIsActive(_node as [number, number])) {
+      //   nodes.push([..._node]);
+      // }
     });
     return nodes;
   }
