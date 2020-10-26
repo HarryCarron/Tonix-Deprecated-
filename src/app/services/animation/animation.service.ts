@@ -1,64 +1,79 @@
-import { Injectable } from '@angular/core';
-import { interval } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { interval } from "rxjs";
+
+export interface AnimationRun {
+  value: number;
+  incrementer: (v: number) => number;
+  finished: (v: number) => boolean;
+  next: (v: number) => void;
+  done: (r: AnimationRun) => void;
+  completed?: boolean;
+  ID?: number;
+}
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class AnimationService {
 
   constructor() {}
+  private reqID;
+  private runID = -1;
+  private runs: AnimationRun[] = [];
+  private isRunning = false;
 
-    public valueToValueAnimation(
-        aniCallback: (arg: number[]) => void,
-        data: number[],
-        stopData: number[],
-        duration: number = 10
-        ) {
+  private engine(): void {
 
-        let manipData = data;
-        let validators;
-        const greatThanVal = (v, i) => v < stopData[i];
-        const lessThanVal = (v, i) => v > stopData[i];
-
-        function prepare(d) {
-            validators = d.map(da => {
-                if (da >= stopData[1]) {
-                    return greatThanVal;
-                } else {
-                    return lessThanVal;
-                }
-            });
+    const turn = () => {
+      this.runs.forEach((r: AnimationRun) => {
+        r.value = r.incrementer(r.value);
+        if (r.finished(r.value)) {
+          r.done({ ...r, completed: true } as AnimationRun);
+          this.removeFromEngine(r.ID);
+        } else {
+          r.next(r.value);
         }
+      });
 
-        prepare(data);
+      this.reqID = requestAnimationFrame(turn);
+    };
 
-        const sanitise = v => v.map(va => Math.round(va));
 
-        data = sanitise(data);
-        stopData = sanitise(stopData);
-         const travelUnits = data.map((d, i) => Math.abs(d - stopData[i]) / duration );
+    this.reqID = requestAnimationFrame(turn);
+  }
 
-        const animate = () => {
+  public removeFromEngine(runID: number): number {
+    const runsIndex = this.runs.findIndex(r => r.ID === runID);
+    this.runs.splice(runsIndex, 1);
+    return runID;
+  }
 
-            const then = performance.now();
+  public addToEngine(input: AnimationRun | AnimationRun[]): number | number[] {
 
-            manipData = manipData
-            .map((d, i) => {
-                const stopValue = stopData[i];
-                return (d === stopValue) ? d : d > stopValue ? d - travelUnits[i] : d + travelUnits[i];
-            });
-
-            aniCallback(manipData);
-
-            if (validators.every(v => !!v())) {
-                requestAnimationFrame(animate);
-
-            } else {
-
-            // todo: some kind of success callback
-            }
-        };
-
-        animate();
-        }
+    if (Array.isArray(input)) {
+      input.map((i) => {
+        this.runID ++;
+        this.runs.push({...i, ID: this.runID});
+        return this.runID;
+      });
+    } else {
+      this.runID ++;
+      this.runs.push({...input, ID: this.runID});
+      return this.runID;
     }
+  }
+
+  public start(): void {
+    if (!this.isRunning) {
+      this.engine();
+      this.isRunning = true;
+    }
+  }
+
+  public stop(): void {
+    if (this.isRunning) {
+      cancelAnimationFrame(this.reqID);
+      this.isRunning = false;
+    }
+  }
+}
