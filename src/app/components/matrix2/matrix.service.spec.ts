@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { WindowEventsService } from './window-events.service';
+import { MatrixService } from './matrix.service';
 
-describe('WindowEventsService', () => {
-  let service: WindowEventsService;
+describe('MatrixService', () => {
+  let service: MatrixService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(WindowEventsService);
+    service = TestBed.inject(MatrixService);
   });
 
   it('should be created', () => {

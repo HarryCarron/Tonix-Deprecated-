@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { interval } from "rxjs";
+import { Injectable, NgZone } from "@angular/core";
 
 export interface AnimationRun {
   value: number;
-  incrementer: (v: number) => number;
-  finished: (v: number) => boolean;
-  next: (v: number) => void;
-  done: (r: AnimationRun) => void;
+  incrementerValue: number;
   completed?: boolean;
   ID?: number;
+  manipulate: () => number;
+  finished: () => boolean;
+  next: (v: number) => void;
+  done?: (v: AnimationRun) => void;
 }
 
 @Injectable({
@@ -16,64 +16,67 @@ export interface AnimationRun {
 })
 export class AnimationService {
 
-  constructor() {}
-  private reqID;
-  private runID = -1;
-  private runs: AnimationRun[] = [];
+  constructor(private zone: NgZone) {}
+  private reqID: number;
+  private run: AnimationRun[] = [];
+  private runID: number = -1;
   private isRunning = false;
 
-  private engine(): void {
+
+  private startEngine(): void {
 
     const turn = () => {
-      this.runs.forEach((r: AnimationRun) => {
-        r.value = r.incrementer(r.value);
-        if (r.finished(r.value)) {
-          r.done({ ...r, completed: true } as AnimationRun);
+      this.run.forEach((r: AnimationRun) => {
+        const manipulatedVal = r.manipulate();
+        r.next(manipulatedVal);
+        if (r.finished()) {
+          r.completed = true;
+          if (r.done) {
+            r.done({ ...r });
+          }
           this.removeFromEngine(r.ID);
-        } else {
-          r.next(r.value);
         }
       });
 
-      this.reqID = requestAnimationFrame(turn);
+      if (!this.run.length) {
+          this.stop();
+      } else {
+        this.reqID = requestAnimationFrame(turn);
+      }
+
+
+
     };
-
-
-    this.reqID = requestAnimationFrame(turn);
+    this.zone.runOutsideAngular(() => {
+      this.reqID = requestAnimationFrame(turn);
+    });
   }
 
   public removeFromEngine(runID: number): number {
-    const runsIndex = this.runs.findIndex(r => r.ID === runID);
-    this.runs.splice(runsIndex, 1);
+    const runsIndex = this.run.findIndex(r => r.ID === runID);
+    this.run.splice(runsIndex, 1);
     return runID;
   }
 
-  public addToEngine(input: AnimationRun | AnimationRun[]): number | number[] {
+  public addRunToEngine(run: AnimationRun) {
 
-    if (Array.isArray(input)) {
-      input.map((i) => {
-        this.runID ++;
-        this.runs.push({...i, ID: this.runID});
-        return this.runID;
-      });
-    } else {
-      this.runID ++;
-      this.runs.push({...input, ID: this.runID});
-      return this.runID;
+    if (!this.isRunning) {
+      this.start();
     }
+    this.runID++;
+    run.ID = this.runID;
+    this.run.push(run);
   }
 
   public start(): void {
-    if (!this.isRunning) {
-      this.engine();
-      this.isRunning = true;
-    }
+      this.zone.runOutsideAngular(() => {
+        this.startEngine();
+        this.isRunning = true;
+      });
   }
 
   public stop(): void {
-    if (this.isRunning) {
-      cancelAnimationFrame(this.reqID);
-      this.isRunning = false;
-    }
+    cancelAnimationFrame(this.reqID);
+    this.isRunning = false;
   }
 }
