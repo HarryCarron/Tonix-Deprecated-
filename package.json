@@ -23,7 +23,7 @@
     "@ng-bootstrap/ng-bootstrap": "^6.2.0",
     "@ng-select/ng-select": "^5.0.0",
     "@types/d3-selection": "^1.4.1",
-    "ajv": "^6.12.2",
+    "ajv": "^6.12.3",
     "bootstrap": "^4.4.0",
     "core-js": "^2.5.4",
     "d3": "^5.15.0",
